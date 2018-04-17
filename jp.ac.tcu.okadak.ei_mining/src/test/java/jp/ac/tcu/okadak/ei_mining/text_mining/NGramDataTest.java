@@ -1,9 +1,11 @@
-package jp.ac.tcu.okadak.ei_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import jp.ac.tcu.okadak.ei_mining.text_mining.NGramData;
 
 /**
  *

@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining;
 
 /**
  * N-Gramのスコア計算のための統計値

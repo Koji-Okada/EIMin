@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import jp.ac.tcu.okadak.data_loader.ei_mining.CSVTokenizer;
 
 /**
  *
@@ -215,7 +217,6 @@ public class CommonWordsExtractor {
 				this.termMap.entrySet());
 
 		Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
-			@Override
 			public int compare(final Entry<String, Integer> e1,
 					final Entry<String, Integer> e2) {
 				return ((Integer) e2.getValue()).compareTo((Integer) e1

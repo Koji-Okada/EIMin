@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -246,7 +246,6 @@ public class NGramAnalyzer {
 
 		Collections.sort(entries,
 				new Comparator<Map.Entry<String, NGramData>>() {
-					@Override
 					public int compare(final Entry<String, NGramData> e1,
 							final Entry<String, NGramData> e2) {
 						return ((NGramData) e2.getValue()).compareTo(

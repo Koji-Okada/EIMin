@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining;
+package jp.ac.tcu.okadak.ei_mining.data_loader;
 
 import java.util.StringTokenizer;
 
