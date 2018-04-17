@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jp.ac.tcu.okadak.data_loader.ei_mining.CSVTokenizer;
+import jp.ac.tcu.okadak.ei_mining.data_loader.CSVTokenizer;
 
 /**
  *
