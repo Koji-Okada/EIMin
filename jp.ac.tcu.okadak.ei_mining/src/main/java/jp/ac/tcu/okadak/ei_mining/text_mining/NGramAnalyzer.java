@@ -10,13 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- *
  * N-Gram 分析器.
  *
- *
  * @author K.Okada
- * @version 2016.08.18
- *
+ * @version 2018.04.20
  */
 public class NGramAnalyzer {
 
@@ -25,15 +22,13 @@ public class NGramAnalyzer {
 	 */
 	private final double scoreThreshold = 0.5e0;
 
-
 	/**
 	 * N-Gram ハッシュマップ.
 	 */
 	private Map<String, NGramData> nGramMap = new HashMap<String, NGramData>();
 
 	/**
-	 * N-Gram毎の単語種類数.
-	 * 	(nTermType[i-1]に i-Gramの単語種類数)
+	 * N-Gram毎の単語種類数. (nTermType[i-1]に i-Gramの単語種類数)
 	 */
 	private int[] nTermType;
 
@@ -43,15 +38,13 @@ public class NGramAnalyzer {
 	private StatisticsValues sValue = new StatisticsValues();
 
 	/**
-	 *
 	 * N-Gram 分析を行う.
 	 *
-	 * @author K.Okada
-	 * @version 2016.08.18
-	 *
-	 * @param targetDoc		分析対象の文書
-	 * @param maxN			N-Gram の上限文字数
-	 * @return				解析結果
+	 * @param targetDoc
+	 *            分析対象の文書
+	 * @param maxN
+	 *            N-Gram の上限文字数
+	 * @return 解析結果
 	 */
 	final String analyze(final String targetDoc, final int maxN) {
 
@@ -81,8 +74,8 @@ public class NGramAnalyzer {
 				break;
 			}
 
-			results = results + (++count) + ",\"" + en.getKey() + "\"," + en
-					.getValue().getNum() + "," + en.getValue().getScore()
+			results = results + (++count) + ",\"" + en.getKey() + "\","
+					+ en.getValue().getNum() + "," + en.getValue().getScore()
 					+ "\r\n";
 		}
 
@@ -90,14 +83,11 @@ public class NGramAnalyzer {
 	}
 
 	/**
+	 * 文字種数を算出する.
 	 *
-	 *  文字種数を算出する.
-	 *
-	 * @author K.Okada
-	 * @version 2016.01.09
-	 *
-	 * @param doc			文章
-	 * @return				文字種数
+	 * @param doc
+	 *            文章
+	 * @return 文字種数
 	 */
 	private int countNumOfChr(final String doc) {
 
@@ -119,14 +109,12 @@ public class NGramAnalyzer {
 	}
 
 	/**
-	 *
 	 * N-Gram ハッシュマップ を作成する.
 	 *
-	 * @author K.Okada
-	 * @version 2016.08.18
-	 *
-	 * @param orgDoc		分析対象の文書
-	 * @param maxN			N-Gram の上限文字数
+	 * @param orgDoc
+	 *            分析対象の文書
+	 * @param maxN
+	 *            N-Gram の上限文字数
 	 */
 	private void generateNGramMap(final String orgDoc, final int maxN) {
 
@@ -170,19 +158,16 @@ public class NGramAnalyzer {
 					data.increase();
 				}
 			}
-			//	System.out.println(nTermType[n - 1]);
+			// System.out.println(nTermType[n - 1]);
 		}
 		return;
 	}
 
 	/**
-	 *
 	 * N-Gram ハッシュマップを整理統合する.
 	 *
-	 * @author K.Okada
-	 * @version 2016.08.18
-	 *
-	 * @param dLen			文字列長
+	 * @param dLen
+	 *            文字列長
 	 */
 	private void consolidateNGram(final int dLen) {
 
@@ -231,13 +216,9 @@ public class NGramAnalyzer {
 	}
 
 	/**
-	 *
 	 * N-Gram ハッシュマップ をソーティングする.
 	 *
-	 * @author K.Okada
-	 * @version 2016.08.18
-	 *
-	 * @return				ソーティング結果 (リスト構造)
+	 * @return ソーティング結果 (リスト構造)
 	 */
 	private List<Entry<String, NGramData>> sortNGram() {
 
@@ -248,8 +229,8 @@ public class NGramAnalyzer {
 				new Comparator<Map.Entry<String, NGramData>>() {
 					public int compare(final Entry<String, NGramData> e1,
 							final Entry<String, NGramData> e2) {
-						return ((NGramData) e2.getValue()).compareTo(
-								(NGramData) e1.getValue());
+						return ((NGramData) e2.getValue())
+								.compareTo((NGramData) e1.getValue());
 					}
 				});
 
