@@ -93,25 +93,22 @@ public class MultiDocAnalyzer {
 
 			// テキストファイル全文を読込む
 			TextReader tr = new TextReader();
-			String orgStr = tr.readAll(targetPath + fName);
+			String str = tr.readAll(targetPath + fName);
 			System.out.print("  Loading done");
-
-			// 改行・空白文字を削除する
-			String targetStr = new TextReader().removeWhiteSpace(orgStr);
 
 			// System.out.println("DocLen=" + targetStr.length());
 
 			NGramAnalyzer nga = new NGramAnalyzer();
 
 			int nGram = this.maxN;
-			if (targetStr.length() < this.maxN) {
+			if (str.length() < this.maxN) {
 				// 対象文書長が短い場合
-				nGram = targetStr.length();
+				nGram = str.length();
 			}
 
 			// N-Gram分析を行う
 			String results = "COUNT,TERM,FREQ,SCORE\r\n";
-			results = results + nga.analyze(targetStr, nGram);
+			results = results + nga.analyze(str, nGram);
 
 			System.out.println(results);
 
@@ -128,9 +125,6 @@ public class MultiDocAnalyzer {
 			}
 
 		}
-
-		// 分析結果を統合する
-		// integrateResults(recordDir);
 
 		return;
 	}

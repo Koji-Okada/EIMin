@@ -28,7 +28,7 @@ public class TextReader {
 			BufferedReader br = new BufferedReader(fr);
 			String str = br.readLine();
 			while (null != str) {
-				builder.append(str + System.getProperty("line.separator"));
+				builder.append(str + "\r\n");
 				str = br.readLine();
 			}
 			br.close();
@@ -65,8 +65,13 @@ public class TextReader {
 	 */
 	public final String dividSentence(final String orgStr) {
 
-		String str1 = orgStr.replaceAll("。", orgStr);
-		String newStr = orgStr.replaceAll("．", str1);
+		// 改行を一旦除去する
+		String str1 = orgStr.replaceAll("\r", "");
+		String str2 = str1.replaceAll("\n", "");
+
+		// 文単位に分割する
+		String str3 = str2.replace("。", "。\r\n");
+		String newStr = str3.replace("．", "．\r\n");
 
 		return newStr;
 	}
