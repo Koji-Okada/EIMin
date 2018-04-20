@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining.text_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining.n_gram;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -97,7 +97,7 @@ public class MultiDocAnalyzer {
 			System.out.print("  Loading done");
 
 			// 改行・空白文字を削除する
-			String targetStr = cleanUp(orgStr);
+			String targetStr = new TextReader().removeWhiteSpace(orgStr);
 
 			// System.out.println("DocLen=" + targetStr.length());
 
@@ -133,22 +133,5 @@ public class MultiDocAnalyzer {
 		// integrateResults(recordDir);
 
 		return;
-	}
-
-	/**
-	 * テキストを洗練する.
-	 *
-	 * @param orgStr
-	 *            洗練前の文字列
-	 * @return 洗練後の文字列
-	 */
-	private String cleanUp(final String orgStr) {
-
-		String str1 = orgStr.replaceAll("\r", "");
-		String str2 = str1.replaceAll("\n", "");
-		String str3 = str2.replaceAll(" ", "");
-		String cleanStr = str3.replaceAll("\t", "");
-
-		return cleanStr;
 	}
 }

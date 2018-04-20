@@ -19,7 +19,7 @@ public class TextReader {
 	 *            テキストファイルのファイルパス
 	 * @return 全文文字列
 	 */
-	 public final String readAll(final String filePath) {
+	public final String readAll(final String filePath) {
 
 		StringBuilder builder = new StringBuilder();
 
@@ -37,5 +37,37 @@ public class TextReader {
 		}
 
 		return builder.toString();
+	}
+
+	/**
+	 * 空白文字を取り除く.
+	 *
+	 * @param orgStr
+	 *            元の文字列
+	 * @return 空白文字除去後の文字列
+	 */
+	public final String removeWhiteSpace(final String orgStr) {
+
+		String str1 = orgStr.replaceAll("\r", "");
+		String str2 = str1.replaceAll("\n", "");
+		String str3 = str2.replaceAll(" ", "");
+		String newStr = str3.replaceAll("\t", "");
+
+		return newStr;
+	}
+
+	/**
+	 * 文単位に分割する.
+	 *
+	 * @param orgStr
+	 *            元の文字列
+	 * @return 分割後の文字列
+	 */
+	public final String dividSentence(final String orgStr) {
+
+		String str1 = orgStr.replaceAll("。", orgStr);
+		String newStr = orgStr.replaceAll("．", str1);
+
+		return newStr;
 	}
 }

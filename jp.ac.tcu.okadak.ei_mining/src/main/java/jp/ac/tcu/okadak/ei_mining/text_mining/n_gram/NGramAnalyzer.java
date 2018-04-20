@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining.text_mining;
+package jp.ac.tcu.okadak.ei_mining.text_mining.n_gram;
 
 import java.util.ArrayList;
 import java.util.Collections;
