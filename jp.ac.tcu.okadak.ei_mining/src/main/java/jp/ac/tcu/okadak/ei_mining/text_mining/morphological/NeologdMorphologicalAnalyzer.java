@@ -5,24 +5,23 @@ import java.io.StringReader;
 
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
+import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.BaseFormAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.PartOfSpeechAttribute;
 
 /**
  * NeoLogD を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.21
+ * @version 2018.04.26
  *
  */
-public class NeologdMorphologicalAnalyzer {
+public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 
 	/**
 	 * 形態素解析器の本体.
 	 */
 	private JapaneseTokenizer tokenizer = new JapaneseTokenizer(null, false,
 			JapaneseTokenizer.Mode.NORMAL);
-	// private JapaneseTokenizer tokenizer = new JapaneseTokenizer(null, false,
-	// JapaneseTokenizer.DEFAULT_MODE);
 
 	/**
 	 *
@@ -34,21 +33,23 @@ public class NeologdMorphologicalAnalyzer {
 		NeologdMorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		// String str = "これは形態素解析の例です。";
-		String str = "クラウドはクラとウドに分割されません。";
-		String res = mla.analyze(str);
+		String str = "大きなクラウドはクラとウドにすぐに分割されません。";
+		String res = mla.analyzeSentense(str, 15);
 
 		System.out.println(str);
 		System.out.println(res);
 	}
 
 	/**
-	 * 形態素解析を行う.
+	 * 文に対して形態素解析を行う.
 	 *
-	 * @param targetDoc
+	 * @param targetSentense
 	 *            分析対象の文
+	 * @param mode
+	 *            -1 : 分かち書き 正値: 出力品詞指定
 	 * @return 解析結果
 	 */
-	final String analyze(final String targetDoc) {
+	final String analyzeSentense(final String targetSentense, final int mode) {
 
 		StringBuilder builder = new StringBuilder();
 
@@ -56,19 +57,62 @@ public class NeologdMorphologicalAnalyzer {
 			// JapaneseTokenizer tokenizer = new JapaneseTokenizer(null, false,
 			// JapaneseTokenizer.DEFAULT_MODE);
 
-			tokenizer.setReader(new StringReader(targetDoc));
+			tokenizer.setReader(new StringReader(targetSentense));
 			CharTermAttribute ct = tokenizer
 					.addAttribute(CharTermAttribute.class);
 			PartOfSpeechAttribute pa = tokenizer
 					.addAttribute(PartOfSpeechAttribute.class);
+			BaseFormAttribute ba = tokenizer
+					.addAttribute(BaseFormAttribute.class);
 
 			tokenizer.reset();
 			while (tokenizer.incrementToken()) {
-				builder.append(ct.toString());
-				builder.append(" ");
 
-				System.out.println(ct.toString() + "\t" + pa.getPartOfSpeech());
+				if (PartOfSpeech.ALL == mode) {
+					builder.append(ct.toString());
+					builder.append(" ");
+					continue;
+				}
+
+				// System.out.println(ct.toString() + "\t\t" +
+				// pa.getPartOfSpeech());
+
+				if (PartOfSpeech.NORN == (mode & PartOfSpeech.NORN)) {
+					// 名詞を出力
+					if (pa.getPartOfSpeech().contains("名詞-")) {
+						builder.append(ct.toString());
+						builder.append(" ");
+					}
+				}
+				if (PartOfSpeech.VERB == (mode & PartOfSpeech.VERB)) {
+					// 動詞を出力
+					if (pa.getPartOfSpeech().contains("動詞-")) {
+						if (null != ba.getBaseForm()) {
+							builder.append(ba.getBaseForm());
+						} else {
+							builder.append(ct.toString());
+						}
+
+						builder.append(" ");
+					}
+				}
+				if (PartOfSpeech.ADJ == (mode & PartOfSpeech.ADJ)) {
+					// 形容詞を出力
+					if (pa.getPartOfSpeech().contains("形容詞-")
+							|| pa.getPartOfSpeech().contains("連体詞")) {
+						builder.append(ct.toString());
+						builder.append(" ");
+					}
+				}
+				if (PartOfSpeech.ADV == (mode & PartOfSpeech.ADV)) {
+					// 副詞を出力
+					if (pa.getPartOfSpeech().contains("副詞-")) {
+						builder.append(ct.toString());
+						builder.append(" ");
+					}
+				}
 			}
+			tokenizer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
