@@ -25,11 +25,10 @@ public final class XBRLDataIndexer {
 		super();
 	}
 
-
 	/**
 	 * 出力ファイル.
 	 */
-	private BufferedWriter  bw;
+	private BufferedWriter bw;
 
 	/**
 	 * 指定されたフォルダから XBRLインデックスを作成する.
@@ -113,7 +112,7 @@ public final class XBRLDataIndexer {
 					// サブディレクトリの場合
 					// 再帰呼出し
 
-					System.out.println(f.getPath());
+//					System.out.println(f.getPath());
 
 					searchXBRLData(f.getPath());
 				} else {
@@ -133,6 +132,12 @@ public final class XBRLDataIndexer {
 								// パース処理を行う
 								parser.parse(f, handler);
 
+								// EDINETコードを取得する
+								String ediNetCode = handler.getEdiNetCode();
+
+								// 証券コードを取得する
+								String securityCode = handler.getSecurityCode();
+
 								// 企業名を取得する
 								String enterpriseName = handler
 										.getEnterpriseName();
@@ -141,6 +146,8 @@ public final class XBRLDataIndexer {
 								String date = handler
 										.getCurrentFiscalYearEndDate();
 
+								this.bw.write(ediNetCode + ",");
+								this.bw.write(securityCode + ",");
 								this.bw.write(date + ",");
 								this.bw.write(enterpriseName + ",");
 								this.bw.write(f.getParent());

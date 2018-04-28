@@ -45,6 +45,34 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 	}
 
 	/**
+	 * 証券コード.
+	 */
+	private String securityCode = null;
+
+	/**
+	 * 証券コードを返す.
+	 *
+	 * @return 証券コード
+	 */
+	final String getSecurityCode() {
+		return this.securityCode;
+	}
+
+	/**
+	 * EDINETコード.
+	 */
+	private String ediNetCode = null;
+
+	/**
+	 * EDINETコードを返す.
+	 *
+	 * @return EDINETコード
+	 */
+	final String getEdiNetCode() {
+		return this.ediNetCode;
+	}
+
+	/**
 	 * 企業名の処理中を示すフラグ.
 	 */
 	private boolean flagEnterpriseName = false;
@@ -53,6 +81,16 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 	 * 会計期間終了日の処理中を示すフラグ.
 	 */
 	private boolean flagCurrentFiscalYearEndDate = false;
+
+	/**
+	 * 証券コードの処理中を示すフラグ.
+	 */
+	private boolean flagSecurityCode = false;
+
+	/**
+	 * EDINETコードの処理中を示すフラグ.
+	 */
+	private boolean flagEdiNetCode = false;
 
 	/**
 	 *
@@ -100,6 +138,10 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 				if (0 == name
 						.compareTo("jpdei_cor:CurrentFiscalYearEndDateDEI")) {
 				flagCurrentFiscalYearEndDate = true;
+			} else if (0 == name.compareTo("jpdei_cor:SecurityCodeDEI")) {
+				flagSecurityCode = true;
+			} else if (0 == name.compareTo("jpdei_cor:EDINETCodeDEI")) {
+				flagEdiNetCode = true;
 			}
 		}
 		return;
@@ -118,14 +160,22 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 	public final void characters(final char[] ch, final int offset,
 			final int length) {
 
-		if (flagEnterpriseName) {
-			enterpriseName = new String(ch, offset, length);
-			flagEnterpriseName = false;
-//			System.out.println(enterpriseName);
-		} else if (flagCurrentFiscalYearEndDate) {
-			currentFiscalYearEndDate = new String(ch, offset, length);
-			flagCurrentFiscalYearEndDate = false;
-//			System.out.println("\t" + currentFiscalYearEndDate);
+		if (this.flagEnterpriseName) {
+			this.enterpriseName = new String(ch, offset, length);
+			this.flagEnterpriseName = false;
+			// System.out.println(enterpriseName);
+		} else if (this.flagCurrentFiscalYearEndDate) {
+			this.currentFiscalYearEndDate = new String(ch, offset, length);
+			this.flagCurrentFiscalYearEndDate = false;
+			// System.out.println("\t" + currentFiscalYearEndDate);
+		} else if (this.flagSecurityCode) {
+			this.securityCode = new String(ch, offset, length);
+			this.flagSecurityCode = false;
+			// System.out.println("\t" + securityCode);
+		} else if (this.flagEdiNetCode) {
+			this.ediNetCode = new String(ch, offset, length);
+			this.flagEdiNetCode = false;
+			// System.out.println("\t" + ediNetCode);
 		}
 		return;
 	}
