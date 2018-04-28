@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining.data_loader.XBRL;
+package jp.ac.tcu.okadak.ei_mining.XBRL;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
