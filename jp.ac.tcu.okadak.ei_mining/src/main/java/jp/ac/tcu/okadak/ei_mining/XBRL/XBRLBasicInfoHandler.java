@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author K.Okada
  * @version 2018.04.27
  */
-public class XBRLBasicInfoExtractor extends DefaultHandler {
+public class XBRLBasicInfoHandler extends DefaultHandler {
 
 	/**
 	 * 企業名.
@@ -67,7 +67,7 @@ public class XBRLBasicInfoExtractor extends DefaultHandler {
 			SAXParser parser = spf.newSAXParser();
 
 			// パーサが処理を委譲するハンドラを生成する
-			XBRLBasicInfoExtractor handler = new XBRLBasicInfoExtractor();
+			XBRLBasicInfoHandler handler = new XBRLBasicInfoHandler();
 
 			parser.parse(new File(args[0]), handler);
 		} catch (Exception e) {

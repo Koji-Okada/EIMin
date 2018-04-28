@@ -104,7 +104,7 @@ public final class XBRLDataIndexer {
 			SAXParser parser = spf.newSAXParser();
 
 			// パーサが処理を委譲するハンドラを生成する
-			XBRLBasicInfoExtractor handler = new XBRLBasicInfoExtractor();
+			XBRLBasicInfoHandler handler = new XBRLBasicInfoHandler();
 
 			for (File f : files) {
 				// ファイル毎に
@@ -112,6 +112,9 @@ public final class XBRLDataIndexer {
 				if (f.isDirectory()) {
 					// サブディレクトリの場合
 					// 再帰呼出し
+
+					System.out.println(f.getPath());
+
 					searchXBRLData(f.getPath());
 				} else {
 					// ファイルの場合
