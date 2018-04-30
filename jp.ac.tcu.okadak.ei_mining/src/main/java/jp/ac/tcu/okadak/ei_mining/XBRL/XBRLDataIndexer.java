@@ -80,8 +80,8 @@ public final class XBRLDataIndexer {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return;
 		}
+		return;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public final class XBRLDataIndexer {
 					// サブディレクトリの場合
 					// 再帰呼出し
 
-//					System.out.println(f.getPath());
+					// System.out.println(f.getPath());
 
 					searchXBRLData(f.getPath());
 				} else {
