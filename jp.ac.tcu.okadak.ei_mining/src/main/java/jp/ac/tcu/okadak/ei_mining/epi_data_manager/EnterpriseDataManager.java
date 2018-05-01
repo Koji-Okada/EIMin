@@ -7,7 +7,7 @@ import java.util.Map;
  * 企業データマネジャー.
  *
  * @author K.Okada
- * @version 2018.04.30
+ * @version 2018.05.01
  */
 public class EnterpriseDataManager {
 
@@ -34,7 +34,7 @@ public class EnterpriseDataManager {
 	 *            値
 	 */
 	final void addData(final String enterprise, final String period,
-			final String indicator, final Double value) {
+			final String indicator, final Object value) {
 
 		// 期間データ木に追加処理を行う
 		if (null != period) {

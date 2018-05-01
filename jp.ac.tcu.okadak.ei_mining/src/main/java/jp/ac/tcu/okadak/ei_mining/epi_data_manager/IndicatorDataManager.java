@@ -7,7 +7,7 @@ import java.util.Map;
  * 指標データマネジャー.
  *
  * @author K.Okada
- * @version 2018.04.30
+ * @version 2018.05.01
  */
 public class IndicatorDataManager {
 
@@ -34,7 +34,7 @@ public class IndicatorDataManager {
 	 *            値
 	 */
 	final void addData(final String enterprise, final String period,
-			final String indicator, final Double value) {
+			final String indicator, final Object value) {
 
 		// 企業データ木に追加処理を行う
 		if (null != enterprise) {

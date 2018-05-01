@@ -4,9 +4,12 @@ package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
  * 期間データ要素.
  *
  * @author K.Okada
- * @version 2018.04.30
+ * @version 2018.05.01
+ *
+ * @param <T>
+ *            ジェネリックス
  */
-public class PeriodDataElement {
+public class PeriodDataElement<T> {
 
 	/**
 	 * 企業データマネジャー.
@@ -21,10 +24,9 @@ public class PeriodDataElement {
 	/**
 	 * 値.
 	 */
-	private Double value = null;
+	private Object value = null;
 
 	/**
-	 *
 	 * 要素に値を設定する.
 	 *
 	 * @param enterprise
@@ -37,7 +39,7 @@ public class PeriodDataElement {
 	 *            値
 	 */
 	final void setValue(final String enterprise, final String period,
-			final String indicator, final Double val) {
+			final String indicator, final Object val) {
 
 		// 引数の事前検証
 		if (null != period) {
@@ -61,7 +63,7 @@ public class PeriodDataElement {
 				eDManager = new EnterpriseDataManager();
 			}
 			// 企業データマネジャーにデータ値を追加する
-			eDManager.addData(null, enterprise, indicator, val);
+			eDManager.addData(null, null, indicator, val);
 		}
 
 		if (null != indicator) {
@@ -73,7 +75,7 @@ public class PeriodDataElement {
 				iDManager = new IndicatorDataManager();
 			}
 			// 指標データマネジャーにデータ値を追加する
-			iDManager.addData(null, enterprise, indicator, val);
+			iDManager.addData(enterprise, null, null, val);
 		}
 
 		return;
@@ -91,7 +93,7 @@ public class PeriodDataElement {
 	/**
 	 * 指標データマネジャーを返す.
 	 *
-	 * @return	指標データマネジャー
+	 * @return 指標データマネジャー
 	 */
 	final IndicatorDataManager getIndicatorDataManager() {
 		return this.iDManager;
@@ -100,10 +102,12 @@ public class PeriodDataElement {
 	/**
 	 * データ値を返す.
 	 *
+	 * @param <T>
+	 *            ジェネリックス
 	 * @return 値
 	 */
-	final Double getValue() {
-		return this.value;
+	@SuppressWarnings({"hiding", "unchecked"})
+	final <T> T getValue() {
+		return (T) this.value;
 	}
-
 }

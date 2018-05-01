@@ -4,9 +4,12 @@ package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
  * 企業データ要素.
  *
  * @author K.Okada
- * @version 2018.04.30
+ * @version 2018.05.01
+ *
+ * @param <T>
+ *            ジェネリックス
  */
-public class EnterpriseDataElement {
+public class EnterpriseDataElement<T> {
 
 	/**
 	 * 期間データマネジャー.
@@ -21,22 +24,22 @@ public class EnterpriseDataElement {
 	/**
 	 * データ.
 	 */
-	private Double value = null;
+	private Object value = null;
 
 	/**
 	 * 要素に値を設定する.
 	 *
-	 * @param period
-	 *            期間
 	 * @param enterprise
 	 *            企業
+	 * @param period
+	 *            期間
 	 * @param indicator
 	 *            指標
 	 * @param val
 	 *            値
 	 */
-	final void setValue(final String period, final String enterprise,
-			final String indicator, final Double val) {
+	final void setValue(final String enterprise, final String period,
+			final String indicator, final Object val) {
 
 		// 引数の事前検証
 		if (null != enterprise) {
@@ -60,7 +63,7 @@ public class EnterpriseDataElement {
 				pDManager = new PeriodDataManager();
 			}
 			// 期間データマネジャーにデータ値を追加する
-			pDManager.addData(period, null, indicator, val);
+			pDManager.addData(null, null, indicator, val);
 		}
 
 		if (null != indicator) {
@@ -72,7 +75,7 @@ public class EnterpriseDataElement {
 				iDManager = new IndicatorDataManager();
 			}
 			// 指標データマネジャーにデータ値を追加する
-			iDManager.addData(null, enterprise, indicator, val);
+			iDManager.addData(null, period, null, val);
 		}
 
 		return;
@@ -90,7 +93,7 @@ public class EnterpriseDataElement {
 	/**
 	 * 指標データマネジャーを返す.
 	 *
-	 * @return	指標データマネジャー
+	 * @return 指標データマネジャー
 	 */
 	final IndicatorDataManager getIndicatorDataManager() {
 		return this.iDManager;
@@ -99,9 +102,12 @@ public class EnterpriseDataElement {
 	/**
 	 * データ値を返す.
 	 *
+	 * @param <T>
+	 *            ジェネリックス
 	 * @return 値
 	 */
-	final Double getValue() {
-		return this.value;
+	@SuppressWarnings({"hiding", "unchecked"})
+	final <T> T getValue() {
+		return (T) this.value;
 	}
 }
