@@ -1,10 +1,13 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 指標データ要素.
  *
  * @author K.Okada
- * @version 2018.05.01
+ * @version 2018.05.06
  *
  * @param <T>
  *            ジェネリックス
@@ -12,22 +15,21 @@ package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 public class IndicatorDataElement<T> {
 
 	/**
-	 * 企業データマネジャー.
+	 * 企業データ要素のマップ.
 	 */
-	private EnterpriseDataManager eDManager = null;
+	private Map<String, EnterpriseDataElement<T>> eMap = new HashMap<String, EnterpriseDataElement<T>>();
 
 	/**
-	 * 期間データマネジャー.
+	 * 期間データ要素のマップ.
 	 */
-	private PeriodDataManager pDManager = null;
+	private Map<String, PeriodDataElement<T>> pMap = new HashMap<String, PeriodDataElement<T>>();
 
 	/**
-	 * 値.
+	 * データ.
 	 */
 	private Object value = null;
 
 	/**
-	 *
 	 * 要素に値を設定する.
 	 *
 	 * @param enterprise
@@ -58,46 +60,42 @@ public class IndicatorDataElement<T> {
 		if (null != enterprise) {
 			// 企業データ木が未処理の場合
 
-			if (null == eDManager) {
-				// 企業データマネジャーが未生成の場合
-				// 企業データマネジャーを生成する
-				eDManager = new EnterpriseDataManager();
-			}
-			// 企業データマネジャーにデータ値を追加する
-			eDManager.addData(null, period, null, val);
+			EnterpriseDataElement<T> eElm = new EnterpriseDataElement<T>();
+			eElm.setValue(null, null, indicator, val);
+			eMap.put(period, eElm);
 		}
 
 		if (null != period) {
 			// 期間データ木が未処理の場合
 
-			if (null == pDManager) {
-				// 期間データマネジャーが未生成の場合
-				// 期間データマネジャーを生成する
-				pDManager = new PeriodDataManager();
-			}
-			// 期間データマネジャーにデータ値を追加する
-			pDManager.addData(enterprise, null, null, val);
+			PeriodDataElement<T> pElm = new PeriodDataElement<T>();
+			pElm.setValue(enterprise, null, null, val);
+			pMap.put(period, pElm);
 		}
 
 		return;
 	}
 
-	/**
-	 * 企業データマネジャーを返す.
-	 *
-	 * @return 企業データマネジャー
-	 */
-	final EnterpriseDataManager getEnterpriseDataManager() {
-		return this.eDManager;
-	}
 
 	/**
-	 * 期間データマネジャーを返す.
+	 * 企業データのマップを返す.
 	 *
-	 * @return 期間データマネジャー
+	 * @return 企業データのマップ
 	 */
-	final PeriodDataManager getPeriodDataManager() {
-		return this.pDManager;
+	final Map<String, EnterpriseDataElement<T>> getEMap() {
+
+		return (Map<String, EnterpriseDataElement<T>>) this.eMap;
+	}
+
+
+	/**
+	 * 期間データのマップを返す.
+	 *
+	 * @return 期間データのマップ
+	 */
+	final Map<String, PeriodDataElement<T>> getPMap() {
+
+		return (Map<String, PeriodDataElement<T>>) this.pMap;
 	}
 
 	/**

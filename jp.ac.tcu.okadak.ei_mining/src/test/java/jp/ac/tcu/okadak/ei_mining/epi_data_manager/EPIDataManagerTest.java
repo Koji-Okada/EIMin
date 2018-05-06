@@ -1,6 +1,11 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
 
 /**
  *
@@ -18,8 +23,8 @@ public class EPIDataManagerTest {
 		Double v2 = new Double(2.34e0d);
 
 		dm.addData("ABC", "2000", "xxx", v1);
-//		dm.addData("ABC", "2000", "yyy", v2);
+		Double out = dm.getValue("ABC", "2000", "xxx");
 
+		assertThat(out, sameInstance(v1));
 	}
-
 }

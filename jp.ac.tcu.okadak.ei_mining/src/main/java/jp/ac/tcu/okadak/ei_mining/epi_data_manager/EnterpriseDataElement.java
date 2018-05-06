@@ -1,10 +1,13 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 企業データ要素.
  *
  * @author K.Okada
- * @version 2018.05.01
+ * @version 2018.05.06
  *
  * @param <T>
  *            ジェネリックス
@@ -12,14 +15,14 @@ package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 public class EnterpriseDataElement<T> {
 
 	/**
-	 * 期間データマネジャー.
+	 * 期間データ要素のマップ.
 	 */
-	private PeriodDataManager pDManager = null;
+	private Map<String, PeriodDataElement<T>> pMap = new HashMap<String, PeriodDataElement<T>>();
 
 	/**
-	 * 指標データマネジャー.
+	 * 指標データ要素のマップ.
 	 */
-	private IndicatorDataManager iDManager = null;
+	private Map<String, IndicatorDataElement<T>> iMap = new HashMap<String, IndicatorDataElement<T>>();
 
 	/**
 	 * データ.
@@ -57,46 +60,40 @@ public class EnterpriseDataElement<T> {
 		if (null != period) {
 			// 期間データ木が未処理の場合
 
-			if (null == pDManager) {
-				// 期間データマネジャーが未生成の場合
-				// 期間データマネジャーを生成する
-				pDManager = new PeriodDataManager();
-			}
-			// 期間データマネジャーにデータ値を追加する
-			pDManager.addData(null, null, indicator, val);
+			PeriodDataElement<T> pElm = new PeriodDataElement<T>();
+			pElm.setValue(null, null, indicator, val);
+			pMap.put(period, pElm);
 		}
 
 		if (null != indicator) {
 			// 指標データ木が未処理の場合
 
-			if (null == iDManager) {
-				// 指標データマネジャーが未生成の場合
-				// 指標データマネジャーを生成する
-				iDManager = new IndicatorDataManager();
-			}
-			// 指標データマネジャーにデータ値を追加する
-			iDManager.addData(null, period, null, val);
+			IndicatorDataElement<T> iElm = new IndicatorDataElement<T>();
+			iElm.setValue(null, period, null, val);
+			iMap.put(indicator, iElm);
 		}
 
 		return;
 	}
 
 	/**
-	 * 期間データマネジャーを返す.
+	 * 期間データのマップを返す.
 	 *
-	 * @return 期間データマネジャー
+	 * @return 期間データのマップ
 	 */
-	final PeriodDataManager getPeriodDataManager() {
-		return this.pDManager;
+	final Map<String, PeriodDataElement<T>> getPMap() {
+
+		return (Map<String, PeriodDataElement<T>>) this.pMap;
 	}
 
 	/**
-	 * 指標データマネジャーを返す.
+	 * 指標データのマップを返す.
 	 *
-	 * @return 指標データマネジャー
+	 * @return 指標データのマップ
 	 */
-	final IndicatorDataManager getIndicatorDataManager() {
-		return this.iDManager;
+	final Map<String, IndicatorDataElement<T>> getIMap() {
+
+		return (Map<String, IndicatorDataElement<T>>) this.iMap;
 	}
 
 	/**
@@ -106,7 +103,7 @@ public class EnterpriseDataElement<T> {
 	 *            ジェネリックス
 	 * @return 値
 	 */
-	@SuppressWarnings({"hiding", "unchecked"})
+	@SuppressWarnings("unchecked")
 	final <T> T getValue() {
 		return (T) this.value;
 	}

@@ -1,10 +1,13 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 期間データ要素.
+ * 企業データ要素.
  *
  * @author K.Okada
- * @version 2018.05.01
+ * @version 2018.05.06
  *
  * @param <T>
  *            ジェネリックス
@@ -12,17 +15,17 @@ package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 public class PeriodDataElement<T> {
 
 	/**
-	 * 企業データマネジャー.
+	 * 企業データ要素のマップ.
 	 */
-	private EnterpriseDataManager eDManager = null;
+	private Map<String, EnterpriseDataElement<T>> eMap = new HashMap<String, EnterpriseDataElement<T>>();
 
 	/**
-	 * 指標データマネジャー.
+	 * 指標データ要素のマップ.
 	 */
-	private IndicatorDataManager iDManager = null;
+	private Map<String, IndicatorDataElement<T>> iMap = new HashMap<String, IndicatorDataElement<T>>();
 
 	/**
-	 * 値.
+	 * データ.
 	 */
 	private Object value = null;
 
@@ -47,7 +50,7 @@ public class PeriodDataElement<T> {
 		}
 
 		if ((null == enterprise) && (null == indicator)) {
-			// 企業データ・指標データが構成済みの場合
+			// 期間データ・指標データが構成済みの場合
 			// 末端処理を実施
 			this.value = val;
 
@@ -57,46 +60,41 @@ public class PeriodDataElement<T> {
 		if (null != enterprise) {
 			// 企業データ木が未処理の場合
 
-			if (null == eDManager) {
-				// 企業データマネジャーが未生成の場合
-				// 企業データマネジャーを生成する
-				eDManager = new EnterpriseDataManager();
-			}
-			// 企業データマネジャーにデータ値を追加する
-			eDManager.addData(null, null, indicator, val);
+			EnterpriseDataElement<T> eElm = new EnterpriseDataElement<T>();
+			eElm.setValue(null, null, indicator, val);
+			eMap.put(period, eElm);
 		}
 
 		if (null != indicator) {
 			// 指標データ木が未処理の場合
 
-			if (null == iDManager) {
-				// 指標データマネジャーが未生成の場合
-				// 指標データマネジャーを生成する
-				iDManager = new IndicatorDataManager();
-			}
-			// 指標データマネジャーにデータ値を追加する
-			iDManager.addData(enterprise, null, null, val);
+			IndicatorDataElement<T> iElm = new IndicatorDataElement<T>();
+			iElm.setValue(null, period, null, val);
+			iMap.put(indicator, iElm);
 		}
 
 		return;
 	}
 
 	/**
-	 * 企業データマネジャーを返す.
+	 * 企業データのマップを返す.
 	 *
-	 * @return 企業データマネジャー
+	 * @return 企業データのマップ
 	 */
-	final EnterpriseDataManager getEnterpriseDataManager() {
-		return this.eDManager;
+	final Map<String, EnterpriseDataElement<T>> getEMap() {
+
+		return (Map<String, EnterpriseDataElement<T>>) this.eMap;
 	}
 
+
 	/**
-	 * 指標データマネジャーを返す.
+	 * 指標データのマップを返す.
 	 *
-	 * @return 指標データマネジャー
+	 * @return 指標データのマップ
 	 */
-	final IndicatorDataManager getIndicatorDataManager() {
-		return this.iDManager;
+	final Map<String, IndicatorDataElement<T>> getIMap() {
+
+		return (Map<String, IndicatorDataElement<T>>) this.iMap;
 	}
 
 	/**
