@@ -120,10 +120,19 @@ public class EPIDataManager<T> {
 		@SuppressWarnings("unchecked")
 		EnterpriseDataElement<T> ede = (EnterpriseDataElement<T>) this.eMap
 				.get(enterprise);
+		if (null == ede) {
+			return null;
+		}
 		Map<String, PeriodDataElement<T>> pm = ede.getPMap();
 		PeriodDataElement<T> pde = pm.get(period);
+		if (null == pde) {
+			return null;
+		}
 		Map<String, IndicatorDataElement<T>> im = pde.getIMap();
 		IndicatorDataElement<T> ide = im.get(indicator);
+		if (null == ide) {
+			return null;
+		}
 		T val = ide.getValue();
 
 		return val;
