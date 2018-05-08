@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
  * XBRLデータの索引生成器.
  *
  * @author K.Okada
- * @version 2018.04.27
+ * @version 2018.05.08
  */
 public final class XBRLDataIndexer {
 
@@ -38,7 +38,7 @@ public final class XBRLDataIndexer {
 	 */
 	public static void main(final String[] arg) {
 
-		System.out.println("Start XBRL Loader ...");
+		System.out.println("Start XBRL Indexer ...");
 
 		XBRLDataIndexer indexer = new XBRLDataIndexer();
 		indexer.index();
@@ -134,23 +134,44 @@ public final class XBRLDataIndexer {
 
 								// EDINETコードを取得する
 								String ediNetCode = handler.getEdiNetCode();
+								if (null == ediNetCode) {
+									ediNetCode = "";
+								} else if (0 == ediNetCode.compareTo("\n")) {
+									ediNetCode = "";
+								}
 
 								// 証券コードを取得する
 								String securityCode = handler.getSecurityCode();
+								if (null == securityCode) {
+									securityCode = "";
+								} else if (0 == securityCode.compareTo("\n")) {
+									securityCode = "";
+								}
 
 								// 企業名を取得する
 								String enterpriseName = handler
 										.getEnterpriseName();
+								if (null == enterpriseName) {
+									enterpriseName = "";
+								} else
+									if (0 == enterpriseName.compareTo("\n")) {
+									enterpriseName = "";
+								}
 
 								// 会計期間終了日を取得する
 								String date = handler
 										.getCurrentFiscalYearEndDate();
+								if (null == date) {
+									date = "";
+								} else if (0 == date.compareTo("\n")) {
+									date = "";
+								}
 
-								this.bw.write(ediNetCode + ",");
-								this.bw.write(securityCode + ",");
-								this.bw.write(date + ",");
-								this.bw.write(enterpriseName + ",");
-								this.bw.write(f.getParent());
+								String str = ediNetCode + "," + securityCode
+										+ "," + date + "," + enterpriseName
+										+ "," + f.getParent();
+
+								this.bw.write(str);
 								this.bw.newLine();
 
 								System.out.println(date + "\t" + enterpriseName

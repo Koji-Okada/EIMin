@@ -7,7 +7,7 @@ import java.util.Map;
  * 企業-期間-指標マネジャー.
  *
  * @author K.Okada
- * @version 2018.05.06
+ * @version 2018.05.08
  *
  * @param <T>
  *            ジェネリックス
@@ -41,7 +41,7 @@ public class EPIDataManager<T> {
 	 * @param value
 	 *            データ値
 	 */
-	final void addData(final String enterprise, final String period,
+	public final void addData(final String enterprise, final String period,
 			final String indicator, final Object value) {
 
 		// 企業データ木に追加処理を行う --------
@@ -91,15 +91,15 @@ public class EPIDataManager<T> {
 		return;
 	}
 
-//	/**
-//	 * 企業データのマップを返す.
-//	 *
-//	 * @return 企業データのマップ
-//	 */
-//	final Map<String, EnterpriseDataElement<T>> getEMap() {
-//
-//		return (Map<String, EnterpriseDataElement<T>>) this.eMap;
-//	}
+	// /**
+	// * 企業データのマップを返す.
+	// *
+	// * @return 企業データのマップ
+	// */
+	// final Map<String, EnterpriseDataElement<T>> getEMap() {
+	//
+	// return (Map<String, EnterpriseDataElement<T>>) this.eMap;
+	// }
 
 	/**
 	 * データ値を返す.
