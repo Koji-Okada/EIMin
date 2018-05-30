@@ -33,8 +33,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.nd4j</groupId>
-			<artifactId>nd4j-x86</artifactId>
-			<version>0.4-rc3.8</version>
+			<artifactId>nd4j-native</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.deeplearning4j</groupId>

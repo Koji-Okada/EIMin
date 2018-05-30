@@ -40,8 +40,9 @@ public class MultiDocMorphologicalAnalyzer {
 
 		MultiDocMorphologicalAnalyzer mdpa = new MultiDocMorphologicalAnalyzer();
 
-		mdpa.setMode(PartOfSpeech.NORN | PartOfSpeech.VERB | PartOfSpeech.ADJ
-				| PartOfSpeech.ADV);
+		mdpa.setMode(-1);
+//		mdpa.setMode(PartOfSpeech.NORN | PartOfSpeech.VERB | PartOfSpeech.ADJ
+//				| PartOfSpeech.ADV);
 		mdpa.analyze();
 
 		System.out.println("... Successfully Complete.");

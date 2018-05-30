@@ -113,9 +113,10 @@ public class TikaTextExtractor {
 		}
 
 		// 文字列を整形する
-		TextReader tr = new TextReader();
+		TextFormatter tr = new TextFormatter();
 		String str1 = tr.removeWhiteSpace(orgStr); // 改行・空白文字を削除
-		String str = tr.dividSentence(str1); // 文単位に分割
+		String str2 = tr.dividSentence(str1); // 文単位に分割
+		String str = tr.eliminateEnglishSentece(str2); // 英文部分を削除
 
 		return str;
 	}
