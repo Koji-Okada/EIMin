@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import jp.ac.tcu.okadak.ei_mining.text_mining.textExtractor.TextReader;
+import jp.ac.tcu.okadak.ei_mining.text_mining.textExtractor.TextFormatter;
 
 /**
  *
@@ -92,7 +92,7 @@ public class MultiDocAnalyzer {
 			System.out.println("====" + fName);
 
 			// テキストファイル全文を読込む
-			TextReader tr = new TextReader();
+			TextFormatter tr = new TextFormatter();
 			String str = tr.readAll(targetPath + fName);
 			System.out.print("  Loading done");
 
