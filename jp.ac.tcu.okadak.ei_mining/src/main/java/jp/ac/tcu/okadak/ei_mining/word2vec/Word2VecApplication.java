@@ -95,27 +95,27 @@ public class Word2VecApplication {
 		word = "プロジェクト";
 		ranking = 20;
 		similarTop = vec.wordsNearest(word, ranking);
-		System.out.println(String.format("[%s] ≒ [%s]", word, similarTop));
+		System.out.println(String.format("[%s] ≒ %s", word, similarTop));
 
 		word = "マネジャー";
 		ranking = 20;
 		similarTop = vec.wordsNearest(word, ranking);
-		System.out.println(String.format("[%s] ≒ [%s]", word, similarTop));
+		System.out.println(String.format("[%s] ≒ %s", word, similarTop));
 
 		word = "マネージャ";
 		ranking = 20;
 		similarTop = vec.wordsNearest(word, ranking);
-		System.out.println(String.format("[%s] ≒ [%s]", word, similarTop));
+		System.out.println(String.format("[%s] ≒ %s", word, similarTop));
 
 		word = "マネージャー";
 		ranking = 20;
 		similarTop = vec.wordsNearest(word, ranking);
-		System.out.println(String.format("[%s] ≒ [%s]", word, similarTop));
+		System.out.println(String.format("[%s] ≒ %s", word, similarTop));
 
 		word = "シミュレーション";
 		ranking = 20;
 		similarTop = vec.wordsNearest(word, ranking);
-		System.out.println(String.format("[%s] ≒ [%s]", word, similarTop));
+		System.out.println(String.format("[%s] ≒ %s", word, similarTop));
 
 		System.out.println();
 

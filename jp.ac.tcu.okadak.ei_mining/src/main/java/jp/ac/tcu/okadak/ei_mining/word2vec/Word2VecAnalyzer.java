@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
-import org.deeplearning4j.models.word2vec.Word2Vec.Builder;
 import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
@@ -26,7 +25,7 @@ public class Word2VecAnalyzer {
 	/**
 	 * 初期化する.
 	 *
-	 * @return	Word2Vec本体
+	 * @return Word2Vec本体
 	 */
 	final Word2Vec initialize() {
 		System.out.println("  ... Initializing");
@@ -41,7 +40,7 @@ public class Word2VecAnalyzer {
 		int negaSamples = 10; // ネガティブサンプリング数
 		TokenizerFactory tokenizer = new DefaultTokenizerFactory();
 
-		Builder builder = new Word2Vec.Builder();
+		Word2Vec.Builder builder = new Word2Vec.Builder();
 		builder.batchSize(batchSize);
 		builder.minWordFrequency(minFrequency);
 		builder.useAdaGrad(false);
@@ -51,6 +50,9 @@ public class Word2VecAnalyzer {
 		builder.minLearningRate(minLearningRate);
 		builder.negativeSample(negaSamples);
 		builder.tokenizerFactory(tokenizer);
+
+		// 語彙リストを別途作成するため、モデルをリセットしない設定にする
+		builder.resetModel(false);
 
 		this.vec = builder.build();
 
@@ -62,14 +64,19 @@ public class Word2VecAnalyzer {
 	/**
 	 * 指定された文書を分析する.
 	 *
-	 * @param file	分析対象とする文書
-	 * @return	Word2Vec本体
+	 * @param file
+	 *            分析対象とする文書
+	 * @return Word2Vec本体
 	 */
 	final Word2Vec analyze(final File file) {
 
 		// 分析する文書を登録する
 		SentenceIterator iterator = new LineSentenceIterator(file);
 		this.vec.setSentenceIterator(iterator);
+
+		// これで良いのか？
+		System.out.println("  ... Building Vocabulary");
+		this.vec.buildVocab();
 
 		System.out.println("  ... Learning");
 
@@ -80,11 +87,11 @@ public class Word2VecAnalyzer {
 		return this.vec;
 	}
 
-
 	/**
 	 * 指定されたファイルに分析結果を保存する.
 	 *
-	 * @param file	出力ファイル
+	 * @param file
+	 *            出力ファイル
 	 */
 	final void save(final File file) {
 		System.out.println("Save Model...");
