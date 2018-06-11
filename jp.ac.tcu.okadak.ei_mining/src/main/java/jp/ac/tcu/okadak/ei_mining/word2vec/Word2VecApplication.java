@@ -17,7 +17,7 @@ import org.deeplearning4j.models.word2vec.Word2Vec;
  * Word2Vecの応用 (テスト的クラス).
  *
  * @author K.Okada
- * @version 2018.05.30
+ * @version 2018.06.11
  */
 public class Word2VecApplication {
 
@@ -53,6 +53,7 @@ public class Word2VecApplication {
 			BufferedReader br = new BufferedReader(fr);
 
 			br.readLine();
+			br.readLine();
 			targetPath = br.readLine();
 
 			br.close();
@@ -86,6 +87,36 @@ public class Word2VecApplication {
 				String.format("[%s] - [%s] = %f", word1, word2, similarity));
 
 		System.out.println();
+
+
+//		ユークリッド距離も算出してみる
+//
+//		double[] v0 = vec.getWordVector("シミュレーション");
+//
+//		Collection<String> wds = vec.getVocab().words();
+//		for (String w:wds) {
+//			double sum1 = 0.0e0d;
+//			double sum2 = 0.0e0d;
+//			double sumV0 = 0.0e0d;
+//			double sumV = 0.0e0d;
+//
+//
+//			double[] v = vec.getWordVector(w);
+//			for (int i = 0; i < 200 ; i++) {
+//				sum1 += ((v[i]-v0[i]) * (v[i]-v0[i]));
+//				sum2 += (v[i] * v0[i]);
+//				sumV0 += (v0[i] * v0[i]);
+//				sumV += (v[i] * v[i]);
+//			}
+//			System.out.println(w + "\t" + sum1 + "\t" + sum2/Math.sqrt(sumV0*sumV));
+//		}
+
+
+//		double[] v = vec.getWordVector("プロジェクト");
+//		for (double val:v) {
+//			System.out.println("  ... " + val);
+//		}
+
 
 		// 類似ワード
 		String word;
@@ -152,6 +183,12 @@ public class Word2VecApplication {
 				String.join(" + ", positiveList),
 				String.join(" + ", negativeList), nearestList));
 
+
 		return;
 	}
+
+
+
+
+
 }

@@ -2,6 +2,8 @@ package jp.ac.tcu.okadak.ei_mining.text_mining.morphological;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
 
@@ -9,7 +11,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.26
+ * @version 2018.06.04
  */
 public class IPADicMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 
@@ -63,8 +65,13 @@ public class IPADicMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 			if (PartOfSpeech.NORN == (mode & PartOfSpeech.NORN)) {
 				// 名詞を出力
 				if (token.getPartOfSpeechLevel1().equals("名詞")) {
-					builder.append(token.getBaseForm());
-					builder.append(" ");
+
+					String str = token.getBaseForm();
+					if ((0 != str.compareTo("*"))
+							&& (!StringUtils.isNumeric(str))) {
+						builder.append(str);
+						builder.append(" ");
+					}
 				}
 			}
 			if (PartOfSpeech.VERB == (mode & PartOfSpeech.VERB)) {

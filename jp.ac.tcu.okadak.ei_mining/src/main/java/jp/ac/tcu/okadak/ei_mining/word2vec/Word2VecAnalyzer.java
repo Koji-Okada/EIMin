@@ -14,6 +14,7 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
  * Word2Vec解析器.
  *
  * @author
+ * @version 2018.06.01
  */
 public class Word2VecAnalyzer {
 
@@ -21,6 +22,7 @@ public class Word2VecAnalyzer {
 	 * Word2Vec分析結果.
 	 */
 	private Word2Vec vec;
+
 
 	/**
 	 * 初期化する.
@@ -32,8 +34,8 @@ public class Word2VecAnalyzer {
 
 		// モデル作成
 		int batchSize = 1000; // ミニバッチで学習する単語数
-		int iterations = 10; // 反復回数
-		int layerSize = 100; // 次元数
+		int iterations = 100; // 反復回数
+		int layerSize = 200; // 次元数
 		int minFrequency = 10; // 単語の最低出現頻度(下回るの学習対象外)
 		double learningRate = 0.025; // 学習率
 		double minLearningRate = 1.0e-3d; // 学習率の最小値
@@ -62,13 +64,9 @@ public class Word2VecAnalyzer {
 	}
 
 	/**
-	 * 指定された文書を分析する.
-	 *
-	 * @param file
-	 *            分析対象とする文書
-	 * @return Word2Vec本体
+	 * 語彙を作成する.
 	 */
-	final Word2Vec analyze(final File file) {
+	final void setVocabulary(final File file) {
 
 		// 分析する文書を登録する
 		SentenceIterator iterator = new LineSentenceIterator(file);
@@ -77,6 +75,19 @@ public class Word2VecAnalyzer {
 		// これで良いのか？
 		System.out.println("  ... Building Vocabulary");
 		this.vec.buildVocab();
+
+		return;
+	}
+
+
+	/**
+	 * 指定された文書を分析する.
+	 *
+	 * @param file
+	 *            分析対象とする文書
+	 * @return Word2Vec本体
+	 */
+	final Word2Vec analyze(final File file) {
 
 		System.out.println("  ... Learning");
 

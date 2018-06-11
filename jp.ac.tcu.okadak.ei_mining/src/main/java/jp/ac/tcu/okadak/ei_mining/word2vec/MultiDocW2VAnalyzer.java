@@ -10,7 +10,7 @@ import java.io.IOException;
  * 複数文書の Word2Vec分析器.
  *
  * @author K.Okada
- * @version 2018.05.30
+ * @version 2018.06.01
  */
 public class MultiDocW2VAnalyzer {
 
@@ -38,6 +38,7 @@ public class MultiDocW2VAnalyzer {
 	private void analyze() {
 
 		String targetPath;
+		String keywordsPath;
 		String outputPath;
 
 		// 設定ファイルから入出力パスを取得する
@@ -47,6 +48,7 @@ public class MultiDocW2VAnalyzer {
 			BufferedReader br = new BufferedReader(fr);
 
 			targetPath = br.readLine();
+			keywordsPath = br.readLine();
 			outputPath = br.readLine();
 
 			br.close();
@@ -59,6 +61,11 @@ public class MultiDocW2VAnalyzer {
 		// Word2Vec分析器を生成する
 		Word2VecAnalyzer w2v = new Word2VecAnalyzer();
 		w2v.initialize();
+
+		// 語彙を設定する
+		File keywordsFile = new File(keywordsPath + "/keywords.txt");
+		w2v.setVocabulary(keywordsFile);
+
 
 		// ファイル名の一覧を取得する
 		File file = new File(targetPath);

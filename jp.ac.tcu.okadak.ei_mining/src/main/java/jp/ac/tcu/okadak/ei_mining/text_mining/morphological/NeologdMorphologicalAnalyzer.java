@@ -3,6 +3,7 @@ package jp.ac.tcu.okadak.ei_mining.text_mining.morphological;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.BaseFormAttribute;
@@ -12,7 +13,7 @@ import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.PartOfSpee
  * NeoLogD を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.26
+ * @version 2018.06.04
  *
  */
 public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
@@ -80,8 +81,12 @@ public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 				if (PartOfSpeech.NORN == (mode & PartOfSpeech.NORN)) {
 					// 名詞を出力
 					if (pa.getPartOfSpeech().contains("名詞-")) {
-						builder.append(ct.toString());
-						builder.append(" ");
+
+						String str = ct.toString();
+						if (!StringUtils.isNumeric(str)) {
+							builder.append(str);
+							builder.append(" ");
+						}
 					}
 				}
 				if (PartOfSpeech.VERB == (mode & PartOfSpeech.VERB)) {
@@ -111,6 +116,7 @@ public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 						builder.append(" ");
 					}
 				}
+
 			}
 			tokenizer.close();
 		} catch (IOException e) {

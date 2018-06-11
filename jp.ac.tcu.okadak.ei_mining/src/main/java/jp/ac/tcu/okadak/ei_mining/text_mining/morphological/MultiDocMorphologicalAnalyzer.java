@@ -9,7 +9,7 @@ import java.io.IOException;
  * 複数文書に対する形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.26
+ * @version 2018.06.26
  */
 public class MultiDocMorphologicalAnalyzer {
 
@@ -40,9 +40,9 @@ public class MultiDocMorphologicalAnalyzer {
 
 		MultiDocMorphologicalAnalyzer mdpa = new MultiDocMorphologicalAnalyzer();
 
-		mdpa.setMode(-1);
-//		mdpa.setMode(PartOfSpeech.NORN | PartOfSpeech.VERB | PartOfSpeech.ADJ
-//				| PartOfSpeech.ADV);
+//		mdpa.setMode(-1);
+		mdpa.setMode(PartOfSpeech.NORN | PartOfSpeech.VERB | PartOfSpeech.ADJ
+				| PartOfSpeech.ADV);
 		mdpa.analyze();
 
 		System.out.println("... Successfully Complete.");
