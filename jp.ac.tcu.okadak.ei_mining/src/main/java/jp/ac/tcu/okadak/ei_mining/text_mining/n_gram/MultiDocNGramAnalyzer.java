@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.textExtractor.TextFormatter;
  * @author K.Okada
  * @version 2018.04.20
  */
-public class MultiDocAnalyzer {
+public class MultiDocNGramAnalyzer {
 
 	/**
 	 * N-Gram の最大値.
@@ -44,8 +44,8 @@ public class MultiDocAnalyzer {
 
 		System.out.println("Start MultiDocAnalyzer ...");
 
-		MultiDocAnalyzer mda = new MultiDocAnalyzer();
-		mda.setMaxN(24);
+		MultiDocNGramAnalyzer mda = new MultiDocNGramAnalyzer();
+		mda.setMaxN(32);
 		mda.analyzeNGram();
 
 		System.out.println("... Successfully Complete.");
@@ -93,8 +93,11 @@ public class MultiDocAnalyzer {
 
 			// テキストファイル全文を読込む
 			TextFormatter tr = new TextFormatter();
-			String str = tr.readAll(targetPath + fName);
+			String str0 = tr.readAll(targetPath + fName);
 			System.out.print("  Loading done");
+
+			// 改行の削除
+			String str = str0.replaceAll("\r\n", "");
 
 			// System.out.println("DocLen=" + targetStr.length());
 
