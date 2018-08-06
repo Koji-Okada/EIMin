@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import jp.ac.tcu.okadak.ei_mining.text_mining.textExtractor.TextFormatter;
+import jp.ac.tcu.okadak.ei_mining.text_mining.text_extractor.TextFormatter;
 
 /**
  *
