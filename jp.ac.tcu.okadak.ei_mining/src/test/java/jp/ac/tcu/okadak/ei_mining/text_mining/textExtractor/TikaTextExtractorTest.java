@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import jp.ac.tcu.okadak.ei_mining.text_mining.text_extractor.TextFormatter;
+
 public class TikaTextExtractorTest {
 
 	@Test
