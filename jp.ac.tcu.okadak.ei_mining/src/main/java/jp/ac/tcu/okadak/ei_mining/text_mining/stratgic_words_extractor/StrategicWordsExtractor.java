@@ -8,6 +8,7 @@ import java.util.List;
 
 import jp.ac.tcu.okadak.ei_mining.data_loader.CSVTokenizer;
 import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
+import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
 
 /**
  * 戦略ワード抽出器.
@@ -47,7 +48,7 @@ public final class StrategicWordsExtractor {
 	}
 
 	/**
-	 *
+	 * 戦略ワードを抽出する.
 	 */
 	private void extract() {
 
@@ -69,14 +70,14 @@ public final class StrategicWordsExtractor {
 			return;
 		}
 
-		loadWords(targetPath); // 候補ワードを読込む
+		// 候補ワードを読込む
+		loadWords(targetPath);
 
+		// それぞれの要素数を求める
 		List<String> enterprises = epiDM.getEnterprises();
 		int numEnterprises = enterprises.size();
-
 		List<String> periods = epiDM.listPeriod();
 		int numPeriods = periods.size();
-
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
 
@@ -97,20 +98,178 @@ public final class StrategicWordsExtractor {
 
 					String nameE = enterprises.get(e);
 					String nameP = periods.get(p);
-
-					Double d = epiDM.getValue(nameE, nameP, ind);
-
-					data[e][p] = d;
-
-					// ここから、パターン毎に抽出する
-
-
-					System.out.println(nameE + " : " + nameP + " : " + ind + " = " + data[e][p]);
+					data[e][p] = epiDM.getValue(nameE, nameP, ind);
 				}
+			}
+
+			// ここから、パターン毎に抽出する
+
+			// 特定企業型戦略ワードを抽出する
+			specificEnterprise(data, enterprises, periods, ind);
+
+			// 特定期間型戦略ワードを抽出する
+			// specificPeriod(data, enterprises, periods, ind);
+
+		}
+	}
+
+	// =================================================================
+	/**
+	 * 特定企業型戦略ワードを抽出する.
+	 *
+	 * @param data
+	 *            値[企業][期間].矩形を想定.
+	 * @param enterprises
+	 *            企業のリスト
+	 * @param periods
+	 *            期間のリスト
+	 * @param ind
+	 *            指標
+	 */
+	private void specificEnterprise(final Double[][] data,
+			final List<String> enterprises, final List<String> periods,
+			final String ind) {
+
+		final double threshold = 0.999999e0d; // 閾値
+		// final double threshold = 0.95e0d; // 閾値
+
+		int numE = enterprises.size();
+		int numP = periods.size();
+
+		int[][] clsMask = new int[numE][numP];
+		InterGroupsAnalyzer iga = new InterGroupsAnalyzer(true);
+
+		for (int se = 0; se < numE; se++) {
+			// 特定企業を選択する
+
+			// 特定企業の場合：群1、特定企業でない場合：群2 に設定する.
+			for (int e = 0; e < numE; e++) {
+				for (int p = 0; p < numP; p++) {
+					if (e == se) {
+						// 群1の条件を満たす場合
+						clsMask[e][p] = 1;
+					} else {
+						clsMask[e][p] = 2;
+					}
+				}
+			}
+
+			// 群1と群2の違いを分散分析する
+			double v = iga.compareGropus(data, clsMask);
+			if (threshold <= v) {
+				// 有意差がある場合
+
+				// 出力形式に纏める.
+				double d;
+				String st = "特定企業型" + "\t";
+				st = st + ind + "\t" + v + "\t" + enterprises.get(se) + "\t"
+						+ periods.get(0) + "\t" + periods.get(numP - 1) + "\t";
+				for (int p = 0; p < numP; p++) {
+					if (null == data[se][p]) {
+						d = 0.0e0d;
+					} else {
+						d = data[se][p];
+					}
+					st = st + d + "\t";
+				}
+
+				System.out.println(st);
 			}
 		}
 	}
 
+	// =================================================================
+	/**
+	 * 特定期間型戦略ワードを抽出する.
+	 *
+	 * 窓の幅に制限を加えることで抽出精度を高めている.
+	 *
+	 * @param data
+	 *            値[企業][期間].矩形を想定.
+	 * @param enterprises
+	 *            企業のリスト
+	 * @param periods
+	 *            期間のリスト
+	 * @param ind
+	 *            指標
+	 */
+	private void specificPeriod(final Double[][] data,
+			final List<String> enterprises, final List<String> periods,
+			final String ind) {
+
+		final int minWindowSize = 1; // 窓の最小幅
+		final int maxWindowSize = 4; // 窓の最大幅
+		final double threshold = 0.999999e0d; // 閾値
+		// final double threshold = 0.95e0d; // 閾値
+
+		int numE = enterprises.size();
+		int numP = periods.size();
+
+		int[][] clsMask = new int[numE][numP];
+		InterGroupsAnalyzer iga = new InterGroupsAnalyzer(true);
+
+		double vMax = 0.0e0d;
+		int wsMax = 0;
+		int weMax = numP - 1;
+		boolean found = false;
+
+		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
+			// 期間窓の幅を選択する
+			for (int ws = 1; ws < numP - wSize - 1; ws++) {
+				// 期間窓の終点を選択する
+				int we = ws + wSize;
+
+				// System.out.println(ws + ":" + we);
+
+				// 特定企業の場合：群1、特定企業でない場合：群2 に設定する.
+				for (int e = 0; e < numE; e++) {
+					for (int p = 0; p < numP; p++) {
+						if ((ws <= p) && (p <= we)) {
+							// 群1の条件を満たす場合
+							clsMask[e][p] = 1;
+						} else {
+							clsMask[e][p] = 2;
+						}
+					}
+				}
+
+				// 群1と群2の違いを分散分析する
+				double v = iga.compareGropus(data, clsMask);
+				if (threshold <= v) {
+					// 有意差がある場合
+					found = true;
+
+					if (v >= vMax) {
+						// if ((we - ws) < (weMax - wsMax)) {
+						vMax = v;
+						weMax = we;
+						wsMax = ws;
+					}
+				}
+			}
+		}
+
+		// 出力形式に纏める.
+		if (found) {
+			for (int e = 0; e < numE; e++) {
+				double d;
+				String st = "特定期間型" + "\t";
+				st = st + ind + "\t" + vMax + "\t" + enterprises.get(e) + "\t"
+						+ periods.get(wsMax) + "\t" + periods.get(weMax) + "\t";
+				for (int p = 0; p < numP; p++) {
+					if (null == data[e][p]) {
+						d = 0.0e0d;
+					} else {
+						d = data[e][p];
+					}
+					st = st + d + "\t";
+				}
+				System.out.println(st);
+			}
+		}
+	}
+
+	// =================================================================
 	/**
 	 * 候補ワードを読込む.
 	 *
