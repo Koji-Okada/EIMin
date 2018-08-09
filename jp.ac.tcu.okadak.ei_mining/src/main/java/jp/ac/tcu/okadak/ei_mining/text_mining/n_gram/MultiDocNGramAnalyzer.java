@@ -63,7 +63,7 @@ public class MultiDocNGramAnalyzer {
 
 		// 設定ファイルから入出力パスを取得する
 		try {
-			File confFile = new File("conf/MultiDocAnalyzer.txt");
+			File confFile = new File("conf/MultiDocNGramAnalyzer.txt");
 			FileReader fr = new FileReader(confFile);
 			BufferedReader br = new BufferedReader(fr);
 
