@@ -1,13 +1,16 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 企業-期間-指標マネジャー.
  *
  * @author K.Okada
- * @version 2018.05.08
+ * @version 2018.08.07
  *
  * @param <T>
  *            ジェネリックス
@@ -91,15 +94,72 @@ public class EPIDataManager<T> {
 		return;
 	}
 
-	// /**
-	// * 企業データのマップを返す.
-	// *
-	// * @return 企業データのマップ
-	// */
-	// final Map<String, EnterpriseDataElement<T>> getEMap() {
-	//
-	// return (Map<String, EnterpriseDataElement<T>>) this.eMap;
-	// }
+	/**
+	 * 登録されている企業名を返す.
+	 *
+	 * @return	登録されている企業名のリスト
+	 */
+	public final List<String> getEnterprises() {
+
+		List<String> list = new ArrayList<String>(eMap.keySet());
+		return list;
+	}
+
+	/**
+	 * 登録されている期間名を返す.
+	 *
+	 * @return	登録されている期間名の集合
+	 */
+	public final Set<String> getPeriods() {
+		return pMap.keySet();
+	}
+
+	/**
+	 * 登録されている期間名のリストを返す.
+	 * (期間の欠損も補完の上で、昇順ソーティング)
+	 *
+	 * @return	登録されている期間名のリスト
+	 */
+	public final List<String> listPeriod() {
+
+		final int initMAX = 0;
+		final int initMIN = 10000;
+
+		List<String> pList = new ArrayList<String>();
+		int max = initMAX;
+		int min = initMIN;
+
+		Set<String> periods = pMap.keySet();
+
+		// 期間の最小値と最大値を求める
+		for (String p:periods) {
+			int i = Integer.parseInt(p);
+			if (max < i) {
+				max = i;
+			}
+			if (i < min) {
+				min = i;
+			}
+		}
+
+		// 最小値から最大値まで昇順にリスト化する
+		for (int i = min; i <= max; i++) {
+			pList.add(Integer.toString(i));
+		}
+
+		return pList;
+	}
+
+	/**
+	 * 登録されている指標名を返す.
+	 *
+	 * @return	登録されている指標名のリスト
+	 */
+	public final List<String> getIndicators() {
+
+		List<String> list = new ArrayList<String>(iMap.keySet());
+		return list;
+	}
 
 	/**
 	 * データ値を返す.
@@ -114,7 +174,8 @@ public class EPIDataManager<T> {
 	 *            ジェネリックス
 	 * @return 設定されたデータ値
 	 */
-	final <T> T getValue(final String enterprise, final String period,
+	@SuppressWarnings("hiding")
+	public final <T> T getValue(final String enterprise, final String period,
 			final String indicator) {
 
 		@SuppressWarnings("unchecked")
@@ -123,6 +184,7 @@ public class EPIDataManager<T> {
 		if (null == ede) {
 			return null;
 		}
+
 		Map<String, PeriodDataElement<T>> pm = ede.getPMap();
 		PeriodDataElement<T> pde = pm.get(period);
 		if (null == pde) {

@@ -7,7 +7,7 @@ import java.util.Map;
  * 企業データ要素.
  *
  * @author K.Okada
- * @version 2018.05.06
+ * @version 2018.08.07
  *
  * @param <T>
  *            ジェネリックス
@@ -52,6 +52,9 @@ public class PeriodDataElement<T> {
 		if ((null == enterprise) && (null == indicator)) {
 			// 期間データ・指標データが構成済みの場合
 			// 末端処理を実施
+			if (null != this.value) {
+				System.out.println("Data Override!");
+			}
 			this.value = val;
 
 			return;
@@ -60,16 +63,24 @@ public class PeriodDataElement<T> {
 		if (null != enterprise) {
 			// 企業データ木が未処理の場合
 
-			EnterpriseDataElement<T> eElm = new EnterpriseDataElement<T>();
+			EnterpriseDataElement<T> eElm;
+			eElm = eMap.get(enterprise);
+			if (null == eElm) {
+				eElm = new EnterpriseDataElement<T>();
+			}
 			eElm.setValue(null, null, indicator, val);
-			eMap.put(period, eElm);
+			eMap.put(enterprise, eElm);
 		}
 
 		if (null != indicator) {
 			// 指標データ木が未処理の場合
 
-			IndicatorDataElement<T> iElm = new IndicatorDataElement<T>();
-			iElm.setValue(null, period, null, val);
+			IndicatorDataElement<T> iElm;
+			iElm = iMap.get(indicator);
+			if (null == iElm) {
+				iElm = new IndicatorDataElement<T>();
+			}
+			iElm.setValue(enterprise, null, null, val);
 			iMap.put(indicator, iElm);
 		}
 
