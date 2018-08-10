@@ -1,8 +1,10 @@
 package jp.ac.tcu.okadak.ei_mining.text_mining.stratgic_words_extractor;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2018.08.09
+ * @version 2018.08.10
  */
 public final class StrategicWordsExtractor {
 
@@ -84,33 +86,59 @@ public final class StrategicWordsExtractor {
 		System.out.println(
 				numEnterprises + " : " + numPeriods + " : " + numIndicators);
 
-		for (String ind : indicators) {
-			// 全てのワードに対して
+		try {
+			// 出力先を用意する
+			File outFile = new File(outputPath + "/" + "strategicWords.txt");
+			FileWriter fw = new FileWriter(outFile);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String res;
 
-			// 時系列財務データ分析との互換性の観点から、
-			// 欠損値も扱えるようにラッパーを用いている.
-			// 後処理の容易性から時系列軸を基本軸としている.
-			Double[][] data = new Double[numEnterprises][numPeriods];
+			for (String ind : indicators) {
+				// 全てのワードに対して
 
-			// データを設定する.
-			for (int e = 0; e < numEnterprises; e++) {
-				for (int p = 0; p < numPeriods; p++) {
+				// 時系列財務データ分析との互換性の観点から、
+				// 欠損値も扱えるようにラッパーを用いている.
+				// 後処理の容易性から時系列軸を基本軸としている.
+				Double[][] data = new Double[numEnterprises][numPeriods];
 
-					String nameE = enterprises.get(e);
-					String nameP = periods.get(p);
-					data[e][p] = epiDM.getValue(nameE, nameP, ind);
+				// データを設定する.
+				for (int e = 0; e < numEnterprises; e++) {
+					for (int p = 0; p < numPeriods; p++) {
+
+						String nameE = enterprises.get(e);
+						String nameP = periods.get(p);
+						data[e][p] = epiDM.getValue(nameE, nameP, ind);
+					}
+				}
+
+				// == ここから、戦略ワード出現パターン毎に抽出する
+
+				// 特定企業型戦略ワードを抽出する
+
+				res = specificEnterprise(data, enterprises, periods, ind);
+				if ("" != res) {
+					bw.write(res);
+				}
+
+				// 特定期間型戦略ワードを抽出する
+				res = specificPeriod(data, enterprises, periods, ind);
+				if ("" != res) {
+					bw.write(res);
+				}
+
+				// 業界動向型戦略ワードを抽出する
+				res = industrialTrend(data, enterprises, periods, ind);
+				if ("" != res) {
+					bw.write(res);
 				}
 			}
 
-			// ここから、パターン毎に抽出する
+			bw.close();
 
-			// 特定企業型戦略ワードを抽出する
-			specificEnterprise(data, enterprises, periods, ind);
-
-			// 特定期間型戦略ワードを抽出する
-			// specificPeriod(data, enterprises, periods, ind);
-
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return;
 	}
 
 	// =================================================================
@@ -125,8 +153,9 @@ public final class StrategicWordsExtractor {
 	 *            期間のリスト
 	 * @param ind
 	 *            指標
+	 * @return 抽出結果
 	 */
-	private void specificEnterprise(final Double[][] data,
+	private String specificEnterprise(final Double[][] data,
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
@@ -138,6 +167,8 @@ public final class StrategicWordsExtractor {
 
 		int[][] clsMask = new int[numE][numP];
 		InterGroupsAnalyzer iga = new InterGroupsAnalyzer(true);
+
+		String res = "";
 
 		for (int se = 0; se < numE; se++) {
 			// 特定企業を選択する
@@ -161,21 +192,25 @@ public final class StrategicWordsExtractor {
 
 				// 出力形式に纏める.
 				double d;
-				String st = "特定企業型" + "\t";
-				st = st + ind + "\t" + v + "\t" + enterprises.get(se) + "\t"
-						+ periods.get(0) + "\t" + periods.get(numP - 1) + "\t";
+				String st = "特定企業型" + ",";
+				st = st + ind + ",";
+				st = st + v + ",";
+				st = st + enterprises.get(se) + ",";
+				st = st + periods.get(0) + ",";
+				st = st + periods.get(numP - 1) + ",";
 				for (int p = 0; p < numP; p++) {
 					if (null == data[se][p]) {
 						d = 0.0e0d;
 					} else {
 						d = data[se][p];
 					}
-					st = st + d + "\t";
+					st = st + d + ",";
 				}
-
 				System.out.println(st);
+				res = res + st + "\r\n";
 			}
 		}
+		return res;
 	}
 
 	// =================================================================
@@ -192,8 +227,9 @@ public final class StrategicWordsExtractor {
 	 *            期間のリスト
 	 * @param ind
 	 *            指標
+	 * @return 抽出結果
 	 */
-	private void specificPeriod(final Double[][] data,
+	private String specificPeriod(final Double[][] data,
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
@@ -212,6 +248,8 @@ public final class StrategicWordsExtractor {
 		int wsMax = 0;
 		int weMax = numP - 1;
 		boolean found = false;
+
+		String res = "";
 
 		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
 			// 期間窓の幅を選択する
@@ -249,24 +287,129 @@ public final class StrategicWordsExtractor {
 			}
 		}
 
+		String st = null;
 		// 出力形式に纏める.
 		if (found) {
 			for (int e = 0; e < numE; e++) {
 				double d;
-				String st = "特定期間型" + "\t";
-				st = st + ind + "\t" + vMax + "\t" + enterprises.get(e) + "\t"
-						+ periods.get(wsMax) + "\t" + periods.get(weMax) + "\t";
+				st = "特定期間型" + ",";
+				st = st + ind + ",";
+				st = st + vMax + ",";
+				st = st + enterprises.get(e) + ",";
+				st = st + periods.get(wsMax) + ",";
+				st = st + periods.get(weMax) + ",";
 				for (int p = 0; p < numP; p++) {
 					if (null == data[e][p]) {
 						d = 0.0e0d;
 					} else {
 						d = data[e][p];
 					}
-					st = st + d + "\t";
+					st = st + d + ",";
 				}
 				System.out.println(st);
+				res = res + st + "\r\n";
 			}
 		}
+		return res;
+	}
+
+	// =================================================================
+	/**
+	 * 業界動向型戦略ワードを抽出する.
+	 *
+	 * 窓の幅に制限を加えることで抽出精度を高めている.
+	 *
+	 * @param data
+	 *            値[企業][期間].矩形を想定.
+	 * @param enterprises
+	 *            企業のリスト
+	 * @param periods
+	 *            期間のリスト
+	 * @param ind
+	 *            指標
+	 * @return 抽出結果
+	 */
+	private String industrialTrend(final Double[][] data,
+			final List<String> enterprises, final List<String> periods,
+			final String ind) {
+
+		final int minWindowSize = 1; // 窓の最小幅
+		final int maxWindowSize = 4; // 窓の最大幅
+		final double threshold = 0.999999e0d; // 閾値
+		// final double threshold = 0.95e0d; // 閾値
+
+		int numE = enterprises.size();
+		int numP = periods.size();
+
+		int[][] clsMask = new int[numE][numP];
+		InterGroupsAnalyzer iga = new InterGroupsAnalyzer(true);
+
+		double vMax = 0.0e0d;
+		int wsMax = 0;
+		int weMax = numP - 1;
+		boolean found = false;
+
+		String res = "";
+
+		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
+			// 期間窓の幅を選択する
+			for (int ws = 1; ws < numP - wSize - 1; ws++) {
+				// 期間窓の終点を選択する
+				int we = ws + wSize + 1;
+
+				// System.out.println(ws + ":" + we);
+
+				// 特定企業の場合：群1、特定企業でない場合：群2 に設定する.
+				for (int e = 0; e < numE; e++) {
+					for (int p = 0; p < numP; p++) {
+						if (we <= p) {
+							// 群1の条件を満たす場合
+							clsMask[e][p] = 1;
+						} else if (p <= ws) {
+							clsMask[e][p] = 2;
+						}
+					}
+				}
+
+				// 群1と群2の違いを分散分析する
+				double v = iga.compareGropus(data, clsMask);
+				if (threshold <= v) {
+					// 有意差がある場合
+					found = true;
+
+					if (v >= vMax) {
+						// if ((we - ws) < (weMax - wsMax)) {
+						vMax = v;
+						weMax = we;
+						wsMax = ws;
+					}
+				}
+			}
+		}
+
+		// 出力形式に纏める.
+		if (found) {
+			for (int e = 0; e < numE; e++) {
+				double d;
+				String st = "業界動向型" + ",";
+				st = st + ind + ",";
+				st = st + vMax + ",";
+				st = st + enterprises.get(e) + ",";
+				st = st + periods.get(wsMax) + ",";
+				st = st + periods.get(weMax) + ",";
+				for (int p = 0; p < numP; p++) {
+					if (null == data[e][p]) {
+						d = 0.0e0d;
+					} else {
+						d = data[e][p];
+					}
+					st = st + d + ",";
+				}
+				System.out.println(st);
+				res = res + st + "\r\n";
+			}
+		}
+		return res;
 	}
 
 	// =================================================================
@@ -317,7 +460,7 @@ public final class StrategicWordsExtractor {
 	private void load(final File file, final String entName,
 			final String year) {
 
-		System.out.println("[" + entName + "]-[" + year + "]");
+		// System.out.println("[" + entName + "]-[" + year + "]");
 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
