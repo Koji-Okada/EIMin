@@ -33,7 +33,7 @@ public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 		NeologdMorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		// String str = "これは形態素解析の例です。";
-		String str = "大きなクラウドはクラとウドにすぐに分割されません。";
+		String str = "比較的新しい用語であるクラウドはクラとウドにすぐに分割されません。";
 		String res = mla.analyzeSentense(str, 15);
 
 		System.out.println(str);
