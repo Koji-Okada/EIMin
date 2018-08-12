@@ -16,9 +16,6 @@ public class CSVTokenizer extends StringTokenizer {
 	 *
 	 * コンストラクタ.
 	 *
-	 * @author K.Okada
-	 * @version 2016.01.14
-	 *
 	 * @param str			入力文字列
 	 */
 	public CSVTokenizer(final String str) {
@@ -26,11 +23,7 @@ public class CSVTokenizer extends StringTokenizer {
 	}
 
 	/**
-	 *
 	 * 次のトークンを返す.
-	 *
-	 * @author K.Okada
-	 * @version 2016.01.17
 	 *
 	 * @return			分割されたトークン
 	 */
@@ -81,3 +74,4 @@ public class CSVTokenizer extends StringTokenizer {
 		return str;
 	}
 }
+
