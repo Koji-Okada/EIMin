@@ -51,8 +51,10 @@ public class FDBDataLoader {
 
 	/**
 	 * 企業財務データを読込む.
+	 *
+	 * @return EPIデータマネジャー
 	 */
-	public void load() {
+	public EPIDataManager<Double> load() {
 
 		String targetFile;
 
@@ -99,7 +101,7 @@ public class FDBDataLoader {
 			e.printStackTrace();
 		}
 
-		return;
+		return this.dm;
 	}
 
 	/**
@@ -182,6 +184,9 @@ public class FDBDataLoader {
 				String entID = tokenizer.nextToken();
 				String date = tokenizer.nextToken();
 
+				// ※date の年度への変換が必要
+
+
 				if (targetEnterprises.containsKey(entID)) {
 					// 対象企業の場合
 
@@ -207,10 +212,8 @@ public class FDBDataLoader {
 							System.out.println(entName + ":" + date + ":"
 									+ indicator + ":" + value);
 						}
-
 						i++;
 					}
-
 				}
 			}
 

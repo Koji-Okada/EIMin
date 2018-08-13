@@ -33,14 +33,14 @@ public final class StrategicWordsExtractor {
 	}
 
 	/**
-	 * 戦略ワード候補を抽出する.
+	 * 戦略ワードを抽出する.
 	 *
 	 * @param args
 	 *            ダミー引数
 	 */
 	public static void main(final String[] args) {
 
-		System.out.println("Start extracting strategic words");
+		System.out.println("Start extracting strategic words ...");
 
 		StrategicWordsExtractor swe = new StrategicWordsExtractor();
 		swe.extract();
