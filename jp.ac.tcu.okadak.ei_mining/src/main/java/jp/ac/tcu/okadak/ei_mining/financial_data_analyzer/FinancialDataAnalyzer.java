@@ -13,7 +13,6 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  */
 public class FinancialDataAnalyzer {
 
-
 	/**
 	 * パブリックコンストラクタをオーバーライド.
 	 */
@@ -58,8 +57,10 @@ public class FinancialDataAnalyzer {
 		System.out.println(
 				numEnterprises + " : " + numPeriods + " : " + numIndicators);
 
+		// ====  ※ここからの処理は未実装
+
+
 
 		return;
 	}
-
 }

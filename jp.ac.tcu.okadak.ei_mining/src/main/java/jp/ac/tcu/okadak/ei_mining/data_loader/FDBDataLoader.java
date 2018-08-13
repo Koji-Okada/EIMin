@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.08.12
+ * @version 2018.08.13
  */
 public class FDBDataLoader {
 
@@ -185,7 +185,7 @@ public class FDBDataLoader {
 				String date = tokenizer.nextToken();
 
 				// ※date の年度への変換が必要
-
+				date = period(date);
 
 				if (targetEnterprises.containsKey(entID)) {
 					// 対象企業の場合
@@ -225,5 +225,29 @@ public class FDBDataLoader {
 		}
 
 		return;
+	}
+
+	/**
+	 * 年月を標準的な会計年度に変換する.
+	 *
+	 * @param str	年月
+	 * @return	年度
+	 */
+	private String period(final String str) {
+
+		// 標準会計年度の終わりは 3月
+		final int endOfFinancialYear = 3;
+		String[] s = str.split("-", 2);		// 年月文字列を年と月に分割
+		String sYear = s[0];
+		String sMonth = s[1];
+
+		int year = Integer.parseUnsignedInt(sYear);
+		int month = Integer.parseUnsignedInt(sMonth);
+
+		if (month <= endOfFinancialYear) {
+			year--;
+		}
+
+		return String.valueOf(year);
 	}
 }
