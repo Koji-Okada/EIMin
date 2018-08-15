@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.08.13
+ * @version 2018.08.15
  */
 public class FDBDataLoader {
 
@@ -33,6 +33,22 @@ public class FDBDataLoader {
 	 * 対象企業の一覧.
 	 */
 	private Map<String, String> targetEnterprises = new HashMap<String, String>();
+
+	/**
+	 * 出力先ファイルパス.
+	 *
+	 * (設定ファイルで指定される出力先ファイルパスを保持しておく)
+	 */
+	private String outputPath;
+
+	/**
+	 * 出力先ファイルパスを返す.
+	 *
+	 * @return 出力先ファイルパス
+	 */
+	public String getOutputPath() {
+		return this.outputPath;
+	}
 
 	/**
 	 *
@@ -66,6 +82,8 @@ public class FDBDataLoader {
 
 			// ==== 設定を読込む
 			String settingPath = br.readLine();
+			String targetPath = br.readLine();
+			this.outputPath = br.readLine();
 
 			// 対象データ要素を読込む
 			String dataElementsSettingFile = settingPath
@@ -78,23 +96,22 @@ public class FDBDataLoader {
 			loadSetting(targetEnterprises, enterprisesSettingFile);
 
 			// ==== データを読込む
-			String targetPath = br.readLine();
 
 			// 損益計算書データを読込む
 			targetFile = targetPath + "/連結損益計算書.txt";
 			loadData(targetFile);
 
 			// 貸借対照表(借方)データを読込む
-			// targetFile = targetPath + "/連結貸借対照表1.txt";
-			// loadFile(targetFile);
-			//
+			targetFile = targetPath + "/連結貸借対照表1.txt";
+			loadData(targetFile);
+
 			// 貸借対照表(貸方)データを読込む
-			// targetFile = targetPath + "/連結貸借対照表2.txt";
-			// loadFile(targetFile);
-			//
+			targetFile = targetPath + "/連結貸借対照表2.txt";
+			loadData(targetFile);
+
 			// キャッシュフロー計算書データを読込む
-			// targetFile = targetPath + "/連結キャッシュフロー計算書.txt";
-			// loadFile(targetFile);
+			targetFile = targetPath + "/連結キャッシュフロー計算書.txt";
+			loadData(targetFile);
 
 			br.close();
 		} catch (IOException e) {
@@ -230,14 +247,15 @@ public class FDBDataLoader {
 	/**
 	 * 年月を標準的な会計年度に変換する.
 	 *
-	 * @param str	年月
-	 * @return	年度
+	 * @param str
+	 *            年月
+	 * @return 年度
 	 */
 	private String period(final String str) {
 
 		// 標準会計年度の終わりは 3月
 		final int endOfFinancialYear = 3;
-		String[] s = str.split("-", 2);		// 年月文字列を年と月に分割
+		String[] s = str.split("-", 2); // 年月文字列を年と月に分割
 		String sYear = s[0];
 		String sMonth = s[1];
 

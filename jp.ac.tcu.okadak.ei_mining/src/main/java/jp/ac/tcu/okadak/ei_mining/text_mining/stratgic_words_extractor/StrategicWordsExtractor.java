@@ -132,9 +132,7 @@ public final class StrategicWordsExtractor {
 					bw.write(res);
 				}
 			}
-
 			bw.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -254,7 +252,7 @@ public final class StrategicWordsExtractor {
 		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
 			// 期間窓の幅を選択する
 			for (int ws = 1; ws < numP - wSize - 1; ws++) {
-				// 期間窓の終点を選択する
+				// 期間窓の始点を選択する
 				int we = ws + wSize;
 
 				// System.out.println(ws + ":" + we);
