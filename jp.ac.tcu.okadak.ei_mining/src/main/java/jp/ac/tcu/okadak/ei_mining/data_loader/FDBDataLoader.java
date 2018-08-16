@@ -201,7 +201,7 @@ public class FDBDataLoader {
 				String entID = tokenizer.nextToken();
 				String date = tokenizer.nextToken();
 
-				// ※date の年度への変換が必要
+				// date の年度への変換
 				date = period(date);
 
 				if (targetEnterprises.containsKey(entID)) {

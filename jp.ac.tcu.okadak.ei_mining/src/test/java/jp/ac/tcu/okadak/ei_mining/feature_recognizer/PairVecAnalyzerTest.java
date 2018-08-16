@@ -5,6 +5,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ *
+ * @author K.Okada
+ * @version 2018.08.16
+ */
 public class PairVecAnalyzerTest {
 
 	@Test
@@ -19,7 +24,7 @@ public class PairVecAnalyzerTest {
 		Double[] data1 = {1.0e0d, 3.0e0d, 2.0e0d, 4.0e0d, 5.0e0d};
 		Double[] data2 = {9.0e0d, 8.0e0d, 6.0e0d, 7.0e0d, 5.0e0d};
 
-		cor = pva.cosSimularity(data1, data2, 0, 4);
+		cor = pva.calcCOSSimularity(data1, data2, 0, 4);
 		pValue = pva.getPValue();
 
 		// R上で
@@ -34,9 +39,9 @@ public class PairVecAnalyzerTest {
 
 		Double[] data3 = {1.0e0d, null, 2.0e0d, 4.0e0d, 5.0e0d};
 		Double[] data4 = {9.0e0d, 8.0e0d, 6.0e0d, 7.0e0d, 5.0e0d};
-		cor = pva.cosSimularity(data3, data4, 0, 4);
+		cor = pva.calcCOSSimularity(data3, data4, 0, 4);
 		pValue = pva.getPValue();
-		System.out.println(cor + "\t" + pValue);
+//		System.out.println(cor + "\t" + pValue);
 
 		// R上で
 		// data3 <- c(1.0, 2.0, 4.0, 5.0)
@@ -47,9 +52,9 @@ public class PairVecAnalyzerTest {
 
 		Double[] data5 = {1.0e0d, 3.0e0d, 2.0e0d, 4.0e0d, 5.0e0d};
 		Double[] data6 = {9.0e0d, 8.0e0d, null, 7.0e0d, 5.0e0d};
-		cor = pva.cosSimularity(data5, data6, 0, 4);
+		cor = pva.calcCOSSimularity(data5, data6, 0, 4);
 		pValue = pva.getPValue();
-		System.out.println(cor + "\t" + pValue);
+//		System.out.println(cor + "\t" + pValue);
 
 		// R上で
 		// data5 <- c(1.0, 3.0, 4.0, 5.0)
@@ -61,11 +66,44 @@ public class PairVecAnalyzerTest {
 		// ==== 最小自由度以下の場合
 		Double[] data7 = {1.0e0d, null, 2.0e0d, 4.0e0d, null};
 		Double[] data8 = {9.0e0d, 8.0e0d, null, 7.0e0d, 5.0e0d};
-		cor = pva.cosSimularity(data7, data8, 0, 4);
+		cor = pva.calcCOSSimularity(data7, data8, 0, 4);
 		pValue = pva.getPValue();
-		System.out.println(cor + "\t" + pValue);
+//		System.out.println(cor + "\t" + pValue);
 
 		assertThat(cor, is(nullValue()));
 		assertThat(pValue, is(nullValue()));
+	}
+
+
+	@Test
+	public void testAmpRatio() {
+		final double DELTA = 1e-4;	// Rの表示精度に合わせる
+
+		PairVecAnalyzer pva = new PairVecAnalyzer();
+		Double amp;
+		Double pValue;
+
+		// ====
+		Double[] data1 = {1.0e0d, 3.0e0d, 2.0e0d, 4.0e0d, 5.0e0d};
+		Double[] data2 = {9.0e0d, 8.0e0d, 6.0e0d, 7.0e0d, 0.0e0d};
+
+		amp = pva.calcAmpRatio(data1, data2, 0, 4);
+		pValue = pva.getPValue();
+
+//		System.out.println(amp + "\t" + pValue);
+		// R上で
+		// data1 <- c(1.0, 3.0, 2.0, 4.0, 5.0)
+		// data2 <- c(9.0, 8.0, 6.0, 7.0, 0.0)
+		// var.test(data1, data2)	// 両側検定値
+		assertEquals(amp, 0.2e0d, DELTA);
+		assertEquals(pValue, 0.1481e0d / 2.0e0d, DELTA);
+
+		amp = pva.calcAmpRatio(data2, data1, 0, 4);
+		pValue = pva.getPValue();
+
+		// 基準の入替え
+//		System.out.println(amp + "\t" + pValue);
+		assertEquals(amp, 5.0e0d, DELTA);
+		assertEquals(pValue, 0.1481e0d / 2.0e0d, DELTA);
 	}
 }

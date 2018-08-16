@@ -152,7 +152,7 @@ public final class FinancialDataAnalyzer {
 
 							// COS類似度と p値 を算出する.
 							PairVecAnalyzer pva = new PairVecAnalyzer();
-							Double sim = pva.cosSimularity(data[e], data[i], ws,
+							Double sim = pva.calcCOSSimularity(data[e], data[i], ws,
 									we);
 							Double pValue = pva.getPValue();
 
