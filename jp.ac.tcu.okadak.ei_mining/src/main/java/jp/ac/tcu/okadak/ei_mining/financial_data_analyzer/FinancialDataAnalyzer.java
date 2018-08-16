@@ -14,9 +14,9 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.PairVecAnalyzer;
  * 財務データ分析器.
  *
  * @author K.Okada
- * @version 2018.08.15
+ * @version 2018.08.16
  */
-public class FinancialDataAnalyzer {
+public final class FinancialDataAnalyzer {
 
 	/**
 	 * パブリックコンストラクタをオーバーライド.
@@ -128,7 +128,6 @@ public class FinancialDataAnalyzer {
 		String res = "";
 
 		final int minWindowSize = 3; // 窓の最小幅
-		final int maxWindowSize = 4; // 窓の最大幅
 
 		int numE = enterprises.size();
 		int numP = periods.size();
@@ -152,13 +151,14 @@ public class FinancialDataAnalyzer {
 
 							// COS類似度と p値 を算出する.
 							PairVecAnalyzer pva = new PairVecAnalyzer();
-							Double sim = pva.CosSimularity(data[0], data[1], ws, we);
+							Double sim = pva.cosSimularity(data[0], data[1], ws,
+									we);
 							Double pValue = pva.getPValue();
-//
-//							sum += sim;
-//							if (pValue < minP) {
-//								minP = pValue;
-//							}
+							//
+							// sum += sim;
+							// if (pValue < minP) {
+							// minP = pValue;
+							// }
 
 						}
 					}

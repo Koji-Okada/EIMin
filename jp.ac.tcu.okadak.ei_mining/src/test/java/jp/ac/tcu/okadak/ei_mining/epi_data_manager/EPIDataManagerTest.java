@@ -13,7 +13,7 @@ import org.junit.Test;
 public class EPIDataManagerTest {
 
 	@Test
-	public void test() {
+	public void testAddData() {
 
 		EPIDataManager<Double> dm = new EPIDataManager<Double>();
 
