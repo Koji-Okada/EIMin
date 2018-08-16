@@ -141,33 +141,63 @@ public final class FinancialDataAnalyzer {
 					// 企業を選択する
 
 					double sum = 0.0e0d; // コサイン類似度の合計
-					double minP = 1.0e0d; // p値の最大値
+					double maxP = 0.0e0d; // p値の最大値
+					int c = 0;
 
-					for (int c = 0; c < numE; c++) {
+					for (int i = 0; i < numE; i++) {
 						// 比較企業を選択する
 
-						if (e != c) {
+						if (e != i) {
 							// 2社比較
 
 							// COS類似度と p値 を算出する.
 							PairVecAnalyzer pva = new PairVecAnalyzer();
-							Double sim = pva.cosSimularity(data[0], data[1], ws,
+							Double sim = pva.cosSimularity(data[e], data[i], ws,
 									we);
 							Double pValue = pva.getPValue();
-							//
-							// sum += sim;
-							// if (pValue < minP) {
-							// minP = pValue;
-							// }
 
+							// 特異度算出用の値を求める
+							if (null != sim) {
+								sum += sim;
+								if (pValue > maxP) {
+									maxP = pValue;
+								}
+								c++;
+							}
 						}
 					}
 
 					// 類似度から特異度を算出する
+					double diff = sum / (double) c;
+
+//					System.out.println("diff = " + diff + "\t p =" + maxP);
+
+					String st = "";
+					if ((diff < 0.0e0d) && (maxP < 0.10)) {
+						// 特徴パターンと認められる場合
+
+						st = "波形独自性" + ",";
+						st  = st + ind + ",";
+						st = st + diff + ",";
+						st = st + enterprises.get(e) + ",";
+						st = st + periods.get(ws) + ",";
+						st = st + periods.get(we) + ",";
+
+						double d;
+						for (int p = 0; p < numP; p++) {
+							if (null == data[e][p]) {
+								d = 0.0e0d;
+							} else {
+								d = data[e][p];
+							}
+							st = st + d + ",";
+						}
+						System.out.println(st);
+					}
+					res = res + st;
 				}
 			}
 		}
-
 		return res;
 	}
 }

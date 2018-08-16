@@ -43,6 +43,7 @@ public class PairVecAnalyzer {
 		// System.out.println(s + "->" + e);
 		final int minDegreeOfFreedom = 3; // 最小自由度
 
+		// 有効要素数のカウントと平均値算出処理を行う
 		double sum1 = 0.0e0d;
 		double sum2 = 0.0e0d;
 		int c = 0; // カウンター
@@ -58,6 +59,7 @@ public class PairVecAnalyzer {
 		double avg1 = sum1 / (double)c;
 		double avg2 = sum2 / (double)c;
 
+		// COS類似度(相関係数)を算出する
 		double dst1 = 0.0e0d;
 		double dst2 = 0.0e0d;
 		double prod = 0.0e0d;
@@ -68,7 +70,6 @@ public class PairVecAnalyzer {
 				double d1 = data1[i] - avg1;
 				double d2 = data2[i] - avg2;
 
-
 				dst1 += d1 * d1;
 				dst2 += d2 * d2;
 				prod += d1 * d2;
@@ -76,10 +77,9 @@ public class PairVecAnalyzer {
 		}
 		if (c < minDegreeOfFreedom) {
 			// 最小自由度未満の場合
-			this.pValue = null;
+			this.pValue = null;		// p値もリセットする
 			return null;
 		}
-		System.out.println(dst1 + "\t" + dst2 + "\t" + prod);
 
 		double cor = prod / (Math.sqrt(dst1 * dst2));
 

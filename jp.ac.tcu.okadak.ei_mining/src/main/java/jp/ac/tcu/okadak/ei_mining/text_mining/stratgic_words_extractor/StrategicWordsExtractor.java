@@ -289,13 +289,15 @@ public final class StrategicWordsExtractor {
 		// 出力形式に纏める.
 		if (found) {
 			for (int e = 0; e < numE; e++) {
-				double d;
+
 				st = "特定期間型" + ",";
 				st = st + ind + ",";
 				st = st + vMax + ",";
 				st = st + enterprises.get(e) + ",";
 				st = st + periods.get(wsMax) + ",";
 				st = st + periods.get(weMax) + ",";
+
+				double d;
 				for (int p = 0; p < numP; p++) {
 					if (null == data[e][p]) {
 						d = 0.0e0d;
