@@ -45,7 +45,7 @@ public final class FinancialDataAnalyzer {
 	/**
 	 * 財務データを分析する.
 	 */
-	private void analyze() {
+	void analyze() {
 
 		// 財務データを読込む
 		FDBDataLoader loader = new FDBDataLoader();
@@ -62,8 +62,8 @@ public final class FinancialDataAnalyzer {
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
 
-		System.out.println(
-				numEnterprises + " : " + numPeriods + " : " + numIndicators);
+		System.out.println(numEnterprises + " : " + numPeriods + " : "
+				+ numIndicators);
 
 		try {
 			// 出力先を用意する
@@ -90,12 +90,8 @@ public final class FinancialDataAnalyzer {
 				}
 
 				// == ここから、財務データ時系列特徴パターン毎に抽出する
+				res = specificFeatures(data, enterprises, periods, ind);
 
-				// ※未実装
-
-				// 財務時系列データの波形特異部位を抽出する
-
-				res = specificShape(data, enterprises, periods, ind);
 				if ("" != res) {
 					bw.write(res);
 				}
@@ -109,7 +105,7 @@ public final class FinancialDataAnalyzer {
 	}
 
 	/**
-	 * 財務時系列データの波形特異部を抽出する.
+	 * 財務時系列データの特異部を抽出する.
 	 *
 	 * @param data
 	 *            値[企業][期間].矩形を想定.
@@ -121,7 +117,7 @@ public final class FinancialDataAnalyzer {
 	 *            指標
 	 * @return 抽出結果
 	 */
-	private String specificShape(final Double[][] data,
+	private String specificFeatures(final Double[][] data,
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
@@ -129,7 +125,11 @@ public final class FinancialDataAnalyzer {
 
 		final int minWindowSize = 3; // 窓の最小幅
 
-		int numE = enterprises.size();
+		String resShape = "";
+		String resAmp = "";
+		String resLvl = "";
+
+		//		int numE = enterprises.size();
 		int numP = periods.size();
 
 		for (int ws = 1; ws < numP - minWindowSize; ws++) {
@@ -137,66 +137,111 @@ public final class FinancialDataAnalyzer {
 			for (int we = ws + minWindowSize; we < numP; we++) {
 				// 期間窓の終点を選択する
 
-				for (int e = 0; e < numE; e++) {
-					// 企業を選択する
+				// 財務時系列データの波形特異部位を抽出する
+				resShape = specificShape(data, enterprises, periods, ind, ws,
+						we);
+				res = res + resShape;
 
-					double sum = 0.0e0d; // コサイン類似度の合計
-					double maxP = 0.0e0d; // p値の最大値
-					int c = 0;
+				//				resAmp = specificAmp(data, enterprises, periods, ind, ws, we);
+				res = res + resAmp;
 
-					for (int i = 0; i < numE; i++) {
-						// 比較企業を選択する
+				//				resLvl = specificLvl(data, enterprises, periods, ind, ws, we);
+				res = res + resLvl;
+			}
+		}
+		return res;
+	}
 
-						if (e != i) {
-							// 2社比較
+	/**
+	 * 財務時系列データの波形特異部を抽出する.
+	 *
+	 * @param data
+	 *            値[企業][期間].矩形を想定.
+	 * @param enterprises
+	 *            企業のリスト
+	 * @param periods
+	 *            期間のリスト
+	 * @param ind
+	 *            指標
+	 * @param ws
+	 *            期間窓の始点
+	 * @param we
+	 *            期間窓の終点
+	 * @return 抽出結果
+	 */
+	private String specificShape(final Double[][] data,
+			final List<String> enterprises, final List<String> periods,
+			final String ind, final int ws, final int we) {
 
-							// COS類似度と p値 を算出する.
-							PairVecAnalyzer pva = new PairVecAnalyzer();
-							Double sim = pva.calcCOSSimularity(data[e], data[i], ws,
-									we);
-							Double pValue = pva.getPValue();
+		String res = "";
 
-							// 特異度算出用の値を求める
-							if (null != sim) {
-								sum += sim;
-								if (pValue > maxP) {
-									maxP = pValue;
-								}
-								c++;
-							}
+		int numE = enterprises.size();
+		int numP = periods.size();
+
+		for (int e = 0; e < numE; e++) {
+			// 企業を選択する
+
+			double sum = 0.0e0d; // コサイン類似度の合計
+			double maxP = 0.0e0d; // p値の最大値
+			int c = 0;
+
+			for (int i = 0; i < numE; i++) {
+				// 比較企業を選択する
+
+				if (e != i) {
+					// 2社比較
+
+					// COS類似度と p値 を算出する.
+					PairVecAnalyzer pva = new PairVecAnalyzer();
+					Double sim = pva.calcCOSSimularity(data[e], data[i], ws,
+							we);
+					Double pValue = pva.getPValue();
+
+					// 特異度算出用の値を求める
+					if (null != sim) {
+						sum += sim;
+						if (pValue > maxP) {
+							maxP = pValue;
 						}
+						c++;
 					}
-
-					// 類似度から特異度を算出する
-					double diff = sum / (double) c;
-
-//					System.out.println("diff = " + diff + "\t p =" + maxP);
-
-					String st = "";
-					if ((diff < 0.0e0d) && (maxP < 0.10)) {
-						// 特徴パターンと認められる場合
-
-						st = "波形独自性" + ",";
-						st  = st + ind + ",";
-						st = st + diff + ",";
-						st = st + enterprises.get(e) + ",";
-						st = st + periods.get(ws) + ",";
-						st = st + periods.get(we) + ",";
-
-						double d;
-						for (int p = 0; p < numP; p++) {
-							if (null == data[e][p]) {
-								d = 0.0e0d;
-							} else {
-								d = data[e][p];
-							}
-							st = st + d + ",";
-						}
-						System.out.println(st);
-					}
-					res = res + st;
 				}
 			}
+
+			String st = "";
+			if (0 != c) {
+
+				// 類似度から特異度を算出する
+				double diff = sum / (double) c;
+
+				// 竹松の経営情報学会発表時には正規化処理を行っているが
+				// ２社比較も可能とするため、正規化処理は行わず、
+				// 特異度そのもので判定を行う形に変更
+
+
+				if ((diff < 0.0e0d) && (maxP < 0.10)) {
+					// 特徴パターンと認められる場合
+
+					st = "波形独自性" + ",";
+					st = st + ind + ",";
+					st = st + diff + ",";
+					st = st + enterprises.get(e) + ",";
+					st = st + periods.get(ws) + ",";
+					st = st + periods.get(we) + ",";
+
+					double d;
+					for (int p = 0; p < numP; p++) {
+						if (null == data[e][p]) {
+							d = 0.0e0d;
+						} else {
+							d = data[e][p];
+						}
+						st = st + d + ",";
+					}
+					System.out.println(st);
+				}
+			}
+			res = res + st;
 		}
 		return res;
 	}
