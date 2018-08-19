@@ -114,7 +114,7 @@ public class PairVecAnalyzer {
 	 * 			 1 : 同一
 	 * 			 0 : 当該時系列が他に比べ大きい
 	 */
-	public final Double calcAmpRatio(final Double[] data0, final Double[] data1,
+	public final Double calcVarRatio(final Double[] data0, final Double[] data1,
 			final int s, final int e) {
 
 		final int minDegreeOfFreedom = 3; // 最小自由度

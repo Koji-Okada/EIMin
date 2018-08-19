@@ -87,7 +87,7 @@ public class PairVecAnalyzerTest {
 		Double[] data1 = {1.0e0d, 3.0e0d, 2.0e0d, 4.0e0d, 5.0e0d};
 		Double[] data2 = {9.0e0d, 8.0e0d, 6.0e0d, 7.0e0d, 0.0e0d};
 
-		rVar = pva.calcAmpRatio(data1, data2, 0, 4);
+		rVar = pva.calcVarRatio(data1, data2, 0, 4);
 		pValue = pva.getPValue();
 
 //		System.out.println(rVar + "\t" + pValue);
@@ -98,7 +98,7 @@ public class PairVecAnalyzerTest {
 		assertEquals(rVar, 0.2e0d, DELTA);
 		assertEquals(pValue, 0.1481e0d / 2.0e0d, DELTA);
 
-		rVar = pva.calcAmpRatio(data2, data1, 0, 4);
+		rVar = pva.calcVarRatio(data2, data1, 0, 4);
 		pValue = pva.getPValue();
 
 		// 基準の入替え
@@ -109,7 +109,7 @@ public class PairVecAnalyzerTest {
 		// ==== 欠損値のある場合
 		Double[] data3 = {1.0e0d, null, 2.0e0d, 4.0e0d, 5.0e0d};
 		Double[] data4 = {9.0e0d, 8.0e0d, null, 7.0e0d, 0.0e0d};
-		rVar = pva.calcAmpRatio(data3, data4, 0, 4);
+		rVar = pva.calcVarRatio(data3, data4, 0, 4);
 		pValue = pva.getPValue();
 //		System.out.println(rVar + "\t" + pValue);
 
@@ -123,7 +123,7 @@ public class PairVecAnalyzerTest {
 		// ==== 最小自由度以下の場合
 		Double[] data5 = {null, null, 2.0e0d, 4.0e0d, null};
 		Double[] data6 = {9.0e0d, 8.0e0d, null, 7.0e0d, 5.0e0d};
-		rVar = pva.calcAmpRatio(data5, data6, 0, 4);
+		rVar = pva.calcVarRatio(data5, data6, 0, 4);
 		pValue = pva.getPValue();
 //		System.out.println(rVar + "\t" + pValue);
 
