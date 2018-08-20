@@ -34,6 +34,42 @@ public class EPIDataManager<T> {
 
 	/**
 	 * データ値を追加する.
+	 * (Integer型の場合のみ有効)
+	 *
+	 * @param enterprise
+	 * @param period
+	 * @param indicator
+	 * @param value
+	 */
+	public final void addData(final String enterprise, final String period,
+			final String indicator, final Object value) {
+
+		T existingValue = this.getValue(enterprise, period, indicator);
+
+		if (null != existingValue) {
+			Integer av;
+			if (value instanceof Integer) {
+				av = (Integer) value;
+
+				Integer ev;
+				if (null != existingValue) {
+					if (existingValue instanceof Integer) {
+						ev = (Integer) existingValue;
+						Integer x = new Integer(av.intValue() + ev.intValue());
+						this.putData(enterprise, period, indicator, x);
+						System.out.println(" -> " + x);
+					}
+				}
+			}
+		} else {
+			this.putData(enterprise, period, indicator, value);
+		}
+		return;
+	}
+
+	/**
+	 * データ値を登録する.
+	 * (既に値が登録されている場合は更新する)
 	 *
 	 * @param period
 	 *            期間
@@ -44,7 +80,7 @@ public class EPIDataManager<T> {
 	 * @param value
 	 *            データ値
 	 */
-	public final void addData(final String enterprise, final String period,
+	public final void putData(final String enterprise, final String period,
 			final String indicator, final Object value) {
 
 		// 企業データ木に追加処理を行う --------
@@ -132,7 +168,7 @@ public class EPIDataManager<T> {
 		Set<String> periods = pMap.keySet();
 
 		// 期間の最小値と最大値を求める
-		for (String p:periods) {
+		for (String p : periods) {
 			int i = Integer.parseInt(p);
 			if (max < i) {
 				max = i;
@@ -179,8 +215,8 @@ public class EPIDataManager<T> {
 			final String indicator) {
 
 		@SuppressWarnings("unchecked")
-		EnterpriseDataElement<T> ede = (EnterpriseDataElement<T>) this.eMap
-				.get(enterprise);
+		EnterpriseDataElement<T> ede = (EnterpriseDataElement<T>) this.eMap.get(
+				enterprise);
 		if (null == ede) {
 			return null;
 		}

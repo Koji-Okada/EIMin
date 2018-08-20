@@ -212,7 +212,7 @@ public class XBRLTextExtractor {
 
 
 				if ((0 != enterprise.length()) && (0 != date.length())) {
-					xbrlIndex.addData(enterprise, date, "index", path);
+					xbrlIndex.putData(enterprise, date, "index", path);
 
 					System.out.println(date + "\t" + enterprise + "\t" + path);
 				}

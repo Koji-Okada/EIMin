@@ -52,9 +52,7 @@ public class PeriodDataElement<T> {
 		if ((null == enterprise) && (null == indicator)) {
 			// 期間データ・指標データが構成済みの場合
 			// 末端処理を実施
-			if (null != this.value) {
-				System.out.println("Data Override!");
-			}
+
 			this.value = val;
 
 			return;

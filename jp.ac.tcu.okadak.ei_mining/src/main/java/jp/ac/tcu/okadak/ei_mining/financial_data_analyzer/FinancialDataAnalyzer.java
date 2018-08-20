@@ -36,7 +36,13 @@ public final class FinancialDataAnalyzer {
 		System.out.println("Start analyzing financial data ...");
 
 		FinancialDataAnalyzer fda = new FinancialDataAnalyzer();
-		fda.analyze();
+		String outputPath = fda.analyze();
+
+		// 抽出結果を集約する
+		// 未実装
+		FeatureAggregator fa = new FeatureAggregator();
+		fa.aggregate(outputPath);
+
 
 		System.out.println("... Fin");
 		return;
@@ -44,8 +50,10 @@ public final class FinancialDataAnalyzer {
 
 	/**
 	 * 財務データを分析する.
+	 *
+	 * @return 出力先のファイルパス
 	 */
-	void analyze() {
+	String analyze() {
 
 		// 財務データを読込む
 		FDBDataLoader loader = new FDBDataLoader();
@@ -100,7 +108,7 @@ public final class FinancialDataAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return;
+		return outputPath;
 	}
 
 	/**

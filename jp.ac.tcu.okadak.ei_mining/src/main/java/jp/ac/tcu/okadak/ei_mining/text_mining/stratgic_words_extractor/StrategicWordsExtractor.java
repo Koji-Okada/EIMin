@@ -475,7 +475,7 @@ public final class StrategicWordsExtractor {
 				String val = tknzr.nextToken();
 				Double d = Double.parseDouble(val);
 
-				epiDM.addData(entName, year, word, d);
+				epiDM.putData(entName, year, word, d);
 			}
 			br.close();
 

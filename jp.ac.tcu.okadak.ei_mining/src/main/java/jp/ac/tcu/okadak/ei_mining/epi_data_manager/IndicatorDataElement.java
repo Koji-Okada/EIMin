@@ -53,9 +53,6 @@ public class IndicatorDataElement<T> {
 			// 企業データ・期間データが構成済みの場合
 			// 末端処理を実施
 
-			if (null != this.value) {
-				System.out.println("Data Override!");
-			}
 			this.value = val;
 
 			return;

@@ -36,7 +36,7 @@ public class EPIDataManagerTest {
 		Double outVal;
 
 		// 登録
-		dm.addData(ent0, per0, idx0, inV000);
+		dm.putData(ent0, per0, idx0, inV000);
 		outVal = dm.getValue(ent0, per0, idx0);
 		assertThat(outVal, sameInstance(inV000));
 
@@ -50,31 +50,31 @@ public class EPIDataManagerTest {
 		assertThat(outVal, nullValue());
 
 		// 登録 × 7
-		dm.addData(ent0, per0, idx1, inV001);
+		dm.putData(ent0, per0, idx1, inV001);
 		outVal = dm.getValue(ent0, per0, idx1);
 		assertThat(outVal, sameInstance(inV001));
 
-		dm.addData(ent0, per1, idx0, inV010);
+		dm.putData(ent0, per1, idx0, inV010);
 		outVal = dm.getValue(ent0, per1, idx0);
 		assertThat(outVal, sameInstance(inV010));
 
-		dm.addData(ent0, per1, idx1, inV011);
+		dm.putData(ent0, per1, idx1, inV011);
 		outVal = dm.getValue(ent0, per1, idx1);
 		assertThat(outVal, sameInstance(inV011));
 
-		dm.addData(ent1, per0, idx0, inV100);
+		dm.putData(ent1, per0, idx0, inV100);
 		outVal = dm.getValue(ent1, per0, idx0);
 		assertThat(outVal, sameInstance(inV100));
 
-		dm.addData(ent1, per0, idx1, inV101);
+		dm.putData(ent1, per0, idx1, inV101);
 		outVal = dm.getValue(ent1, per0, idx1);
 		assertThat(outVal, sameInstance(inV101));
 
-		dm.addData(ent1, per1, idx0, inV110);
+		dm.putData(ent1, per1, idx0, inV110);
 		outVal = dm.getValue(ent1, per1, idx0);
 		assertThat(outVal, sameInstance(inV110));
 
-		dm.addData(ent1, per1, idx1, inV111);
+		dm.putData(ent1, per1, idx1, inV111);
 		outVal = dm.getValue(ent1, per1, idx1);
 		assertThat(outVal, sameInstance(inV111));
 

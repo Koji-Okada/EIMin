@@ -224,7 +224,7 @@ public class FDBDataLoader {
 							} else {
 								value = null;
 							}
-							dm.addData(entName, date, indicator, value);
+							dm.putData(entName, date, indicator, value);
 
 							System.out.println(entName + ":" + date + ":"
 									+ indicator + ":" + value);
