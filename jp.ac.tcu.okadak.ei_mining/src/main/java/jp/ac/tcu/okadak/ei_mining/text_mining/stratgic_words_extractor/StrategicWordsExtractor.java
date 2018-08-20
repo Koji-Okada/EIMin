@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2018.08.10
+ * @version 2018.08.20
  */
 public final class StrategicWordsExtractor {
 
@@ -189,20 +189,20 @@ public final class StrategicWordsExtractor {
 				// 有意差がある場合
 
 				// 出力形式に纏める.
-				double d;
 				String st = "特定企業型" + ",";
 				st = st + ind + ",";
-				st = st + v + ",";
 				st = st + enterprises.get(se) + ",";
 				st = st + periods.get(0) + ",";
 				st = st + periods.get(numP - 1) + ",";
+				st = st + v + ",";
+				st = st + periods.get(0) + ",";
+				st = st + periods.get(numP - 1);
 				for (int p = 0; p < numP; p++) {
-					if (null == data[se][p]) {
-						d = 0.0e0d;
+					if (null != data[se][p]) {
+						st = st + "," + data[se][p];
 					} else {
-						d = data[se][p];
+						st = st + ",";
 					}
-					st = st + d + ",";
 				}
 				System.out.println(st);
 				res = res + st + "\r\n";
@@ -292,19 +292,18 @@ public final class StrategicWordsExtractor {
 
 				st = "特定期間型" + ",";
 				st = st + ind + ",";
-				st = st + vMax + ",";
 				st = st + enterprises.get(e) + ",";
 				st = st + periods.get(wsMax) + ",";
 				st = st + periods.get(weMax) + ",";
-
-				double d;
+				st = st + vMax + ",";
+				st = st + periods.get(0) + ",";
+				st = st + periods.get(numP - 1) + ",";
 				for (int p = 0; p < numP; p++) {
-					if (null == data[e][p]) {
-						d = 0.0e0d;
+					if (null != data[e][p]) {
+						st = st + "," + data[e][p];
 					} else {
-						d = data[e][p];
+						st = st + ",";
 					}
-					st = st + d + ",";
 				}
 				System.out.println(st);
 				res = res + st + "\r\n";
@@ -390,20 +389,20 @@ public final class StrategicWordsExtractor {
 		// 出力形式に纏める.
 		if (found) {
 			for (int e = 0; e < numE; e++) {
-				double d;
 				String st = "業界動向型" + ",";
 				st = st + ind + ",";
-				st = st + vMax + ",";
 				st = st + enterprises.get(e) + ",";
 				st = st + periods.get(wsMax) + ",";
 				st = st + periods.get(weMax) + ",";
+				st = st + vMax + ",";
+				st = st + periods.get(0) + ",";
+				st = st + periods.get(numP - 1) + ",";
 				for (int p = 0; p < numP; p++) {
-					if (null == data[e][p]) {
-						d = 0.0e0d;
+					if (null != data[e][p]) {
+						st = st + "," + data[e][p];
 					} else {
-						d = data[e][p];
+						st = st + ",";
 					}
-					st = st + d + ",";
 				}
 				System.out.println(st);
 				res = res + st + "\r\n";

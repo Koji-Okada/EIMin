@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.PairVecAnalyzer;
  * 財務データ分析器.
  *
  * @author K.Okada
- * @version 2018.08.16
+ * @version 2018.08.20
  */
 public final class FinancialDataAnalyzer {
 
@@ -62,8 +62,8 @@ public final class FinancialDataAnalyzer {
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
 
-		System.out.println(
-				numEnterprises + " : " + numPeriods + " : " + numIndicators);
+		System.out.println(numEnterprises + " : " + numPeriods + " : "
+				+ numIndicators);
 
 		try {
 			// 出力先を用意する
@@ -228,19 +228,18 @@ public final class FinancialDataAnalyzer {
 
 					st = "波形特異" + ",";
 					st = st + ind + ",";
-					st = st + specificity + ",";
 					st = st + enterprises.get(e) + ",";
 					st = st + periods.get(ws) + ",";
 					st = st + periods.get(we) + ",";
-
-					double d;
+					st = st + specificity + ",";
+					st = st + periods.get(0) + ",";
+					st = st + periods.get(numP - 1);
 					for (int p = 0; p < numP; p++) {
-						if (null == data[e][p]) {
-							d = 0.0e0d;
+						if (null != data[e][p]) {
+							st = st + "," + data[e][p];
 						} else {
-							d = data[e][p];
+							st = st + ",";
 						}
-						st = st + d + ",";
 					}
 					System.out.println(st);
 					st = st + "\r\n";
@@ -332,19 +331,18 @@ public final class FinancialDataAnalyzer {
 						st = "振幅特異(小)" + ",";
 					}
 					st = st + ind + ",";
-					st = st + specificity + ",";
 					st = st + enterprises.get(e) + ",";
 					st = st + periods.get(ws) + ",";
 					st = st + periods.get(we) + ",";
-
-					double d;
+					st = st + specificity + ",";
+					st = st + periods.get(0) + ",";
+					st = st + periods.get(numP - 1);
 					for (int p = 0; p < numP; p++) {
-						if (null == data[e][p]) {
-							d = 0.0e0d;
+						if (null != data[e][p]) {
+							st = st + "," + data[e][p];
 						} else {
-							d = data[e][p];
+							st = st + ",";
 						}
-						st = st + d + ",";
 					}
 					System.out.println(st);
 					st = st + "\r\n";
@@ -436,19 +434,18 @@ public final class FinancialDataAnalyzer {
 						st = "水準特異(小)" + ",";
 					}
 					st = st + ind + ",";
-					st = st + specificity + ",";
 					st = st + enterprises.get(e) + ",";
 					st = st + periods.get(ws) + ",";
 					st = st + periods.get(we) + ",";
-
-					double d;
+					st = st + specificity + ",";
+					st = st + periods.get(0) + ",";
+					st = st + periods.get(numP - 1);
 					for (int p = 0; p < numP; p++) {
-						if (null == data[e][p]) {
-							d = 0.0e0d;
+						if (null != data[e][p]) {
+							st = st + "," + data[e][p];
 						} else {
-							d = data[e][p];
+							st = st + ",";
 						}
-						st = st + d + ",";
 					}
 					System.out.println(st);
 					st = st + "\r\n";
@@ -458,5 +455,4 @@ public final class FinancialDataAnalyzer {
 		}
 		return res;
 	}
-
 }
