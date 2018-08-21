@@ -15,9 +15,14 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.08.15
+ * @version 2018.08.21
  */
 public class FDBDataLoader {
+
+	/**
+	 *
+	 */
+	private static int UNIT = 1000000;
 
 	/**
 	 * 読込んだ企業財務データ.
@@ -179,15 +184,15 @@ public class FDBDataLoader {
 				if (null != targetDataElements.get(sValue)) {
 					// 対象データ要素の場合
 					index.put(c, sValue);
-					System.out.println(c + " : " + sValue);
+//					System.out.println(c + " : " + sValue);
 				}
 				c++;
 			}
 			System.out.println("...");
 
-			for (String e : targetEnterprises.keySet()) {
-				System.out.println(" - " + e);
-			}
+//			for (String e : targetEnterprises.keySet()) {
+//				System.out.println(" - " + e);
+//			}
 
 			// データを読込む
 			while (null != (line = br.readLine())) {
@@ -207,8 +212,6 @@ public class FDBDataLoader {
 				if (targetEnterprises.containsKey(entID)) {
 					// 対象企業の場合
 
-					System.out.println("[" + entName + "]-[" + date + "]");
-
 					String indicator;
 					Double value;
 					int i = 4;
@@ -220,14 +223,13 @@ public class FDBDataLoader {
 						if (null != (indicator = index.get(i))) {
 
 							if (0 != sValue.length()) {
-								value = Double.parseDouble(sValue);
+								// 単位換算する
+								int x = Integer.parseInt(sValue) / UNIT;
+								value = (Double)((double)x);
 							} else {
 								value = null;
 							}
 							dm.putData(entName, date, indicator, value);
-
-							System.out.println(entName + ":" + date + ":"
-									+ indicator + ":" + value);
 						}
 						i++;
 					}

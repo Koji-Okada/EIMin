@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.PairVecAnalyzer;
  * 財務データ分析器.
  *
  * @author K.Okada
- * @version 2018.08.20
+ * @version 2018.08.21
  */
 public final class FinancialDataAnalyzer {
 
@@ -43,7 +43,6 @@ public final class FinancialDataAnalyzer {
 		FeatureAggregator fa = new FeatureAggregator();
 		fa.aggregate(outputPath);
 
-
 		System.out.println("... Fin");
 		return;
 	}
@@ -69,9 +68,6 @@ public final class FinancialDataAnalyzer {
 		int numPeriods = periods.size();
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
-
-		System.out.println(numEnterprises + " : " + numPeriods + " : "
-				+ numIndicators);
 
 		try {
 			// 出力先を用意する
@@ -136,7 +132,6 @@ public final class FinancialDataAnalyzer {
 		String resAmp = "";
 		String resLvl = "";
 
-		// int numE = enterprises.size();
 		int numP = periods.size();
 
 		for (int ws = 1; ws < numP - minWindowSize; ws++) {
@@ -249,7 +244,7 @@ public final class FinancialDataAnalyzer {
 							st = st + ",";
 						}
 					}
-					System.out.println(st);
+//					System.out.println(st);
 					st = st + "\r\n";
 				}
 			}
@@ -352,7 +347,7 @@ public final class FinancialDataAnalyzer {
 							st = st + ",";
 						}
 					}
-					System.out.println(st);
+//					System.out.println(st);
 					st = st + "\r\n";
 				}
 			}
@@ -455,7 +450,7 @@ public final class FinancialDataAnalyzer {
 							st = st + ",";
 						}
 					}
-					System.out.println(st);
+//					System.out.println(st);
 					st = st + "\r\n";
 				}
 			}
