@@ -36,28 +36,32 @@ public class EPIDataManager<T> {
 	 * データ値を追加する.
 	 * (Integer型の場合のみ有効)
 	 *
-	 * @param enterprise
-	 * @param period
-	 * @param indicator
-	 * @param value
+	 * @param enterprise	企業
+	 * @param period	期間
+	 * @param indicator	指標
+	 * @param value	値
 	 */
 	public final void addData(final String enterprise, final String period,
 			final String indicator, final Object value) {
 
+		// 登録されていればそのデータを得る
 		T existingValue = this.getValue(enterprise, period, indicator);
 
 		if (null != existingValue) {
-			Integer av;
-			if (value instanceof Integer) {
-				av = (Integer) value;
+			// 既に登録されていた場合
 
-				Integer ev;
+			Integer addV;
+			if (value instanceof Integer) {
+				addV = (Integer) value;
+
+				Integer extV;
 				if (null != existingValue) {
 					if (existingValue instanceof Integer) {
-						ev = (Integer) existingValue;
-						Integer x = new Integer(av.intValue() + ev.intValue());
+						extV = (Integer) existingValue;
+						Integer x = new Integer(addV.intValue() + extV
+								.intValue());
 						this.putData(enterprise, period, indicator, x);
-						System.out.println(" -> " + x);
+						//						System.out.println(" -> " + x);
 					}
 				}
 			}
@@ -156,7 +160,7 @@ public class EPIDataManager<T> {
 	 *
 	 * @return	登録されている期間名のリスト
 	 */
-	public final List<String> listPeriod() {
+	public final List<String> listPeriods() {
 
 		final int initMAX = 0;
 		final int initMIN = 10000;

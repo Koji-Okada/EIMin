@@ -65,7 +65,7 @@ public final class FinancialDataAnalyzer {
 		// それぞれの要素数を求める
 		List<String> enterprises = epiDM.getEnterprises();
 		int numEnterprises = enterprises.size();
-		List<String> periods = epiDM.listPeriod();
+		List<String> periods = epiDM.listPeriods();
 		int numPeriods = periods.size();
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
