@@ -1,5 +1,6 @@
 package jp.ac.tcu.okadak.ei_mining.text_mining.morphological;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.atilika.kuromoji.ipadic.Token;
@@ -9,7 +10,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.26
+ * @version 2018.08.22
  */
 public class IPADicMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 
@@ -28,69 +29,57 @@ public class IPADicMorphologicalAnalyzer extends MorphlogicalAnalyzer {
 		IPADicMorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
 
 		// String str = "これは形態素解析の例です。";
-		String str = "大きなクラウドはクラとウドにすぐに分割されてしまいます。";
-		String res = mla.analyzeSentense(str, PartOfSpeech.ALL);
-		String res2 = mla.analyzeSentense(str, 15);
+		String str = "比較的新しい用語であるクラウドはクラとウドに分割されてしまいます。";
+		List<Morpheme> mor = mla.analyze(str);
+		String res = mla.getSurface(mor, " ", PartOfSpeech.ALL);
+		String res2 = mla.getSurface(mor, " ", 31);
+		String res3 = mla.getBase(mor, " ", 31);
 
 		System.out.println(str);
 		System.out.println(res);
 		System.out.println(res2);
+		System.out.println(res3);
 	}
 
 	/**
 	 * 文に対して形態素解析を行う.
+	 * オーバーライドしている
 	 *
-	 * @param targetSentense
-	 *            分析対象の文
-	 * @param mode
-	 *            -1 : 分かち書き 正値: 出力品詞指定
-	 * @return 解析結果
+	 * @param targetSentense	分析対象の文
+	 * @return 形態素のリスト
 	 */
-	final String analyzeSentense(final String targetSentense, final int mode) {
+	final List<Morpheme> analyze(final String targetSentense) {
 
-		StringBuilder builder = new StringBuilder();
+		List<Morpheme> morphemes = new ArrayList<Morpheme>();
 
 		List<Token> tokens = tokenizer.tokenize(targetSentense);
-
-		// 結果を出力してみる
 		for (Token token : tokens) {
+			// 形態素毎に
 
-			if (PartOfSpeech.ALL == mode) {
-				builder.append(token.getSurface());
-				builder.append(" ");
-				continue;
+			String surface = token.getSurface();
+			String base = token.getBaseForm();
+
+			String strPoq = token.getPartOfSpeechLevel1();
+			int poq;
+			if (strPoq.equals("名詞")) {
+				poq = PartOfSpeech.NORN;
+			} else if (strPoq.equals("動詞")) {
+				poq = PartOfSpeech.VERB;
+			} else if (strPoq.equals("形容詞")) {
+				poq = PartOfSpeech.ADJ;
+			} else if (strPoq.equals("連体詞")) {
+				poq = PartOfSpeech.PREN;
+			} else if (strPoq.equals("副詞")) {
+				poq = PartOfSpeech.ADV;
+			} else {
+				poq = PartOfSpeech.OTHERS;
 			}
-			if (PartOfSpeech.NORN == (mode & PartOfSpeech.NORN)) {
-				// 名詞を出力
-				if (token.getPartOfSpeechLevel1().equals("名詞")) {
-					builder.append(token.getBaseForm());
-					builder.append(" ");
-				}
-			}
-			if (PartOfSpeech.VERB == (mode & PartOfSpeech.VERB)) {
-				// 動詞を出力
-				if (token.getPartOfSpeechLevel1().equals("動詞")) {
-					builder.append(token.getBaseForm());
-					builder.append(" ");
-				}
-			}
-			if (PartOfSpeech.ADJ == (mode & PartOfSpeech.ADJ)) {
-				// 形容詞を出力
-				if (token.getPartOfSpeechLevel1().equals("形容詞")
-						|| token.getPartOfSpeechLevel1().equals("連体詞")) {
-					builder.append(token.getBaseForm());
-					builder.append(" ");
-				}
-			}
-			if (PartOfSpeech.ADV == (mode & PartOfSpeech.ADV)) {
-				// 副詞を出力
-				if (token.getPartOfSpeechLevel1().equals("副詞")) {
-					builder.append(token.getBaseForm());
-					builder.append(" ");
-				}
-			}
+
+//			System.out.println(strPoq + ":" + surface + ":" + base);
+
+			Morpheme m = new Morpheme(surface, base, poq);
+			morphemes.add(m);
 		}
-
-		return builder.toString();
+		return morphemes;
 	}
 }

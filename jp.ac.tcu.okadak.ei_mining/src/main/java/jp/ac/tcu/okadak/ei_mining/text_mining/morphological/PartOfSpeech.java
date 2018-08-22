@@ -37,7 +37,18 @@ public final class PartOfSpeech {
 	static final int ADJ = 4;
 
 	/**
-	 * 形容詞.
+	 * 連体詞.
 	 */
-	static final int ADV = 8;
+	static final int PREN = 8;
+
+
+	/**
+	 * 副詞.
+	 */
+	static final int ADV = 16;
+
+	/**
+	 * その他.
+	 */
+	static final int OTHERS = 128;
 }
