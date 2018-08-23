@@ -17,7 +17,7 @@ import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.PartOfSpee
  * @version 2018.08.22
  *
  */
-public class NeologdMorphologicalAnalyzer extends MorphlogicalAnalyzer {
+public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
 	/**
 	 * 形態素解析器の本体.

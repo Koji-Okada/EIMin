@@ -79,7 +79,7 @@ public class MultiDocMorphologicalAnalyzer {
 
 		// 形態素解析を生成する
 //		MorphlogicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
-		MorphlogicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
+		MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		for (File f : files) {
 			// 各ファイルに対して

@@ -12,7 +12,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * @author K.Okada
  * @version 2018.08.22
  */
-public class IPADicMorphologicalAnalyzer extends MorphlogicalAnalyzer {
+public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
 	/**
 	 * 形態素解析器の本体.

@@ -14,7 +14,7 @@ import java.util.List;
  * @author K.Okada
  * @version 2018.08.22
  */
-public abstract class MorphlogicalAnalyzer {
+public abstract class MorphologicalAnalyzer {
 
 	/**
 	 * ファイルに対して形態素解析を行う.
