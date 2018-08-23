@@ -18,37 +18,37 @@ public final class PartOfSpeech {
 	/**
 	 * 全指定.
 	 */
-	static final int ALL = -1;
+	public static final int ALL = -1;
 
 
 	/**
 	 * 名詞.
 	 */
-	static final int NORN = 1;
+	public static final int NORN = 1;
 
 	/**
 	 * 動詞.
 	 */
-	static final int VERB = 2;
+	public static final int VERB = 2;
 
 	/**
 	 * 形容詞.
 	 */
-	static final int ADJ = 4;
+	public static final int ADJ = 4;
 
 	/**
 	 * 連体詞.
 	 */
-	static final int PREN = 8;
+	public static final int PREN = 8;
 
 
 	/**
 	 * 副詞.
 	 */
-	static final int ADV = 16;
+	public static final int ADV = 16;
 
 	/**
 	 * その他.
 	 */
-	static final int OTHERS = 128;
+	public static final int OTHERS = 128;
 }

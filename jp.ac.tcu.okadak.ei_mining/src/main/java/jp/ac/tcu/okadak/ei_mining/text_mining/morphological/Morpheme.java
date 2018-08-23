@@ -67,4 +67,20 @@ public class Morpheme {
 	public final int getPartOfSpeech() {
 		return this.partOfSpeech;
 	}
+
+
+	/**
+	 * 識別子として使用可能な文字列を返す.
+	 *
+	 * @return	識別子文字列
+	 */
+	public final String getIdStr() {
+		String idStr;
+
+		idStr = String.valueOf(this.partOfSpeech);
+		idStr = idStr + ":" + this.surface;
+		idStr = idStr + ":" + this.base;
+
+		return idStr;
+	}
 }

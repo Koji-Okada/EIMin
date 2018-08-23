@@ -54,7 +54,7 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	 * @param targetSentense	分析対象の文
 	 * @return 形態素のリスト
 	 */
-	final List<Morpheme> analyze(final String targetSentense) {
+	public final List<Morpheme> analyze(final String targetSentense) {
 
 		List<Morpheme> morphemes = new ArrayList<Morpheme>();
 

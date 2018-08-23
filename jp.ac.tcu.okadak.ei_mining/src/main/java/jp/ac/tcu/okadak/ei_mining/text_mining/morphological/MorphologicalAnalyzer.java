@@ -75,7 +75,7 @@ public abstract class MorphologicalAnalyzer {
 	 * @param mode	表示する品詞
 	 * @return	文字列
 	 */
-	final String getSurface(final List<Morpheme> mor, final String sep,
+	public final String getSurface(final List<Morpheme> mor, final String sep,
 			final int mode) {
 
 		StringBuilder builder = new StringBuilder();
@@ -101,7 +101,7 @@ public abstract class MorphologicalAnalyzer {
 	 * @param mode	表示する品詞
 	 * @return	文字列
 	 */
-	final String getBase(final List<Morpheme> mor, final String sep,
+	public final String getBase(final List<Morpheme> mor, final String sep,
 			final int mode) {
 
 		StringBuilder builder = new StringBuilder();
@@ -127,5 +127,5 @@ public abstract class MorphologicalAnalyzer {
 	 *            分析対象の文
 	 * @return 解析結果
 	 **/
-	abstract List<Morpheme> analyze(final String targetDoc);
+	public abstract List<Morpheme> analyze(final String targetDoc);
 }
