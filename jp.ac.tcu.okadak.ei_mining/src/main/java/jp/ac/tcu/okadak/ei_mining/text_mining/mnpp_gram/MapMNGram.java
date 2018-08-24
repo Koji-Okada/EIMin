@@ -103,10 +103,11 @@ public class MapMNGram {
 	/**
 	 * 重要度指標値を算出する.
 	 *
+	 * @param results		重要度の高い形態素N-Gramを追加するリスト
 	 * @param chance	ポアソン分布算出用：
 	 * 					確率×回数 の回数
 	 */
-	final void calcScore(final int chance) {
+	final void calcScore(final List<MNElement> results, final int chance) {
 
 		int k = numOfMorpheme(); // N-Gram要素の語彙数
 
@@ -116,8 +117,14 @@ public class MapMNGram {
 
 		Collection<MNElement> elms = getMNElements();
 		for (MNElement elm : elms) {
-			double v = elm.calcScore(poi);	// ポアソン分布を基に重要度指標値を算出する
+			double score = elm.calcScore(poi);	// ポアソン分布を基に重要度指標値を算出する
+
+			if (MNppAnalyzer.THRESHOLD <= score) {
+				// 重要度が判断閾値よりも高い場合
+
+				// ※ここにヒューリスティック処理を入れたい
+				results.add(elm);	// リストに追加する
+			}
 		}
-		return;
 	}
 }

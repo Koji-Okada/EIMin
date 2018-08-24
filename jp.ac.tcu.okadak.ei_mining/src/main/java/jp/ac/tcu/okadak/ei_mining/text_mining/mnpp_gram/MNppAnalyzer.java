@@ -17,15 +17,20 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
 public class MNppAnalyzer {
 
 	/**
+	 * 重要度判定指標値.
+	 */
+	static final double THRESHOLD = 0.8e0d;
+
+	/**
 	 * 形態素解析器.
 	 */
-	//	private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+//		private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
 	private MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 	/**
 	 * 最大グラム数.
 	 */
-	private int maxN = 16;
+	private int maxN = 32;
 
 	/**
 	 * @param args
@@ -36,7 +41,7 @@ public class MNppAnalyzer {
 		System.out.println("Start Morphlogical N++Gram.");
 
 		MNppAnalyzer mna = new MNppAnalyzer();
-		mna.process();
+		mna.analyzeFile("出力ファイル", "入力ファイル");
 
 		System.out.println("... Fin.");
 	}
@@ -46,7 +51,7 @@ public class MNppAnalyzer {
 	 */
 	final void process() {
 
-		 // 空の形態素リストを作る
+		// 空の形態素リストを作る
 		List<Morpheme> morphemes = new ArrayList<Morpheme>();
 
 		String testStr1 = "かえるがかえる。";
@@ -57,8 +62,19 @@ public class MNppAnalyzer {
 		System.out.println("(" + morphemes.size() + "): " + mla.getSurface(
 				morphemes, " ", PartOfSpeech.ALL));
 
-		this.analyze(morphemes);
+		// 形態素階層化 N-Gram解析を行う.
+		List<MNElement> results = new ArrayList<MNElement>();
+		this.analyze(results, morphemes);
 
+//		for (MNElement elm:results) {
+//			double v = elm.getScore();
+//			String idStr = elm.getIdStr();
+//			String surface = elm.getSurface();
+//
+//			System.out.println(v + ":" + idStr);
+//			System.out.println(v + ":" + surface);
+//		}
+		return;
 	}
 
 	/**
@@ -74,20 +90,31 @@ public class MNppAnalyzer {
 		List<Morpheme> morphemes = this.mla.getMorphemes(inputFileName);
 
 		// 形態素階層化 N-Gram解析を行う.
-		this.analyze(morphemes);
+		List<MNElement> results = new ArrayList<MNElement>();
+		this.analyze(results, morphemes);
 
+		for (MNElement elm:results) {
+			double v = elm.getScore();
+//			String idStr = elm.getIdStr();
+			String surface = elm.getSurface();
+
+//			System.out.println(v + ":" + idStr);
+			System.out.println(v + ":" + surface);
+		}
 		return;
 	}
 
 	/**
 	 * 形態素階層化 N-Gram解析を行う.
 	 *
+	 * @param results 重要度の高い形態素N-Gramを追加するリスト
 	 * @param morphemes 形態素のリスト
 	 */
-	final void analyze(final List<Morpheme> morphemes) {
+	final void analyze(final List<MNElement> results,
+			final List<Morpheme> morphemes) {
 
-		int length = morphemes.size();	// 文書長
-		int max = maxN;					// 最大グラム数
+		int length = morphemes.size(); // 文書長
+		int max = maxN; // 最大グラム数
 		if (length <= maxN) {
 			// 文書長の方が短い場合
 			max = length;
@@ -107,8 +134,7 @@ public class MNppAnalyzer {
 
 			int chance = length - i + 1;
 
-			targetMap.calcScore(chance);
-
+			targetMap.calcScore(results, chance);
 		}
 		return;
 	}

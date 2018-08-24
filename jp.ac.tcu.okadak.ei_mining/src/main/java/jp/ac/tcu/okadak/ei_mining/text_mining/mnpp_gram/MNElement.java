@@ -52,6 +52,15 @@ public class MNElement {
 	 */
 	private double score;
 
+	/**
+	 * 重要度の値を返す.
+	 *
+	 * @return 重要度の値
+	 */
+	final double getScore() {
+		return this.score;
+	}
+
 	// ========================================================================
 	/**
 	 * コンストラクタ.
@@ -173,4 +182,16 @@ public class MNElement {
 		return str;
 	}
 
+	/**
+	 *
+	 *
+	 * @return
+	 */
+	final String getSurface() {
+		String str = "";
+		for (int i = 0; i < mors.length; i++) {
+			str = str + mors[i].getSurface();
+		}
+		return str;
+	}
 }
