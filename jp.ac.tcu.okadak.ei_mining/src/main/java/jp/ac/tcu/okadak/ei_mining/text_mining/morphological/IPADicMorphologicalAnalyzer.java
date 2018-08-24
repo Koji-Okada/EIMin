@@ -10,7 +10,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.08.22
+ * @version 2018.08.24
  */
 public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
@@ -30,7 +30,8 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
 		// String str = "これは形態素解析の例です。";
 		String str = "比較的新しい用語であるクラウドはクラとウドに分割されてしまいます。";
-		List<Morpheme> mor = mla.analyze(str);
+		List<Morpheme> mor = new ArrayList<Morpheme>();
+		mla.analyze(mor, str);
 		String res = mla.getSurface(mor, " ", PartOfSpeech.ALL);
 		String res2 = mla.getSurface(mor, " ", 31);
 		String res3 = mla.getBase(mor, " ", 31);
@@ -45,12 +46,13 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	 * 文に対して形態素解析を行う.
 	 * オーバーライドしている
 	 *
-	 * @param targetSentense	分析対象の文
-	 * @return 形態素のリスト
+	 * @param morphemes 形態素を追加するリスト
+	 * @param targetSentense 分析対象の文
 	 */
-	public final List<Morpheme> analyze(final String targetSentense) {
+	public final void analyze(final List<Morpheme> morphemes,
+			final String targetSentense) {
 
-		List<Morpheme> morphemes = new ArrayList<Morpheme>();
+
 
 		List<Token> tokens = tokenizer.tokenize(targetSentense);
 		for (Token token : tokens) {
@@ -75,11 +77,11 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 				poq = PartOfSpeech.OTHERS;
 			}
 
-//			System.out.println(strPoq + ":" + surface + ":" + base);
+			//			System.out.println(strPoq + ":" + surface + ":" + base);
 
 			Morpheme m = new Morpheme(surface, base, poq);
 			morphemes.add(m);
 		}
-		return morphemes;
+		return;
 	}
 }
