@@ -13,7 +13,7 @@ import java.util.Map.Entry;
  * N-Gram 分析器.
  *
  * @author K.Okada
- * @version 2018.04.20
+ * @version 2018.08.26
  */
 public class NGramAnalyzer {
 
@@ -73,10 +73,17 @@ public class NGramAnalyzer {
 				// 閾値を以下となったら出力を止める
 				break;
 			}
+			String word = en.getKey();
 
-			results = results + (++count) + ",\"" + en.getKey() + "\","
-					+ en.getValue().getNum() + "," + en.getValue().getScore()
+			results = results + "\"" + word + "\","
+					+ word.length() + ","
+					+ en.getValue().getNum() + ","
+					+ en.getValue().getScore()
 					+ "\r\n";
+
+//			results = results + (++count) + ",\"" + en.getKey() + "\","
+//					+ en.getValue().getNum() + "," + en.getValue().getScore()
+//					+ "\r\n";
 		}
 
 		return results;

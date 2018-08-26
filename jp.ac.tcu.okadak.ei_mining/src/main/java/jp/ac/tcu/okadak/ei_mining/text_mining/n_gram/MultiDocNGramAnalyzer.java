@@ -45,7 +45,9 @@ public class MultiDocNGramAnalyzer {
 		System.out.println("Start MultiDocAnalyzer ...");
 
 		MultiDocNGramAnalyzer mda = new MultiDocNGramAnalyzer();
-		mda.setMaxN(32);
+//		mda.setMaxN(32);
+		mda.setMaxN(24);
+
 		mda.analyzeNGram();
 
 		System.out.println("... Successfully Complete.");
