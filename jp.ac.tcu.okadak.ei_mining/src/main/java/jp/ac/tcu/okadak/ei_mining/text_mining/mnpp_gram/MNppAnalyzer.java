@@ -151,9 +151,12 @@ public class MNppAnalyzer {
 			// 包含関係の解析を行う
 			targetMap.adjustInvolvement(parentMap);
 
+			// 重要度指標値を算出する
 			int chance = length - i + 1;
-
 			targetMap.calcScore(results, chance);
+
+			// 品詞を用いて非重要形態素N-Gramを削除する
+			// ※未実装		二段階の処理への変更も要検討
 		}
 		return;
 	}

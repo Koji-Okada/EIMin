@@ -122,7 +122,6 @@ public class MapMNGram {
 			if (MNppAnalyzer.THRESHOLD <= score) {
 				// 重要度が判断閾値よりも高い場合
 
-				// ※ここにヒューリスティック処理を入れたい
 				results.add(elm);	// リストに追加する
 			}
 		}
