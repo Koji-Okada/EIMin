@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2018.08.20
+ * @version 2018.08.26
  */
 public final class StrategicWordsExtractor {
 
@@ -190,7 +190,7 @@ public final class StrategicWordsExtractor {
 
 				// 出力形式に纏める.
 				String st = "特定企業型" + ",";
-				st = st + ind + ",";
+				st = st + "\"" + ind + "\",";
 				st = st + enterprises.get(se) + ",";
 				st = st + periods.get(0) + ",";
 				st = st + periods.get(numP - 1) + ",";
@@ -291,7 +291,7 @@ public final class StrategicWordsExtractor {
 			for (int e = 0; e < numE; e++) {
 
 				st = "特定期間型" + ",";
-				st = st + ind + ",";
+				st = st + "\"" + ind + "\",";
 				st = st + enterprises.get(e) + ",";
 				st = st + periods.get(wsMax) + ",";
 				st = st + periods.get(weMax) + ",";
@@ -390,7 +390,7 @@ public final class StrategicWordsExtractor {
 		if (found) {
 			for (int e = 0; e < numE; e++) {
 				String st = "業界動向型" + ",";
-				st = st + ind + ",";
+				st = st + "\"" + ind + "\",";
 				st = st + enterprises.get(e) + ",";
 				st = st + periods.get(wsMax) + ",";
 				st = st + periods.get(weMax) + ",";
@@ -469,8 +469,8 @@ public final class StrategicWordsExtractor {
 			while (null != (str = br.readLine())) {
 
 				CSVTokenizer tknzr = new CSVTokenizer(str);
-				tknzr.nextToken();
 				String word = tknzr.nextToken();
+				String gram = tknzr.nextToken();
 				String freq = tknzr.nextToken();
 				String val = tknzr.nextToken();
 				Double d = Double.parseDouble(val);
