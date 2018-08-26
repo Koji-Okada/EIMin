@@ -66,6 +66,7 @@ public abstract class MorphologicalAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return;
 	}
 
 

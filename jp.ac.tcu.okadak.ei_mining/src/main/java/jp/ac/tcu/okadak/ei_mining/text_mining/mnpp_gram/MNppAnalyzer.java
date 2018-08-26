@@ -1,5 +1,9 @@
 package jp.ac.tcu.okadak.ei_mining.text_mining.mnpp_gram;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2018.08.26
  */
 public class MNppAnalyzer {
 
@@ -24,13 +28,13 @@ public class MNppAnalyzer {
 	/**
 	 * 形態素解析器.
 	 */
-//		private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+	// private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
 	private MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 	/**
 	 * 最大グラム数.
 	 */
-	private int maxN = 32;
+	private int maxN = 16;
 
 	/**
 	 * @param args
@@ -59,29 +63,23 @@ public class MNppAnalyzer {
 		String testStr2 = "かえるがおよぐ。";
 		mla.analyze(morphemes, testStr2); // 形態素リストに変換、追加する
 
-		System.out.println("(" + morphemes.size() + "): " + mla.getSurface(
-				morphemes, " ", PartOfSpeech.ALL));
+		System.out.println("(" + morphemes.size() + "): "
+				+ mla.getSurface(morphemes, " ", PartOfSpeech.ALL));
 
 		// 形態素階層化 N-Gram解析を行う.
 		List<MNElement> results = new ArrayList<MNElement>();
 		this.analyze(results, morphemes);
 
-//		for (MNElement elm:results) {
-//			double v = elm.getScore();
-//			String idStr = elm.getIdStr();
-//			String surface = elm.getSurface();
-//
-//			System.out.println(v + ":" + idStr);
-//			System.out.println(v + ":" + surface);
-//		}
 		return;
 	}
 
 	/**
 	 * ファイルに対して形態素階層化 N-Gram解析を行う.
 	 *
-	 * @param outputFileName	入力ファイル
-	 * @param inputFileName	解析結果出力ファイル
+	 * @param outputFileName
+	 *            入力ファイル
+	 * @param inputFileName
+	 *            解析結果出力ファイル
 	 */
 	final void analyzeFile(final String outputFileName,
 			final String inputFileName) {
@@ -89,17 +87,36 @@ public class MNppAnalyzer {
 		// ファイルの中身を形態素リストに変換する
 		List<Morpheme> morphemes = this.mla.getMorphemes(inputFileName);
 
-		// 形態素階層化 N-Gram解析を行う.
+		// 形態素階層化N-Gram解析を行う.
 		List<MNElement> results = new ArrayList<MNElement>();
 		this.analyze(results, morphemes);
 
-		for (MNElement elm:results) {
-			double v = elm.getScore();
-//			String idStr = elm.getIdStr();
-			String surface = elm.getSurface();
+		try {
+			// 出力ファイルオープン
+			File outputFile = new File(outputFileName);
+			FileWriter fw = new FileWriter(outputFile);
+			BufferedWriter bw = new BufferedWriter(fw);
 
-//			System.out.println(v + ":" + idStr);
-			System.out.println(v + ":" + surface);
+			for (MNElement elm : results) {
+				// 抽出された形態素N-Gram要素毎に
+
+				double v = elm.getScore();
+				int n = elm.getNum();
+				int g = elm.getNumOfGram();
+				String surface = elm.getSurface();
+
+				String outputStr = "\"" + surface + "\",";
+				outputStr = outputStr + g + ",";
+				outputStr = outputStr + n + ",";
+				outputStr = outputStr + v;
+				System.out.println(outputStr);
+
+				bw.write(outputStr);
+				bw.newLine();
+			}
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return;
 	}
@@ -107,8 +124,10 @@ public class MNppAnalyzer {
 	/**
 	 * 形態素階層化 N-Gram解析を行う.
 	 *
-	 * @param results 重要度の高い形態素N-Gramを追加するリスト
-	 * @param morphemes 形態素のリスト
+	 * @param results
+	 *            重要度の高い形態素N-Gramを追加するリスト
+	 * @param morphemes
+	 *            形態素のリスト
 	 */
 	final void analyze(final List<MNElement> results,
 			final List<Morpheme> morphemes) {

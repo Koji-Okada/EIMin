@@ -22,6 +22,17 @@ public class MNElement {
 	 */
 	private Morpheme[] mors;
 
+
+	/**
+	 * グラム数を返す.
+	 *
+	 * @return グラム数
+	 */
+	final int getNumOfGram() {
+		return this.mors.length;
+	}
+
+
 	// ========================================================================
 	/**
 	 * 形態素N-Gramの出現数.
@@ -183,7 +194,7 @@ public class MNElement {
 	}
 
 	/**
-	 *
+	 * 出現文字列を求める.
 	 *
 	 * @return
 	 */
