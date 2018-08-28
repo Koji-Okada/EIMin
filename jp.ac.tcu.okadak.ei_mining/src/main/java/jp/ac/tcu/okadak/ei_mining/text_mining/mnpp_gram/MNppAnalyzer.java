@@ -141,9 +141,12 @@ public class MNppAnalyzer {
 
 		MapMNGram parentMap = new MapMNGram();
 		parentMap.generateMap(morphemes, 1);
+//		parentMap.generateMap(morphemes, max-1);
 
 		MapMNGram targetMap;
 		for (int i = 1; i < max; i++) {
+//		for (int i = max - 1; 1 <= i; i--) {
+
 			targetMap = parentMap;
 			parentMap = new MapMNGram();
 			parentMap.generateMap(morphemes, i + 1);
