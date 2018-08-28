@@ -16,14 +16,14 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2018.08.26
+ * @version 2018.08.28
  */
 public class MNppAnalyzer {
 
 	/**
 	 * 重要度判定指標値.
 	 */
-	static final double THRESHOLD = 0.8e0d;
+	static final double THRESHOLD = 0.5e0d;
 
 	/**
 	 * 形態素解析器.
@@ -139,17 +139,17 @@ public class MNppAnalyzer {
 			max = length;
 		}
 
-		MapMNGram parentMap = new MapMNGram();
-		parentMap.generateMap(morphemes, 1);
-//		parentMap.generateMap(morphemes, max-1);
+		// グラム数毎に降順で処理する
+		// 降順にするのは重要度調整を下方に伝播させるため
+		MapMNGram targetMap = new MapMNGram();
+		targetMap.generateMap(morphemes, max);
+		MapMNGram parentMap;
+		for (int i = max - 1; 1 <= i; i--) {
+			// グラム数毎に降順で処理する
 
-		MapMNGram targetMap;
-		for (int i = 1; i < max; i++) {
-//		for (int i = max - 1; 1 <= i; i--) {
-
-			targetMap = parentMap;
-			parentMap = new MapMNGram();
-			parentMap.generateMap(morphemes, i + 1);
+			parentMap = targetMap;
+			targetMap = new MapMNGram();
+			targetMap.generateMap(morphemes, i);
 
 			// 包含関係の解析を行う
 			targetMap.adjustInvolvement(parentMap);
