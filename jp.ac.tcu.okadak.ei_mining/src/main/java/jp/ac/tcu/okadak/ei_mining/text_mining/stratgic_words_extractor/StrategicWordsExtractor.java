@@ -430,13 +430,16 @@ public final class StrategicWordsExtractor {
 			// ファイル名から、企業と年度の情報を取り出す.
 			// ※ファイル名の名称ルールに依存
 			String fileName = f.getName();
-			String[] parts1 = fileName.split("_", 3);
-			String[] parts2 = parts1[2].split("\\.", 2);
-			String docType = parts1[0];
-			String entName = parts1[1];
-			String year = parts2[0];
 
-			if (docType.equals("アニュアルレポート")) {
+			String[] parts1 = fileName.split("\\.", 3);
+			String[] parts2 = parts1[0].split("\\)", 2);
+			String[] parts3 = parts2[0].split("\\(", 2);
+
+			String docType = parts3[0];
+			String entName = parts3[1];
+			String year = parts2[1];
+
+			if (docType.equals("AR")) {
 				// ※文書種別を限定
 
 				load(f, entName, year); // 個別のファイルからワードを読込む
