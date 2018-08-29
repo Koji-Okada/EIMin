@@ -224,8 +224,8 @@ public class FDBDataLoader {
 
 							if (0 != sValue.length()) {
 								// 単位換算する
-								int x = Integer.parseInt(sValue) / UNIT;
-								value = (Double)((double)x);
+								long x = Long.parseLong(sValue) / UNIT;
+								value = (Double) ((double)x);
 							} else {
 								value = null;
 							}
