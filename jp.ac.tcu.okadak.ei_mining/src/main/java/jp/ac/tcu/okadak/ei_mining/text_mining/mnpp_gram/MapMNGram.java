@@ -8,12 +8,13 @@ import java.util.Map;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.Morpheme;
+import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
 
 /**
  * 形態素N-Gram要素の検索用マップ.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2018.08.29
  */
 public class MapMNGram {
 
@@ -103,11 +104,10 @@ public class MapMNGram {
 	/**
 	 * 重要度指標値を算出する.
 	 *
-	 * @param results		重要度の高い形態素N-Gramを追加するリスト
 	 * @param chance	ポアソン分布算出用：
 	 * 					確率×回数 の回数
 	 */
-	final void calcScore(final List<MNElement> results, final int chance) {
+	final void calcScore(final int chance) {
 
 		int k = numOfMorpheme(); // N-Gram要素の語彙数
 
@@ -119,11 +119,90 @@ public class MapMNGram {
 		for (MNElement elm : elms) {
 			double score = elm.calcScore(poi);	// ポアソン分布を基に重要度指標値を算出する
 
-			if (MNppAnalyzer.THRESHOLD <= score) {
-				// 重要度が判断閾値よりも高い場合
+			if (MNppAnalyzer.THRESHOLD > score) {
+				// 重要度が判断閾値よりも低い場合
+				elm.drop();	// 削除フラグを立てる
+			}
+		}
+	}
+
+	/**
+	 * 形態素N-Gramの品詞をチェックする.
+	 * (ヒューリスティックな処理)
+	 * ストップワードのみの場合、削除フラグを立てる.
+	 *
+	 */
+	final void checkPartOfSpeech() {
+
+		Collection<MNElement> elms = getMNElements();
+		for (MNElement elm : elms) {
+			// 形態素N-Gram毎に
+			boolean meaningful = false;
+			Morpheme[] mors = elm.getMoroheme();
+			for (Morpheme m:mors) {
+				// 形態素毎に
+				if (PartOfSpeech.OTHERS != m.getPartOfSpeech()) {
+					// ストップワード以外を含む場合
+					meaningful = true;	//意味ありフラグを立てる
+				}
+			}
+			if (!meaningful) {
+				// 意味ありフラグが立っていない場合
+				elm.drop(); // 削除フラグを立てる
+			}
+		}
+		return;
+	}
+
+	/**
+	 * 形態素N-Gramの両端の品詞をチェックする.
+	 * (ヒューリスティックな処理)
+	 *
+	 *
+	 */
+	final void checkEndsPartOfSpeech(final MapMNGram parentMap) {
+
+		Collection<MNElement> elms = parentMap.getMNElements();
+		for (MNElement elm : elms) {
+			// 上位階層の形態素N-Gram要素毎に
+
+			int n = elm.getNumOfGram();
+			Morpheme[] mors = elm.getMoroheme();
+
+			int last = mors[n-1].getPartOfSpeech();
+			int last2 = mors[n-2].getPartOfSpeech();
+
+			if (((PartOfSpeech.OTHERS == last) &&
+					(PartOfSpeech.OTHERS == last2)) ||
+				((PartOfSpeech.OTHERS == last) &&
+					(PartOfSpeech.NORN == last2))) {
+
+//				System.out.println("* " +  elm.getSurface() + "is dropped!");
+				elm.drop();
+			}
+			int top = mors[0].getPartOfSpeech();
+			int top2 = mors[1].getPartOfSpeech();
+
+		}
+		return;
+	}
+
+	/**
+	 * 削除フラグに基づき結果を返す.
+	 *
+	 * @param results	結果
+	 */
+	final void setResults(final List<MNElement> results) {
+
+		Collection<MNElement> elms = getMNElements();
+		for (MNElement elm : elms) {
+
+			if (!elm.isDrop()) {
+				// 削除されていない場合
 
 				results.add(elm);	// リストに追加する
 			}
 		}
+
 	}
 }

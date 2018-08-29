@@ -8,7 +8,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.Morpheme;
  * 形態素N-Gram要素.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2018.08.29
  */
 public class MNElement {
 
@@ -32,6 +32,14 @@ public class MNElement {
 		return this.mors.length;
 	}
 
+	/**
+	 * 形態素N-Gram要素配列を返す.
+	 *
+	 * @return 形態素N-Gram要素配列
+	 */
+	final Morpheme[] getMoroheme() {
+		return this.mors;
+	}
 
 	// ========================================================================
 	/**
@@ -72,6 +80,28 @@ public class MNElement {
 		return this.score;
 	}
 
+	/**
+	 * 削除フラグ.
+	 */
+	private boolean dropFlag;
+
+	/**
+	 * 削除フラグを立てる.
+	 */
+	final void drop() {
+		this.dropFlag = true;
+	}
+
+	/**
+	 * 削除されたか否かを返す.
+	 *
+	 * @return 削除されたか否か
+	 */
+	final boolean isDrop() {
+		return this.dropFlag;
+	}
+
+
 	// ========================================================================
 	/**
 	 * コンストラクタ.
@@ -83,6 +113,7 @@ public class MNElement {
 		this.num = 1;
 		this.fwdAdjust = 0;
 		this.bwdAdjust = 0;
+		this.dropFlag = false;
 		return;
 	}
 
@@ -196,7 +227,7 @@ public class MNElement {
 	/**
 	 * 出現文字列を求める.
 	 *
-	 * @return
+	 * @return 出現文字列
 	 */
 	final String getSurface() {
 		String str = "";

@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2018.08.28
+ * @version 2018.08.29
  */
 public class MNppAnalyzer {
 
@@ -63,8 +63,8 @@ public class MNppAnalyzer {
 		String testStr2 = "かえるがおよぐ。";
 		mla.analyze(morphemes, testStr2); // 形態素リストに変換、追加する
 
-		System.out.println("(" + morphemes.size() + "): "
-				+ mla.getSurface(morphemes, " ", PartOfSpeech.ALL));
+		System.out.println("(" + morphemes.size() + "): " + mla.getSurface(
+				morphemes, " ", PartOfSpeech.ALL));
 
 		// 形態素階層化 N-Gram解析を行う.
 		List<MNElement> results = new ArrayList<MNElement>();
@@ -156,11 +156,23 @@ public class MNppAnalyzer {
 
 			// 重要度指標値を算出する
 			int chance = length - i + 1;
-			targetMap.calcScore(results, chance);
+			targetMap.calcScore(chance);
 
 			// 品詞を用いて非重要形態素N-Gramを削除する
-			// ※未実装		二段階の処理への変更も要検討
+			targetMap.checkPartOfSpeech();
+
+			// ※ここが未だ上手くできていない
+			targetMap.checkEndsPartOfSpeech(parentMap);
+
+
+			if (max - 1 != i) {
+				// 出力を１階層ずらして行っているので…
+				parentMap.setResults(results);			// 結果をリストに返す
+			}
 		}
+		// 出力を１階層ずらして行っているので…
+		targetMap.setResults(results);
+
 		return;
 	}
 }
