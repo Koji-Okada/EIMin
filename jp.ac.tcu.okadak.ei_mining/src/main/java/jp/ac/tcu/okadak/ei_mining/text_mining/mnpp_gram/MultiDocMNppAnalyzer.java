@@ -9,7 +9,7 @@ import java.io.IOException;
  * 複数文書に対する形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2018.08.26
+ * @version 2018.08.29
  */
 public class MultiDocMNppAnalyzer {
 
