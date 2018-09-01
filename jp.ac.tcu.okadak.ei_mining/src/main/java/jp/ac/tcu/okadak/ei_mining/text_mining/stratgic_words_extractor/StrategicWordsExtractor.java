@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2018.08.26
+ * @version 2018.09.01
  */
 public final class StrategicWordsExtractor {
 
@@ -188,12 +188,24 @@ public final class StrategicWordsExtractor {
 			if (threshold <= v) {
 				// 有意差がある場合
 
-				// 出力形式に纏める.
+				// 出現範囲を算出する
+				int first = -1;
+				int last = -1;
+				for (int p = 0; p < numP; p++) {
+					if (null != data[se][p]) {
+						if (-1 == first) {
+							first = p;
+						}
+						last = p;
+					}
+				}
+
+				// 出力形式に纏める
 				String st = "特定企業型" + ",";
 				st = st + "\"" + ind + "\",";
 				st = st + enterprises.get(se) + ",";
-				st = st + periods.get(0) + ",";
-				st = st + periods.get(numP - 1) + ",";
+				st = st + periods.get(first) + ",";
+				st = st + periods.get(last) + ",";
 				st = st + v + ",";
 				st = st + periods.get(0) + ",";
 				st = st + periods.get(numP - 1);

@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素N-Gram要素の検索用マップ.
  *
  * @author K.Okada
- * @version 2018.08.29
+ * @version 2018.09.01
  */
 public class MapMNGram {
 
@@ -177,12 +177,24 @@ public class MapMNGram {
 				((PartOfSpeech.OTHERS == last) &&
 					(PartOfSpeech.NORN == last2))) {
 
-//				System.out.println("* " +  elm.getSurface() + "is dropped!");
-				elm.drop();
-			}
-			int top = mors[0].getPartOfSpeech();
-			int top2 = mors[1].getPartOfSpeech();
+				// ※重要度指標の伝播修正処理は未実装
 
+//				System.out.println("* " +  elm.getSurface() + "is dropped!");
+				elm.drop();		// 削除フラグを立てる
+			}
+			int first = mors[0].getPartOfSpeech();
+			int second = mors[1].getPartOfSpeech();
+
+			if (((PartOfSpeech.OTHERS == first) &&
+					(PartOfSpeech.OTHERS == second)) ||
+				((PartOfSpeech.OTHERS == first) &&
+					(PartOfSpeech.NORN == second))) {
+
+				// ※重要度指標の伝播修正処理は未実装
+
+//				System.out.println("- " +  elm.getSurface() + "is dropped!");
+				elm.drop();		// 削除フラグを立てる
+			}
 		}
 		return;
 	}
