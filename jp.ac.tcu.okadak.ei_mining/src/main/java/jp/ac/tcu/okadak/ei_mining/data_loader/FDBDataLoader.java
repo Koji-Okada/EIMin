@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.08.21
+ * @version 2018.09.02
  */
 public class FDBDataLoader {
 
@@ -93,12 +93,12 @@ public class FDBDataLoader {
 			// 対象データ要素を読込む
 			String dataElementsSettingFile = settingPath
 					+ "/targetElements.txt";
-			loadSetting(targetDataElements, dataElementsSettingFile);
+			loadSetting(this.targetDataElements, dataElementsSettingFile);
 
 			// 対象企業を読込む
 			String enterprisesSettingFile = settingPath
 					+ "/targetEnterprises.txt";
-			loadSetting(targetEnterprises, enterprisesSettingFile);
+			loadSetting(this.targetEnterprises, enterprisesSettingFile);
 
 			// ==== データを読込む
 
@@ -144,7 +144,12 @@ public class FDBDataLoader {
 
 			String line;
 			while (null != (line = br.readLine())) {
-				res.put(line, line);
+				CSVTokenizer tokenizer = new CSVTokenizer(line);
+
+				String symbol = tokenizer.nextToken();
+				String str = tokenizer.nextToken();
+
+				res.put(str, symbol);
 			}
 
 			br.close();
@@ -181,9 +186,11 @@ public class FDBDataLoader {
 			while (tokenizer.hasMoreTokens()) {
 				String sValue = tokenizer.nextToken();
 
-				if (null != targetDataElements.get(sValue)) {
+				String symbol;
+				if (null != (symbol = targetDataElements.get(sValue))) {
 					// 対象データ要素の場合
-					index.put(c, sValue);
+//					index.put(c, sValue);
+					index.put(c, symbol);
 //					System.out.println(c + " : " + sValue);
 				}
 				c++;
@@ -209,7 +216,8 @@ public class FDBDataLoader {
 				// date の年度への変換
 				date = period(date);
 
-				if (targetEnterprises.containsKey(entID)) {
+				String entSymbol;
+				if (null != (entSymbol = targetEnterprises.get(entID))) {
 					// 対象企業の場合
 
 					String indicator;
@@ -229,7 +237,7 @@ public class FDBDataLoader {
 							} else {
 								value = null;
 							}
-							dm.putData(entName, date, indicator, value);
+							dm.putData(entSymbol, date, indicator, value);
 						}
 						i++;
 					}
