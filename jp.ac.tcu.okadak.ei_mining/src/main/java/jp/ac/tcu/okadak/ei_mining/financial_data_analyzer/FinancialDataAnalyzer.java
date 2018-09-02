@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.PairVecAnalyzer;
  * 財務データ分析器.
  *
  * @author K.Okada
- * @version 2018.08.21
+ * @version 2018.09.02
  */
 public final class FinancialDataAnalyzer {
 

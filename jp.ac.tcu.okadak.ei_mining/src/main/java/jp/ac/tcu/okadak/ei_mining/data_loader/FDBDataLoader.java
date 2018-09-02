@@ -118,6 +118,9 @@ public class FDBDataLoader {
 			targetFile = targetPath + "/連結キャッシュフロー計算書.txt";
 			loadData(targetFile);
 
+			// 財務指標を導出し追加する.
+			addIndicators();
+
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -189,17 +192,11 @@ public class FDBDataLoader {
 				String symbol;
 				if (null != (symbol = targetDataElements.get(sValue))) {
 					// 対象データ要素の場合
-//					index.put(c, sValue);
 					index.put(c, symbol);
-//					System.out.println(c + " : " + sValue);
 				}
 				c++;
 			}
 			System.out.println("...");
-
-//			for (String e : targetEnterprises.keySet()) {
-//				System.out.println(" - " + e);
-//			}
 
 			// データを読込む
 			while (null != (line = br.readLine())) {
@@ -233,7 +230,7 @@ public class FDBDataLoader {
 							if (0 != sValue.length()) {
 								// 単位換算する
 								long x = Long.parseLong(sValue) / UNIT;
-								value = (Double) ((double)x);
+								value = (Double) ((double) x);
 							} else {
 								value = null;
 							}
@@ -278,4 +275,62 @@ public class FDBDataLoader {
 
 		return String.valueOf(year);
 	}
+
+	// =========================================================================
+
+	/**
+	 * 財務指標を導出し加える.
+	 *
+	 * 		※本来は外部で指定すべき
+	 */
+	private void addIndicators() {
+
+		addInd("売上高総利益率", "売上総損益", "売上高");
+		addInd("売上高営業損益率", "営業損益", "売上高");
+		addInd("売上高当期純損益率", "当期純損益", "売上高");
+
+		addInd("当座資産率", "当座資産", "資産");
+		addInd("棚卸資産率", "棚卸資産", "資産");
+		addInd("流動資産率", "流動資産", "資産");
+		addInd("有形固定資産率", "有形固定資産", "資産");
+		addInd("無形固定資産率", "無形固定資産", "資産");
+		addInd("固定資産率", "固定資産", "資産");
+
+		addInd("流動負債率", "流動負債", "資産");
+		addInd("固定負債率", "固定負債", "資産");
+		addInd("純資産率", "純資産", "資産");
+
+		return;
+	}
+
+	/**
+	 * 財務指標を導出し加える.
+	 *
+	 * @param strDerived
+	 *            導出指標名
+	 * @param strNumerator
+	 *            分子指標名
+	 * @param strDenominator
+	 *            分母指標名
+	 */
+	private void addInd(final String strDerived, final String strNumerator,
+			final String strDenominator) {
+
+		for (String e : this.dm.getEnterprises()) {
+			for (String p : this.dm.getPeriods()) {
+
+				Double denominator = this.dm.getValue(e, p, strDenominator);
+				Double numerator = this.dm.getValue(e, p, strNumerator);
+
+				if ((null != denominator) && (null != numerator)) {
+					Double derived = numerator / denominator;
+
+					this.dm.putData(e, p, strDerived, derived);
+				}
+			}
+		}
+
+		return;
+	}
+
 }
