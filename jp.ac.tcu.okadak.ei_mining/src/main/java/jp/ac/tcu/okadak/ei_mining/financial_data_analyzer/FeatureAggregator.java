@@ -15,14 +15,15 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 財務データ特徴の集約器.
  *
  * @author K.Okada
- * @version 2018.08.21
+ * @version 2018.09.02
  */
 public class FeatureAggregator {
 
 	/**
 	 * 多重検出される特徴パターンを集約する.
 	 *
-	 * @param filePath 処理対象のファイルパス
+	 * @param filePath
+	 *            処理対象のファイルパス
 	 */
 	final void aggregate(final String filePath) {
 
@@ -37,7 +38,8 @@ public class FeatureAggregator {
 	/**
 	 * 特徴パターンデータを読み込む.
 	 *
-	 * @param filePath 処理対象のファイルパス
+	 * @param filePath
+	 *            処理対象のファイルパス
 	 * @return 読込んだデータ
 	 */
 	final EPIDataManager<Integer> load(final String filePath) {
@@ -61,7 +63,7 @@ public class FeatureAggregator {
 				String sp = ct.nextToken(); // 開始点
 				String ep = ct.nextToken(); // 終了点
 
-				String feInd = feature + "," + indicator;	// 特徴＋指標
+				String feInd = feature + "," + indicator; // 特徴＋指標
 
 				int s = Integer.parseInt(sp);
 				int e = Integer.parseInt(ep);
@@ -80,21 +82,24 @@ public class FeatureAggregator {
 		return epiDM;
 	}
 
-
 	/**
 	 * 集約した結果を記録する.
 	 *
-	 * @param filePath	処理対象のファイルパス
-	 * @param epiDM	処理対象データ
+	 * @param filePath
+	 *            処理対象のファイルパス
+	 * @param epiDM
+	 *            処理対象データ
 	 */
-	final void record(final String filePath, final EPIDataManager<Integer> epiDM) {
+	final void record(final String filePath,
+			final EPIDataManager<Integer> epiDM) {
 
 		List<String> enterprises = epiDM.getEnterprises();
 		List<String> periods = epiDM.listPeriods();
 		List<String> indicators = epiDM.getIndicators();
 
 		try {
-			File outputFile = new File(filePath + "/" + "aggregatedTrendFeatures.txt");
+			File outputFile = new File(
+					filePath + "/" + "aggregatedTrendFeatures.txt");
 			FileWriter fw = new FileWriter(outputFile);
 			BufferedWriter bw = new BufferedWriter(fw);
 
@@ -103,12 +108,17 @@ public class FeatureAggregator {
 
 					// 合計、特徴開始点、特徴終了点を求める
 					int sum = 0;
+					int max = 0;
 					String sp = null;
 					String ep = null;
 					for (String p : periods) {
 						Integer v = epiDM.getValue(e, p, i);
 						if (null != v) {
 							sum += v;
+							if (v > max) {
+								max = v;
+							}
+
 							ep = p;
 							if (null == sp) {
 								sp = p;
@@ -117,7 +127,10 @@ public class FeatureAggregator {
 					}
 					String str = i + "," + e + ",";
 					str = str + sp + "," + ep + ",";
-					str = str + periods.get(0) + "," + periods.get(periods.size()-1);
+					double m = (double) max / (double) sum;
+					str = str + m + ",";
+					str = str + periods.get(0) + ","
+							+ periods.get(periods.size() - 1);
 
 					for (String p : periods) {
 						Integer v = epiDM.getValue(e, p, i);
