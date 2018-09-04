@@ -81,6 +81,17 @@ public class MNElement {
 	}
 
 	/**
+	 * 強制的にスコアを置き換える.
+	 *
+	 * @param sc	新スコア
+	 */
+	final void replaceScore(final double sc) {
+		this.score = sc;
+
+		return;
+	}
+
+	/**
 	 * 削除フラグ.
 	 */
 	private boolean dropFlag;

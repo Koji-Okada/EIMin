@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素N-Gram要素の検索用マップ.
  *
  * @author K.Okada
- * @version 2018.09.01
+ * @version 2018.09.04
  */
 public class MapMNGram {
 
@@ -177,8 +177,15 @@ public class MapMNGram {
 				((PartOfSpeech.OTHERS == last) &&
 					(PartOfSpeech.NORN == last2))) {
 
-				// ※重要度指標の伝播修正処理は未実装
-
+				// ※重要度指標の伝播修正処理
+				String fwdString = elm.getForwardIdStr(); // 前方識別文字列を求める
+				MNElement fwdElm = this.map.get(fwdString); // 前方形態素N-Gram要素を得る
+				double fwdScore = fwdElm.getScore();
+				double score = elm.getScore();
+				if (score > fwdScore) {
+					fwdElm.replaceScore(score);
+					System.out.println("* " + score + "->" + fwdScore);
+				}
 //				System.out.println("* " +  elm.getSurface() + "is dropped!");
 				elm.drop();		// 削除フラグを立てる
 			}
@@ -190,7 +197,16 @@ public class MapMNGram {
 				((PartOfSpeech.OTHERS == first) &&
 					(PartOfSpeech.NORN == second))) {
 
-				// ※重要度指標の伝播修正処理は未実装
+				// ※重要度指標の伝播修正処理
+				String bwdString = elm.getBackwardIdStr(); // 後方識別文字列を求める
+				MNElement bwdElm = this.map.get(bwdString); // 後方形態素N-Gram要素を得る
+				double bwdScore = bwdElm.getScore();
+				double score = elm.getScore();
+				if (score > bwdScore) {
+					bwdElm.replaceScore(score);
+					System.out.println("* " + score + "->" + bwdScore);
+				}
+
 
 //				System.out.println("- " +  elm.getSurface() + "is dropped!");
 				elm.drop();		// 削除フラグを立てる
