@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.08.21
+ * @version 2018.09.05
  */
 public class FDBDataLoader {
 
@@ -93,12 +93,12 @@ public class FDBDataLoader {
 			// 対象データ要素を読込む
 			String dataElementsSettingFile = settingPath
 					+ "/targetElements.txt";
-			loadSetting(targetDataElements, dataElementsSettingFile);
+			loadSetting(this.targetDataElements, dataElementsSettingFile);
 
 			// 対象企業を読込む
 			String enterprisesSettingFile = settingPath
 					+ "/targetEnterprises.txt";
-			loadSetting(targetEnterprises, enterprisesSettingFile);
+			loadSetting(this.targetEnterprises, enterprisesSettingFile);
 
 			// ==== データを読込む
 
@@ -117,6 +117,9 @@ public class FDBDataLoader {
 			// キャッシュフロー計算書データを読込む
 			targetFile = targetPath + "/連結キャッシュフロー計算書.txt";
 			loadData(targetFile);
+
+			// 財務指標を導出し追加する.
+			addIndicators();
 
 			br.close();
 		} catch (IOException e) {
@@ -144,7 +147,12 @@ public class FDBDataLoader {
 
 			String line;
 			while (null != (line = br.readLine())) {
-				res.put(line, line);
+				CSVTokenizer tokenizer = new CSVTokenizer(line);
+
+				String symbol = tokenizer.nextToken();
+				String str = tokenizer.nextToken();
+
+				res.put(str, symbol);
 			}
 
 			br.close();
@@ -181,18 +189,14 @@ public class FDBDataLoader {
 			while (tokenizer.hasMoreTokens()) {
 				String sValue = tokenizer.nextToken();
 
-				if (null != targetDataElements.get(sValue)) {
+				String symbol;
+				if (null != (symbol = targetDataElements.get(sValue))) {
 					// 対象データ要素の場合
-					index.put(c, sValue);
-//					System.out.println(c + " : " + sValue);
+					index.put(c, symbol);
 				}
 				c++;
 			}
 			System.out.println("...");
-
-//			for (String e : targetEnterprises.keySet()) {
-//				System.out.println(" - " + e);
-//			}
 
 			// データを読込む
 			while (null != (line = br.readLine())) {
@@ -209,7 +213,8 @@ public class FDBDataLoader {
 				// date の年度への変換
 				date = period(date);
 
-				if (targetEnterprises.containsKey(entID)) {
+				String entSymbol;
+				if (null != (entSymbol = targetEnterprises.get(entID))) {
 					// 対象企業の場合
 
 					String indicator;
@@ -225,11 +230,11 @@ public class FDBDataLoader {
 							if (0 != sValue.length()) {
 								// 単位換算する
 								long x = Long.parseLong(sValue) / UNIT;
-								value = (Double) ((double)x);
+								value = (Double) ((double) x);
 							} else {
 								value = null;
 							}
-							dm.putData(entName, date, indicator, value);
+							dm.putData(entSymbol, date, indicator, value);
 						}
 						i++;
 					}
@@ -270,4 +275,66 @@ public class FDBDataLoader {
 
 		return String.valueOf(year);
 	}
+
+	// =========================================================================
+
+	/**
+	 * 財務指標を導出し加える.
+	 *
+	 * 		※本来は外部で指定すべき
+	 */
+	private void addIndicators() {
+
+		addInd("売上高総利益率", "売上総損益", "売上高");
+		addInd("売上高営業損益率", "営業損益", "売上高");
+		addInd("売上高当期純損益率", "当期純損益", "売上高");
+
+		addInd("当座資産率", "当座資産", "資産");
+		addInd("棚卸資産率", "棚卸資産", "資産");
+		addInd("流動資産率", "流動資産", "資産");
+		addInd("有形固定資産率", "有形固定資産", "資産");
+		addInd("無形固定資産率", "無形固定資産", "資産");
+		addInd("固定資産率", "固定資産", "資産");
+
+		addInd("流動負債率", "流動負債", "資産");
+		addInd("固定負債率", "固定負債", "資産");
+		addInd("純資産率", "純資産", "資産");
+
+		addInd("当座比率", "当座資産", "流動負債");
+		addInd("流動比率", "流動資産", "流動負債");
+		addInd("固定比率", "固定資産", "純資産");
+
+		return;
+	}
+
+	/**
+	 * 財務指標を導出し加える.
+	 *
+	 * @param strDerived
+	 *            導出指標名
+	 * @param strNumerator
+	 *            分子指標名
+	 * @param strDenominator
+	 *            分母指標名
+	 */
+	private void addInd(final String strDerived, final String strNumerator,
+			final String strDenominator) {
+
+		for (String e : this.dm.getEnterprises()) {
+			for (String p : this.dm.getPeriods()) {
+
+				Double denominator = this.dm.getValue(e, p, strDenominator);
+				Double numerator = this.dm.getValue(e, p, strNumerator);
+
+				if ((null != denominator) && (null != numerator)) {
+					Double derived = numerator / denominator;
+
+					this.dm.putData(e, p, strDerived, derived);
+				}
+			}
+		}
+
+		return;
+	}
+
 }
