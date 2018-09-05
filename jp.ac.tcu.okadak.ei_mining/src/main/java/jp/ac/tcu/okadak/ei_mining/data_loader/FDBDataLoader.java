@@ -15,7 +15,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 元データはライセンス契約により保護されているので ライセンスを得たローカルPC上のみに置かれている,
  *
  * @author K.Okada
- * @version 2018.09.02
+ * @version 2018.09.05
  */
 public class FDBDataLoader {
 
@@ -299,6 +299,10 @@ public class FDBDataLoader {
 		addInd("流動負債率", "流動負債", "資産");
 		addInd("固定負債率", "固定負債", "資産");
 		addInd("純資産率", "純資産", "資産");
+
+		addInd("当座比率", "当座資産", "流動負債");
+		addInd("流動比率", "流動資産", "流動負債");
+		addInd("固定比率", "固定資産", "純資産");
 
 		return;
 	}
