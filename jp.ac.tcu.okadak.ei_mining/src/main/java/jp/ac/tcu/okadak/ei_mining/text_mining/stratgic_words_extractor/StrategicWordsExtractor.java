@@ -83,8 +83,8 @@ public final class StrategicWordsExtractor {
 		List<String> indicators = epiDM.getIndicators();
 		int numIndicators = indicators.size();
 
-		System.out.println(
-				numEnterprises + " : " + numPeriods + " : " + numIndicators);
+		System.out.println(numEnterprises + " : " + numPeriods + " : "
+				+ numIndicators);
 
 		try {
 			// 出力先を用意する
@@ -344,6 +344,13 @@ public final class StrategicWordsExtractor {
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
+		String res = "";
+
+		// 1社しかない場合は処理しない
+		if (1 >= countEnterpriseWithWord(data, enterprises, periods)) {
+			return res;
+		}
+
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
 		final double threshold = 0.999999e0d; // 閾値
@@ -359,8 +366,6 @@ public final class StrategicWordsExtractor {
 		int wsMax = 0;
 		int weMax = numP - 1;
 		boolean found = false;
-
-		String res = "";
 
 		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
 			// 期間窓の幅を選択する
@@ -421,6 +426,41 @@ public final class StrategicWordsExtractor {
 			}
 		}
 		return res;
+	}
+
+	// =================================================================
+	/**
+	 * 指標を含む企業の数を算出する.
+	 *
+	 * @param data
+	 *            値[企業][期間].矩形を想定.
+	 * @param enterprises
+	 *            企業のリスト
+	 * @param periods
+	 *            期間のリスト
+	 * @return
+	 * 				指標を含む企業の数
+	 */
+	private int countEnterpriseWithWord(final Double[][] data,
+			final List<String> enterprises, final List<String> periods) {
+
+		int numE = enterprises.size();
+		int numP = periods.size();
+		int c = 0;
+		for (int ent = 0; ent < numE; ent++) {
+			boolean flg = false;
+			for (int prd = 0; prd < numP; prd++) {
+				if (null != data[ent][prd]) {
+					flg = true;
+					break;
+				}
+			}
+			if (flg) {
+				c++;
+			}
+		}
+
+		return c;
 	}
 
 	// =================================================================
