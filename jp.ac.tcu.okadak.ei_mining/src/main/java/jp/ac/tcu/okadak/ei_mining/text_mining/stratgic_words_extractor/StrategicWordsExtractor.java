@@ -115,16 +115,16 @@ public final class StrategicWordsExtractor {
 
 				// 特定企業型戦略ワードを抽出する
 
-				res = specificEnterprise(data, enterprises, periods, ind);
-				if ("" != res) {
-					bw.write(res);
-				}
+//				res = specificEnterprise(data, enterprises, periods, ind);
+//				if ("" != res) {
+//					bw.write(res);
+//				}
 
 				// 特定期間型戦略ワードを抽出する
-				res = specificPeriod(data, enterprises, periods, ind);
-				if ("" != res) {
-					bw.write(res);
-				}
+//				res = specificPeriod(data, enterprises, periods, ind);
+//				if ("" != res) {
+//					bw.write(res);
+//				}
 
 				// 業界動向型戦略ワードを抽出する
 				res = industrialTrend(data, enterprises, periods, ind);
