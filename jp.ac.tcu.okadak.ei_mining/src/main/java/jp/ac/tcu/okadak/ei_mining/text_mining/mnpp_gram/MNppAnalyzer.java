@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2018.08.29
+ * @version 2019.01.18
  */
 public class MNppAnalyzer {
 
@@ -104,6 +104,18 @@ public class MNppAnalyzer {
 				int n = elm.getNum();
 				int g = elm.getNumOfGram();
 				String surface = elm.getSurface();
+
+				// 無理矢理なヒューリスティク処理なので要見直し (2019.01.18)
+				if (surface.matches(".*[0-9].*")) {
+					continue;
+				}
+				if (surface.matches(".*。.*")) {
+					continue;
+				}
+				if (surface.matches("^、.*")) {
+					continue;
+				}
+				// ここまで (2019.01.18 追加)
 
 				String outputStr = "\"" + surface + "\",";
 				outputStr = outputStr + g + ",";

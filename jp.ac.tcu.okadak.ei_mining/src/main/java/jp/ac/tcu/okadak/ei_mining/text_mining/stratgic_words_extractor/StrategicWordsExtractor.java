@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2018.09.01
+ * @version 2019.01.18
  */
 public final class StrategicWordsExtractor {
 
@@ -157,8 +157,8 @@ public final class StrategicWordsExtractor {
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
-		final double threshold = 0.999999e0d; // 閾値
-		// final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		final double threshold = 0.95e0d; // 閾値
 
 		int numE = enterprises.size();
 		int numP = periods.size();
@@ -245,8 +245,15 @@ public final class StrategicWordsExtractor {
 
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
-		final double threshold = 0.999999e0d; // 閾値
-		// final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		final double threshold = 0.95e0d; // 閾値
+
+		String res = "";
+
+		// 1社しかない場合は処理しない
+		if (1 >= countEnterpriseWithWord(data, enterprises, periods)) {
+			return res;
+		}
 
 		int numE = enterprises.size();
 		int numP = periods.size();
@@ -258,8 +265,6 @@ public final class StrategicWordsExtractor {
 		int wsMax = 0;
 		int weMax = numP - 1;
 		boolean found = false;
-
-		String res = "";
 
 		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
 			// 期間窓の幅を選択する
@@ -353,8 +358,8 @@ public final class StrategicWordsExtractor {
 
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
-		final double threshold = 0.999999e0d; // 閾値
-		// final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		final double threshold = 0.95e0d; // 閾値
 
 		int numE = enterprises.size();
 		int numP = periods.size();

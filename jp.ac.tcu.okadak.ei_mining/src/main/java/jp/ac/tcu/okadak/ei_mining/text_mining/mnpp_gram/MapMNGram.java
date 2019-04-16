@@ -14,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素N-Gram要素の検索用マップ.
  *
  * @author K.Okada
- * @version 2018.09.04
+ * @version 2019.01.18
  */
 public class MapMNGram {
 
@@ -117,11 +117,11 @@ public class MapMNGram {
 
 		Collection<MNElement> elms = getMNElements();
 		for (MNElement elm : elms) {
-			double score = elm.calcScore(poi);	// ポアソン分布を基に重要度指標値を算出する
+			double score = elm.calcScore(poi); // ポアソン分布を基に重要度指標値を算出する
 
 			if (MNppAnalyzer.THRESHOLD > score) {
 				// 重要度が判断閾値よりも低い場合
-				elm.drop();	// 削除フラグを立てる
+				elm.drop(); // 削除フラグを立てる
 			}
 		}
 	}
@@ -139,11 +139,18 @@ public class MapMNGram {
 			// 形態素N-Gram毎に
 			boolean meaningful = false;
 			Morpheme[] mors = elm.getMoroheme();
-			for (Morpheme m:mors) {
+			for (Morpheme m : mors) {
 				// 形態素毎に
-				if (PartOfSpeech.OTHERS != m.getPartOfSpeech()) {
-					// ストップワード以外を含む場合
-					meaningful = true;	//意味ありフラグを立てる
+
+				//				if (PartOfSpeech.OTHERS != m.getPartOfSpeech()) {
+				//					// ストップワード以外を含む場合
+				//					meaningful = true;	//意味ありフラグを立てる
+				//				}
+
+				// 名詞を含まない場合は捨てる (2019.01.17)
+				if (PartOfSpeech.NORN == m.getPartOfSpeech()) {
+					// 名詞を含む場合
+					meaningful = true; //意味ありフラグを立てる
 				}
 			}
 			if (!meaningful) {
@@ -169,13 +176,13 @@ public class MapMNGram {
 			int n = elm.getNumOfGram();
 			Morpheme[] mors = elm.getMoroheme();
 
-			int last = mors[n-1].getPartOfSpeech();
-			int last2 = mors[n-2].getPartOfSpeech();
+			int last = mors[n - 1].getPartOfSpeech();
+			int last2 = mors[n - 2].getPartOfSpeech();
 
-			if (((PartOfSpeech.OTHERS == last) &&
-					(PartOfSpeech.OTHERS == last2)) ||
-				((PartOfSpeech.OTHERS == last) &&
-					(PartOfSpeech.NORN == last2))) {
+			if (((PartOfSpeech.OTHERS == last)
+					&& (PartOfSpeech.OTHERS == last2))
+					|| ((PartOfSpeech.OTHERS == last)
+							&& (PartOfSpeech.NORN == last2))) {
 
 				// ※重要度指標の伝播修正処理
 				String fwdString = elm.getForwardIdStr(); // 前方識別文字列を求める
@@ -184,18 +191,18 @@ public class MapMNGram {
 				double score = elm.getScore();
 				if (score > fwdScore) {
 					fwdElm.replaceScore(score);
-					System.out.println("* " + score + "->" + fwdScore);
+					//					System.out.println("* " + score + "->" + fwdScore);
 				}
-//				System.out.println("* " +  elm.getSurface() + "is dropped!");
-				elm.drop();		// 削除フラグを立てる
+				//				System.out.println("* " +  elm.getSurface() + "is dropped!");
+				elm.drop(); // 削除フラグを立てる
 			}
 			int first = mors[0].getPartOfSpeech();
 			int second = mors[1].getPartOfSpeech();
 
-			if (((PartOfSpeech.OTHERS == first) &&
-					(PartOfSpeech.OTHERS == second)) ||
-				((PartOfSpeech.OTHERS == first) &&
-					(PartOfSpeech.NORN == second))) {
+			if (((PartOfSpeech.OTHERS == first)
+					&& (PartOfSpeech.OTHERS == second))
+					|| ((PartOfSpeech.OTHERS == first)
+							&& (PartOfSpeech.NORN == second))) {
 
 				// ※重要度指標の伝播修正処理
 				String bwdString = elm.getBackwardIdStr(); // 後方識別文字列を求める
@@ -204,12 +211,11 @@ public class MapMNGram {
 				double score = elm.getScore();
 				if (score > bwdScore) {
 					bwdElm.replaceScore(score);
-					System.out.println("* " + score + "->" + bwdScore);
+//					System.out.println("* " + score + "->" + bwdScore);
 				}
 
-
-//				System.out.println("- " +  elm.getSurface() + "is dropped!");
-				elm.drop();		// 削除フラグを立てる
+				//				System.out.println("- " +  elm.getSurface() + "is dropped!");
+				elm.drop(); // 削除フラグを立てる
 			}
 		}
 		return;
@@ -228,7 +234,7 @@ public class MapMNGram {
 			if (!elm.isDrop()) {
 				// 削除されていない場合
 
-				results.add(elm);	// リストに追加する
+				results.add(elm); // リストに追加する
 			}
 		}
 
