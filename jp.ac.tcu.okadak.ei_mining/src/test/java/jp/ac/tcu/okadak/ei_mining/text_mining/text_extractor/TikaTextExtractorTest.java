@@ -1,4 +1,4 @@
-package jp.ac.tcu.okadak.ei_mining.text_mining.textExtractor;
+package jp.ac.tcu.okadak.ei_mining.text_mining.text_extractor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

@@ -127,7 +127,9 @@ public final class XBRLDataIndexer {
 							// ファンドコードの場合は G
 
 							if (fileName.contains("header")) {
-								// 表紙ファイルに絞込む
+							// 表紙ファイルに絞込む
+
+//							if (fileName.contains(".xbrl")) {
 
 								// パース処理を行う
 								parser.parse(f, handler);
@@ -153,8 +155,8 @@ public final class XBRLDataIndexer {
 										.getEnterpriseName();
 								if (null == enterpriseName) {
 									enterpriseName = "";
-								} else
-									if (0 == enterpriseName.compareTo("\n")) {
+								} else if (0 == enterpriseName.compareTo(
+										"\n")) {
 									enterpriseName = "";
 								}
 
@@ -176,6 +178,7 @@ public final class XBRLDataIndexer {
 
 								System.out.println(date + "\t" + enterpriseName
 										+ "\t" + f.getParent());
+								//								}
 							}
 						}
 					}
