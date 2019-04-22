@@ -1,10 +1,5 @@
 package jp.ac.tcu.okadak.ei_mining.xbrl;
 
-import java.io.File;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -12,10 +7,11 @@ import org.xml.sax.helpers.DefaultHandler;
  * XBRL 基本情報抽出器.
  *
  * @author K.Okada
- * @version 2018.04.27
+ * @version 2019.04.22
  */
 public class XBRLBasicInfoHandler extends DefaultHandler {
 
+	// =======================================================================
 	/**
 	 * 企業名.
 	 */
@@ -92,27 +88,7 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 	 */
 	private boolean flagEdiNetCode = false;
 
-	/**
-	 *
-	 * @param args
-	 *            デフォルト.
-	 */
-	public static void main(final String[] args) {
-		try {
-			// SAXパーサファクトリを生成する
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			// SAXパーサを生成する
-			SAXParser parser = spf.newSAXParser();
-
-			// パーサが処理を委譲するハンドラを生成する
-			XBRLBasicInfoHandler handler = new XBRLBasicInfoHandler();
-
-			parser.parse(new File(args[0]), handler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	// =======================================================================
 	/**
 	 * 開始タグ読込み時の処理.
 	 *
@@ -133,14 +109,17 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 			String name = attributes.getValue("name");
 
 			if (0 == name.compareTo("jpdei_cor:FilerNameInJapaneseDEI")) {
+				// 企業名(日本語)の記述部分に遭遇した場合
 				flagEnterpriseName = true;
-			} else
-				if (0 == name
-						.compareTo("jpdei_cor:CurrentFiscalYearEndDateDEI")) {
+			} else if (0 == name.compareTo(
+					"jpdei_cor:CurrentFiscalYearEndDateDEI")) {
+				// 現状会計年度終了日の記述部分に遭遇した場合
 				flagCurrentFiscalYearEndDate = true;
 			} else if (0 == name.compareTo("jpdei_cor:SecurityCodeDEI")) {
+				// 証券コードの記述部分に遭遇した場合
 				flagSecurityCode = true;
 			} else if (0 == name.compareTo("jpdei_cor:EDINETCodeDEI")) {
+				// EDINETコードの記述部分に遭遇した場合
 				flagEdiNetCode = true;
 			}
 		}
@@ -160,20 +139,41 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 	public final void characters(final char[] ch, final int offset,
 			final int length) {
 
+		String str;
 		if (this.flagEnterpriseName) {
-			this.enterpriseName = new String(ch, offset, length);
+			// 企業名(日本語)の記述部分を処理中の場合
+			str = new String(ch, offset, length);
+			str = str.trim();
+			if (0 != str.length()) {
+				this.enterpriseName = str;
+			}
 			this.flagEnterpriseName = false;
 			// System.out.println(enterpriseName);
 		} else if (this.flagCurrentFiscalYearEndDate) {
-			this.currentFiscalYearEndDate = new String(ch, offset, length);
+			// 現状会計年度終了日の記述部分を処理中の場合
+			str = new String(ch, offset, length);
+			str = str.trim();
+			if (0 != str.length()) {
+				this.currentFiscalYearEndDate = str;
+			}
 			this.flagCurrentFiscalYearEndDate = false;
 			// System.out.println("\t" + currentFiscalYearEndDate);
 		} else if (this.flagSecurityCode) {
-			this.securityCode = new String(ch, offset, length);
+			// 証券コード記述部分を処理中の場合
+			str = new String(ch, offset, length);
+			str = str.trim();
+			if (0 != str.length()) {
+				this.securityCode = str;
+			}
 			this.flagSecurityCode = false;
 			// System.out.println("\t" + securityCode);
 		} else if (this.flagEdiNetCode) {
-			this.ediNetCode = new String(ch, offset, length);
+			// EDINETコードの記述部分を処理中の場合
+			str = new String(ch, offset, length);
+			str = str.trim();
+			if (0 != str.length()) {
+				this.ediNetCode = str;
+			}
 			this.flagEdiNetCode = false;
 			// System.out.println("\t" + ediNetCode);
 		}

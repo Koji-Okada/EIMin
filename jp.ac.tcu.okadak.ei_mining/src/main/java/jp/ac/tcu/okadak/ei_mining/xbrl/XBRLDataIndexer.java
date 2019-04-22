@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
  * XBRLデータの索引生成器.
  *
  * @author K.Okada
- * @version 2018.05.08
+ * @version 2019.04.22
  */
 public final class XBRLDataIndexer {
 
@@ -112,8 +112,6 @@ public final class XBRLDataIndexer {
 					// サブディレクトリの場合
 					// 再帰呼出し
 
-					// System.out.println(f.getPath());
-
 					searchXBRLData(f.getPath());
 				} else {
 					// ファイルの場合
@@ -129,7 +127,9 @@ public final class XBRLDataIndexer {
 							if (fileName.contains("header")) {
 							// 表紙ファイルに絞込む
 
-//							if (fileName.contains(".xbrl")) {
+							// .htm の方が、ファイルサイズが小さく
+							// header部分に関しては、ファイルを限定可能な為、
+							// .xbrl ではなく .htm から情報を抽出する
 
 								// パース処理を行う
 								parser.parse(f, handler);
@@ -138,15 +138,11 @@ public final class XBRLDataIndexer {
 								String ediNetCode = handler.getEdiNetCode();
 								if (null == ediNetCode) {
 									ediNetCode = "";
-								} else if (0 == ediNetCode.compareTo("\n")) {
-									ediNetCode = "";
 								}
 
 								// 証券コードを取得する
 								String securityCode = handler.getSecurityCode();
 								if (null == securityCode) {
-									securityCode = "";
-								} else if (0 == securityCode.compareTo("\n")) {
 									securityCode = "";
 								}
 
@@ -155,17 +151,12 @@ public final class XBRLDataIndexer {
 										.getEnterpriseName();
 								if (null == enterpriseName) {
 									enterpriseName = "";
-								} else if (0 == enterpriseName.compareTo(
-										"\n")) {
-									enterpriseName = "";
 								}
 
 								// 会計期間終了日を取得する
 								String date = handler
 										.getCurrentFiscalYearEndDate();
 								if (null == date) {
-									date = "";
-								} else if (0 == date.compareTo("\n")) {
 									date = "";
 								}
 
