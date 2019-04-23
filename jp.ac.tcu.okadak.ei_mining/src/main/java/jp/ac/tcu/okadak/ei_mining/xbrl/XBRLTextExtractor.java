@@ -13,7 +13,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * XBRLテキスト情報抽出器.
  *
  * @author K.Okada
- * @version 2018.05.08
+ * @version 2019.04.22
  */
 public class XBRLTextExtractor {
 
@@ -21,8 +21,6 @@ public class XBRLTextExtractor {
 	 * XBRLデータの索引.
 	 */
 	private EPIDataManager<String> xbrlIndex = new EPIDataManager<String>();
-
-
 
 	/**
 	 * XBRLデータ索引を返す.
@@ -33,8 +31,9 @@ public class XBRLTextExtractor {
 		return xbrlIndex;
 	}
 
+	// =======================================================================
 	/**
-	 * 指定ファイルに示された企業の XBRLテキストを作成する.
+	 * 指定ファイルに示された企業の XBRLテキストを抽出する.
 	 *
 	 * @param arg
 	 *            デフォルト
@@ -50,13 +49,13 @@ public class XBRLTextExtractor {
 	}
 
 	/**
-	 * 構成設定ファイルで指定された企業リストから XBRLテキストを作成する.
+	 * 構成設定ファイルで指定された企業リストから XBRLテキストを抽出する.
 	 */
 	private void extract() {
 
-		String targetPath;
-		String indexPath;
-		String outputPath;
+		String settingFilePath; // 抽出条件設定ファイルのパス
+		String indexPath; // 索引ファイルのパス
+		String outputPath; // 抽出結果の出力先のパス
 
 		// 設定ファイルから入出力パスを取得する
 		try {
@@ -64,32 +63,35 @@ public class XBRLTextExtractor {
 			FileReader fr = new FileReader(confFile);
 			BufferedReader br = new BufferedReader(fr);
 
-			targetPath = br.readLine();
+			settingFilePath = br.readLine();
 			indexPath = br.readLine();
 			outputPath = br.readLine();
-
-//			System.out.println("target: " + targetPath);
-//			System.out.println("index:  " + indexPath);
-//			System.out.println("output: " + outputPath);
 
 			// XBRLデータの索引を読込む
 			loadXBRLIndex(indexPath);
 
 			// 対象企業リストを取得する
 			ArrayList<String> targetEnterprises = getTargetEnterprises(
-					targetPath);
+					settingFilePath);
 
-			// 対象要素リストを取得する
-			ArrayList<String> targetElements = getTargetElements(targetPath);
-
-			// 対象企業から対象要素を抽出する
 			for (String ent : targetEnterprises) {
 				System.out.println(ent);
 			}
 
+			// 対象要素リストを取得する
+			ArrayList<String> targetElements = getTargetElements(
+					settingFilePath);
+
 			for (String elm : targetElements) {
 				System.out.println(elm);
 			}
+
+
+			// 対象企業から対象要素を抽出する
+			// ◆◆◆◆　　未だ未実装！！
+
+
+
 
 			br.close();
 		} catch (IOException e) {
@@ -102,17 +104,18 @@ public class XBRLTextExtractor {
 	/**
 	 * 対象企業リストを取得する.
 	 *
-	 * @param targetPath
+	 * @param settingFilePath
 	 *            処理対象設定ファイルのパス
 	 * @return 企業名のリスト
 	 */
-	private ArrayList<String> getTargetEnterprises(final String targetPath) {
+	private ArrayList<String> getTargetEnterprises(
+			final String settingFilePath) {
 
 		ArrayList<String> list = new ArrayList<String>();
 		String enterprise;
 
 		try {
-			File file = new File(targetPath + "/TargetEnterprises.txt");
+			File file = new File(settingFilePath + "/TargetEnterprises.txt");
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 
@@ -159,6 +162,7 @@ public class XBRLTextExtractor {
 		return list;
 	}
 
+	// =======================================================================
 	/**
 	 * XBRLデータ索引を読込む.
 	 *
@@ -210,9 +214,8 @@ public class XBRLTextExtractor {
 				String enterprise = csvt.nextToken();
 				String path = csvt.nextToken();
 
-
 				if ((0 != enterprise.length()) && (0 != date.length())) {
-					xbrlIndex.putData(enterprise, date, "index", path);
+					xbrlIndex.addData(enterprise, date, "index", path);
 
 					System.out.println(date + "\t" + enterprise + "\t" + path);
 				}

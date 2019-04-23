@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
  * XBRLデータの索引生成器.
  *
  * @author K.Okada
- * @version 2019.04.22
+ * @version 2019.04.23
  */
 public final class XBRLDataIndexer {
 
@@ -29,6 +29,11 @@ public final class XBRLDataIndexer {
 	 * 出力ファイル.
 	 */
 	private BufferedWriter bw;
+
+	/**
+	 *
+	 */
+	private int counterForException = 0;
 
 	/**
 	 * 指定されたフォルダから XBRLインデックスを作成する.
@@ -81,6 +86,9 @@ public final class XBRLDataIndexer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("    Exceptions = " + this.counterForException);
+
 		return;
 	}
 
@@ -124,12 +132,7 @@ public final class XBRLDataIndexer {
 							// EDNETコードの先頭は E から始まる
 							// ファンドコードの場合は G
 
-							if (fileName.contains("header")) {
-							// 表紙ファイルに絞込む
-
-							// .htm の方が、ファイルサイズが小さく
-							// header部分に関しては、ファイルを限定可能な為、
-							// .xbrl ではなく .htm から情報を抽出する
+							if (fileName.contains(".xbrl")) {
 
 								// パース処理を行う
 								parser.parse(f, handler);
@@ -160,22 +163,30 @@ public final class XBRLDataIndexer {
 									date = "";
 								}
 
-								String str = ediNetCode + "," + securityCode
-										+ "," + date + "," + enterpriseName
-										+ "," + f.getParent();
+								// 提出回数を取得する
+								String numOfSubmission = handler
+										.getNumOfSubmission();
+								if (null == numOfSubmission) {
+									numOfSubmission = "";
+								}
+
+								String str = numOfSubmission + "," + ediNetCode
+										+ "," + securityCode + "," + date + ","
+										+ enterpriseName + "," + f.getParent();
 
 								this.bw.write(str);
 								this.bw.newLine();
 
-								System.out.println(date + "\t" + enterpriseName
-										+ "\t" + f.getParent());
-								//								}
+								System.out.println(numOfSubmission + "\t" + date
+										+ "\t" + enterpriseName + "\t" + f
+												.getParent());
 							}
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
+			counterForException++; // 例外発生事象をカウントする
 			e.printStackTrace();
 		}
 		return;
