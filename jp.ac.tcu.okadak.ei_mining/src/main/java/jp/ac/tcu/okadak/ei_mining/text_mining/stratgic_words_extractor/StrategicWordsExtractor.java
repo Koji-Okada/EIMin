@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.feature_recognizer.InterGroupsAnalyzer;
  * 戦略ワード抽出器.
  *
  * @author K.Okada
- * @version 2019.01.18
+ * @version 2019.04.25
  */
 public final class StrategicWordsExtractor {
 
@@ -496,7 +496,7 @@ public final class StrategicWordsExtractor {
 			String entName = parts3[1];
 			String year = parts2[1];
 
-			if (docType.equals("AR")) {
+			if (docType.equals("AR") || docType.equals("CSR")) {
 				// ※文書種別を限定
 
 				load(f, entName, year); // 個別のファイルからワードを読込む
