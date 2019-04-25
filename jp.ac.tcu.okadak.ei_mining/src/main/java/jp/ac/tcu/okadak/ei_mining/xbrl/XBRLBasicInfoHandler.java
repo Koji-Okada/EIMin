@@ -7,7 +7,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * XBRL 基本情報抽出器.
  *
  * @author K.Okada
- * @version 2019.04.22
+ * @version 2019.04.23
  */
 public class XBRLBasicInfoHandler extends DefaultHandler {
 
