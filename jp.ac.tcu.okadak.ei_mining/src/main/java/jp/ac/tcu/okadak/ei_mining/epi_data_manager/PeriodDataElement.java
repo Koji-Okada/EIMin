@@ -95,7 +95,6 @@ public class PeriodDataElement<T> {
 		return (Map<String, EnterpriseDataElement<T>>) this.eMap;
 	}
 
-
 	/**
 	 * 指標データのマップを返す.
 	 *
@@ -113,7 +112,7 @@ public class PeriodDataElement<T> {
 	 *            ジェネリックス
 	 * @return 値
 	 */
-	@SuppressWarnings({"hiding", "unchecked"})
+	@SuppressWarnings({ "hiding", "unchecked" })
 	final <T> T getValue() {
 		return (T) this.value;
 	}

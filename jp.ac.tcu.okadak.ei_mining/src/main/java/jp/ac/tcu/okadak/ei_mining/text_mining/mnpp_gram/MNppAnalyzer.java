@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
  * 形態素階層化N-Gram解析器.
  *
  * @author K.Okada
- * @version 2019.01.18
+ * @version 2019.05.08
  */
 public class MNppAnalyzer {
 
@@ -170,12 +170,12 @@ public class MNppAnalyzer {
 			int chance = length - i + 1;
 			targetMap.calcScore(chance);
 
-			// 品詞を用いて非重要形態素N-Gramを削除する
-			targetMap.checkPartOfSpeech();
-
+			// 終端の品詞により、上位を調整する
 			// ※ここが未だ上手くできていない
 			targetMap.checkEndsPartOfSpeech(parentMap);
 
+			// 品詞を用いて非重要形態素N-Gramを削除する
+			targetMap.checkPartOfSpeech();
 
 			if (max - 1 != i) {
 				// 出力を１階層ずらして行っているので…

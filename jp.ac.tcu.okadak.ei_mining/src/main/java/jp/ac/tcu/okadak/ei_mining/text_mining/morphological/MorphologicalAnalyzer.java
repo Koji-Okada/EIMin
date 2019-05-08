@@ -118,8 +118,8 @@ public abstract class MorphologicalAnalyzer {
 		for (Morpheme m : mor) {
 			// リスト中の形態素に対して
 
-			int poq = m.getPartOfSpeech();
-			if ((poq & mode) == poq) {
+			int pos = m.getPartOfSpeech();
+			if ((pos & mode) == pos) {
 				// modeで指定された品詞であれば
 				builder.append(m.getSurface());
 				builder.append(sep);
@@ -144,8 +144,8 @@ public abstract class MorphologicalAnalyzer {
 		for (Morpheme m : mor) {
 			// リスト中の形態素に対して
 
-			int poq = m.getPartOfSpeech();
-			if ((poq & mode) == poq) {
+			int pos = m.getPartOfSpeech();
+			if ((pos & mode) == pos) {
 				// modeで指定された品詞であれば
 				builder.append(m.getBase());
 				builder.append(sep);

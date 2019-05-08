@@ -80,25 +80,27 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 					base = surface;
 				}
 
-				String strPoq = pa.getPartOfSpeech();
-				int poq;
-				if (strPoq.contains("名詞-")) {
-					poq = PartOfSpeech.NORN;
-				} else if (strPoq.contains("動詞-")) {
-					poq = PartOfSpeech.VERB;
-				} else if (strPoq.contains("形容詞-")) {
-					poq = PartOfSpeech.ADJ;
-				} else if (strPoq.contains("連体詞")) {
-					poq = PartOfSpeech.PREN;
-				} else if (strPoq.contains("副詞-")) {
-					poq = PartOfSpeech.ADV;
+				String strPos = pa.getPartOfSpeech();
+				int pos;
+				if (strPos.contains("名詞-")) {
+					pos = PartOfSpeech.NORN;
+				} else if (strPos.contains("動詞-")) {
+					pos = PartOfSpeech.VERB;
+				} else if (strPos.contains("形容詞-")) {
+					pos = PartOfSpeech.ADJ;
+				} else if (strPos.contains("連体詞")) {
+					pos = PartOfSpeech.PREN;
+				} else if (strPos.contains("副詞-")) {
+					pos = PartOfSpeech.ADV;
 				} else {
-					poq = PartOfSpeech.OTHERS;
+					pos = PartOfSpeech.OTHERS;
 				}
 
 //				System.out.println(strPoq + ":" + surface + ":" + base);
 
-				Morpheme m = new Morpheme(surface, base, poq);
+				Morpheme m = new Morpheme(surface, base, pos);
+
+//				System.out.println("!:" + surface + ":" + base + ":" + pos);
 				morphemes.add(m);
 			}
 			tokenizer.close();

@@ -8,7 +8,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.Morpheme;
  * 形態素N-Gram要素.
  *
  * @author K.Okada
- * @version 2018.08.29
+ * @version 2019.05.07
  */
 public class MNElement {
 
@@ -21,7 +21,6 @@ public class MNElement {
 	 * 形態素N-Gram要素 (形態素 n個分の配列).
 	 */
 	private Morpheme[] mors;
-
 
 	/**
 	 * グラム数を返す.
@@ -104,6 +103,14 @@ public class MNElement {
 	}
 
 	/**
+	 * 削除フラグを降ろす.
+	 */
+	final void cancelDrop() {
+		this.dropFlag = false;
+	}
+
+
+	/**
 	 * 削除されたか否かを返す.
 	 *
 	 * @return 削除されたか否か
@@ -111,7 +118,6 @@ public class MNElement {
 	final boolean isDrop() {
 		return this.dropFlag;
 	}
-
 
 	// ========================================================================
 	/**
@@ -125,6 +131,7 @@ public class MNElement {
 		this.fwdAdjust = 0;
 		this.bwdAdjust = 0;
 		this.dropFlag = false;
+		this.score = 0.0e0d;
 		return;
 	}
 
@@ -188,7 +195,10 @@ public class MNElement {
 		int adjFreq; // 補正出現頻度
 		adjFreq = (int) (Math.ceil((double) this.num * stdInd)) - 1;
 
-		this.score = poi.cumulativeProbability(adjFreq); // 重要度指標値
+		double sc = poi.cumulativeProbability(adjFreq); // 重要度指標値
+
+		this.score = sc;
+
 		return this.score;
 	}
 

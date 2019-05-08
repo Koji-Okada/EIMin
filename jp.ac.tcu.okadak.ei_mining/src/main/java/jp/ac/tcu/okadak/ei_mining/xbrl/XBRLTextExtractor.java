@@ -13,7 +13,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * XBRLテキスト情報抽出器.
  *
  * @author K.Okada
- * @version 2019.04.22
+ * @version 2019.04.25
  */
 public class XBRLTextExtractor {
 
@@ -86,12 +86,8 @@ public class XBRLTextExtractor {
 				System.out.println(elm);
 			}
 
-
 			// 対象企業から対象要素を抽出する
 			// ◆◆◆◆　　未だ未実装！！
-
-
-
 
 			br.close();
 		} catch (IOException e) {
@@ -184,7 +180,9 @@ public class XBRLTextExtractor {
 			System.out.println("   ... " + filePath);
 
 			// ファイルの中身を読み込む
-			load(filePath);
+			if (f.isFile()) {
+				load(filePath);
+			}
 		}
 
 		return;
@@ -208,6 +206,7 @@ public class XBRLTextExtractor {
 
 				CSVTokenizer csvt = new CSVTokenizer(str);
 
+				csvt.nextToken();
 				csvt.nextToken();
 				csvt.nextToken();
 				String date = csvt.nextToken();
