@@ -14,7 +14,7 @@ import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.PartOfSpee
  * NeoLogD を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2019.05.09
  *
  */
 public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
@@ -35,7 +35,7 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 		NeologdMorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		// String str = "これは形態素解析の例です。";
-		String str = "比較的新しい用語であるクラウドはクラとウドに分割されません。";
+		String str = "比較的新しい用語である「クラウド」は、クラとウドに分割されません。";
 		List<Morpheme> mor = new ArrayList<Morpheme>();
 		mla.analyze(mor, str);
 		String res = mla.getSurface(mor, " ", PartOfSpeech.ALL);
@@ -58,7 +58,7 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	public final void analyze(final List<Morpheme> morphemes,
 			final String targetSentense) {
 
-//		List<Morpheme> morphemes = new ArrayList<Morpheme>();
+		//		List<Morpheme> morphemes = new ArrayList<Morpheme>();
 
 		try {
 			// トークナイザを設定する
@@ -76,7 +76,7 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
 				String surface = ct.toString();
 				String base = ba.getBaseForm();
-				if (null == base) {	// IPADICの場合に揃える
+				if (null == base) { // IPADICの場合に揃える
 					base = surface;
 				}
 
@@ -92,15 +92,17 @@ public class NeologdMorphologicalAnalyzer extends MorphologicalAnalyzer {
 					pos = PartOfSpeech.PREN;
 				} else if (strPos.contains("副詞-")) {
 					pos = PartOfSpeech.ADV;
+				} else if (strPos.contains("記号-")) {
+					pos = PartOfSpeech.SYMB;
 				} else {
 					pos = PartOfSpeech.OTHERS;
 				}
 
-//				System.out.println(strPoq + ":" + surface + ":" + base);
+//				System.out.println(strPos + ":" + surface + ":" + base);
 
 				Morpheme m = new Morpheme(surface, base, pos);
 
-//				System.out.println("!:" + surface + ":" + base + ":" + pos);
+				//				System.out.println("!:" + surface + ":" + base + ":" + pos);
 				morphemes.add(m);
 			}
 			tokenizer.close();

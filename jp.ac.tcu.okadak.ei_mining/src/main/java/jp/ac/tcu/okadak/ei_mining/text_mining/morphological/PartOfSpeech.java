@@ -4,7 +4,7 @@ package jp.ac.tcu.okadak.ei_mining.text_mining.morphological;
  * 形態素解析の品詞を示す定数.
  *
  * @author K.Okada
- * @version 2018.04.23
+ * @version 2019.05.09
  */
 public final class PartOfSpeech {
 
@@ -46,6 +46,11 @@ public final class PartOfSpeech {
 	 * 副詞.
 	 */
 	public static final int ADV = 16;
+
+	/**
+	 * 記号.
+	 */
+	public static final int SYMB = 64;
 
 	/**
 	 * その他.

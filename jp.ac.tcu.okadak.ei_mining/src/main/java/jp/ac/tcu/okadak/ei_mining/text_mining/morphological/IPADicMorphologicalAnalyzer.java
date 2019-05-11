@@ -10,7 +10,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2019.05.09
  */
 public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
@@ -29,7 +29,7 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 		IPADicMorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
 
 		// String str = "これは形態素解析の例です。";
-		String str = "比較的新しい用語であるクラウドはクラとウドに分割されてしまいます。";
+		String str = "比較的新しい用語である「クラウド」は、クラとウドに分割されてしまいます。";
 		List<Morpheme> mor = new ArrayList<Morpheme>();
 		mla.analyze(mor, str);
 		String res = mla.getSurface(mor, " ", PartOfSpeech.ALL);
@@ -61,25 +61,27 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 			String surface = token.getSurface();
 			String base = token.getBaseForm();
 
-			String strPoq = token.getPartOfSpeechLevel1();
-			int poq;
-			if (strPoq.equals("名詞")) {
-				poq = PartOfSpeech.NORN;
-			} else if (strPoq.equals("動詞")) {
-				poq = PartOfSpeech.VERB;
-			} else if (strPoq.equals("形容詞")) {
-				poq = PartOfSpeech.ADJ;
-			} else if (strPoq.equals("連体詞")) {
-				poq = PartOfSpeech.PREN;
-			} else if (strPoq.equals("副詞")) {
-				poq = PartOfSpeech.ADV;
+			String strPos = token.getPartOfSpeechLevel1();
+			int pos;
+			if (strPos.equals("名詞")) {
+				pos = PartOfSpeech.NORN;
+			} else if (strPos.equals("動詞")) {
+				pos = PartOfSpeech.VERB;
+			} else if (strPos.equals("形容詞")) {
+				pos = PartOfSpeech.ADJ;
+			} else if (strPos.equals("連体詞")) {
+				pos = PartOfSpeech.PREN;
+			} else if (strPos.equals("副詞")) {
+				pos = PartOfSpeech.ADV;
+			} else if (strPos.equals("記号")) {
+				pos = PartOfSpeech.SYMB;
 			} else {
-				poq = PartOfSpeech.OTHERS;
+				pos = PartOfSpeech.OTHERS;
 			}
 
-			//			System.out.println(strPoq + ":" + surface + ":" + base);
+						System.out.println(strPos + ":" + surface + ":" + base);
 
-			Morpheme m = new Morpheme(surface, base, poq);
+			Morpheme m = new Morpheme(surface, base, pos);
 			morphemes.add(m);
 		}
 		return;
