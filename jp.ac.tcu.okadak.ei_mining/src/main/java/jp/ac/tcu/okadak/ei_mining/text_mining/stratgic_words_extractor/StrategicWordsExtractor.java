@@ -115,16 +115,16 @@ public final class StrategicWordsExtractor {
 
 				// 特定企業型戦略ワードを抽出する
 
-//				res = specificEnterprise(data, enterprises, periods, ind);
-//				if ("" != res) {
-//					bw.write(res);
-//				}
+				res = specificEnterprise(data, enterprises, periods, ind);
+				if ("" != res) {
+					bw.write(res);
+				}
 
 				// 特定期間型戦略ワードを抽出する
-//				res = specificPeriod(data, enterprises, periods, ind);
-//				if ("" != res) {
-//					bw.write(res);
-//				}
+				res = specificPeriod(data, enterprises, periods, ind);
+				if ("" != res) {
+					bw.write(res);
+				}
 
 				// 業界動向型戦略ワードを抽出する
 				res = industrialTrend(data, enterprises, periods, ind);
@@ -157,7 +157,7 @@ public final class StrategicWordsExtractor {
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
-//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
 		final double threshold = 0.95e0d; // 閾値
 
 		int numE = enterprises.size();
@@ -245,7 +245,7 @@ public final class StrategicWordsExtractor {
 
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
-//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
 		final double threshold = 0.95e0d; // 閾値
 
 		String res = "";
@@ -358,7 +358,7 @@ public final class StrategicWordsExtractor {
 
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
-//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
+		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
 		final double threshold = 0.95e0d; // 閾値
 
 		int numE = enterprises.size();
@@ -488,18 +488,21 @@ public final class StrategicWordsExtractor {
 			// ※ファイル名の名称ルールに依存
 			String fileName = f.getName();
 
-			String[] parts1 = fileName.split("\\.", 3);
-			String[] parts2 = parts1[0].split("\\)", 2);
-			String[] parts3 = parts2[0].split("\\(", 2);
+			if (f.isFile()) {
 
-			String docType = parts3[0];
-			String entName = parts3[1];
-			String year = parts2[1];
+				String[] parts1 = fileName.split("\\.", 3);
+				String[] parts2 = parts1[0].split("\\)", 2);
+				String[] parts3 = parts2[0].split("\\(", 2);
+				String docType = parts3[0];
+				String entName = parts3[1];
+				String year = parts2[1];
 
-			if (docType.equals("AR") || docType.equals("CSR")) {
-				// ※文書種別を限定
+				if (docType.equals("AR") || docType.equals("CSR") || docType
+						.equals("有報")) {
+					// ※文書種別を限定
 
-				load(f, entName, year); // 個別のファイルからワードを読込む
+					load(f, entName, year); // 個別のファイルからワードを読込む
+				}
 			}
 		}
 
