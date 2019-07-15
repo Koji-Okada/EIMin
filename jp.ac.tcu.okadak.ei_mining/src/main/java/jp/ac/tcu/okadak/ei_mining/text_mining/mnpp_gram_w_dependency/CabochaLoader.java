@@ -11,132 +11,140 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
- * Cabochaの -i3 分析結果をロードする.
+ * Cabocha -f3 による分析結果をロードする.
  *
  * @author K.Okada
- * @version 2019.07.14
+ * @version 2019.07.15
  */
 public class CabochaLoader {
 
-	public static void main(String[] args) {
+    /**
+     *
+     * @param args  デフォルト
+     */
+    public static void main(final String[] args) {
 
-		System.out.println("Start ... MN++Gram with Dependency");
+        System.out.println("Start ... MN++Gram with Dependency");
 
-		CabochaLoader loader = new CabochaLoader();
-		loader.analyze("C:/Users/Okada/Documents/input.xml");
+        CabochaLoader loader = new CabochaLoader();
+        loader.load("C:/Users/Okada/Documents/input.xml");
 
-		System.out.println("      ... Fin");
+        System.out.println("      ... Fin");
 
-		return;
-	}
+        return;
+    }
 
-	/**
-	 *
-	 * 分析する.
-	 *
-	 * @param filePath		対象ファイルのパス
-	 */
-	void analyze(String filePath) {
+    /**
+     *
+     * ロードする.
+     *
+     * @param filePath 対象ファイルのパス
+     */
+    final void load(final String filePath) {
 
-		Document document = this.loadXMLFile(filePath);
-		Node rootNode = document.getDocumentElement();
-		this.analyzeDocument(rootNode);
+        Document xmlDoc = this.loadXMLFile(filePath);
+        Node rootNode = xmlDoc.getDocumentElement();
+        this.loadDocument(rootNode);
 
-		return;
-	}
+        return;
+    }
 
-	/**
-	 *
-	 */
-	Document loadXMLFile(String filePath) {
+    /**
+     *  XMLドキュメントをロードする.
+     *
+     * @param filePath  ファイルパス
+     * @return ドキュメント
+     */
+    final Document loadXMLFile(final String filePath) {
 
-		Document document = null;
+        Document xmlDoc = null;
 
-		try {
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory
-					.newDocumentBuilder();
-			document = documentBuilder.parse(new File(filePath));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+                    .newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory
+                    .newDocumentBuilder();
+            xmlDoc = documentBuilder.parse(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		return document;
-	}
+        return xmlDoc;
+    }
 
-	/**
-	 *
-	 * @param document
-	 */
-	void analyzeDocument(Node rootNode) {
+    /**
+     *
+     * @param rootNode ルートノード
+     */
+    private void loadDocument(final Node rootNode) {
 
-		NodeList sentenceNodes = rootNode.getChildNodes();
+        NodeList sentenceNodes = rootNode.getChildNodes();
 
-		for (int i = 0; i < sentenceNodes.getLength(); i++) {
-			Node sentenceNode = sentenceNodes.item(i);
+        for (int i = 0; i < sentenceNodes.getLength(); i++) {
+            Node sentenceNode = sentenceNodes.item(i);
 
-			if (Node.ELEMENT_NODE == sentenceNode.getNodeType()) {
-				System.out.println(sentenceNode.getNodeName());
+            if (Node.ELEMENT_NODE == sentenceNode.getNodeType()) {
+                System.out.println(sentenceNode.getNodeName());
 
-				analyzeSenetence(sentenceNode);
-			}
-			sentenceNode = sentenceNode.getNextSibling();
-		}
+                loadSenetence(sentenceNode);
+            }
+            sentenceNode = sentenceNode.getNextSibling();
+        }
 
-		return;
-	}
+        return;
+    }
 
-	/**
-	 *
-	 * @param sentenceNode
-	 */
-	void analyzeSenetence(Node sentenceNode) {
+    /**
+     *
+     * @param sentenceNode 文ノード
+     */
+    private void loadSenetence(final Node sentenceNode) {
 
-		NodeList chunkNodes = sentenceNode.getChildNodes();
+        NodeList chunkNodes = sentenceNode.getChildNodes();
 
-		for (int i = 0; i < chunkNodes.getLength(); i++) {
-			Node chunkNode = chunkNodes.item(i);
+        for (int i = 0; i < chunkNodes.getLength(); i++) {
+            Node chunkNode = chunkNodes.item(i);
 
-			if (Node.ELEMENT_NODE == chunkNode.getNodeType()) {
-				System.out.println("\t" + chunkNode.getNodeName());
+            if (Node.ELEMENT_NODE == chunkNode.getNodeType()) {
+                System.out.println("\t" + chunkNode.getNodeName());
 
-				analyzeChunk(chunkNode);
-			}
-			chunkNode = chunkNode.getNextSibling();
-		}
+                loadChunk(chunkNode);
+            }
+            chunkNode = chunkNode.getNextSibling();
+        }
 
-		return;
-	}
+        return;
+    }
 
-	/**
-	 *
-	 * @param chunkNode
-	 */
-	void analyzeChunk(Node chunkNode) {
+    /**
+     *
+     * @param chunkNode チャンクノード
+     */
+    private void loadChunk(final Node chunkNode) {
 
-		NodeList tokNodes = chunkNode.getChildNodes();
+        NodeList tokNodes = chunkNode.getChildNodes();
 
-		for (int i = 0; i < tokNodes.getLength(); i++) {
-			Node tokNode = tokNodes.item(i);
+        for (int i = 0; i < tokNodes.getLength(); i++) {
+            Node tokNode = tokNodes.item(i);
 
-			if (Node.ELEMENT_NODE == tokNode.getNodeType()) {
-				System.out.println("\t\t" + tokNode.getNodeName());
+            if (Node.ELEMENT_NODE == tokNode.getNodeType()) {
+                System.out.println("\t\t" + tokNode.getNodeName());
 
-				Element el = (Element) tokNode;
+                Element el = (Element) tokNode;
 
-				String id = el.getAttribute("id");
-				String feature = el.getAttribute("feature");
+                // 属性を取得する
+                String id = el.getAttribute("id");
+                String feature = el.getAttribute("feature");
 
-				System.out.println("\t\t" + id);
-				System.out.println("\t\t" + feature);
-			} else {
+                System.out.println("\t\t" + id);
+                System.out.println("\t\t" + feature);
 
-			}
-			tokNode = tokNode.getNextSibling();
-		}
+                //               String val = tokNodes.item(++i).getTextContent();
+                //               System.out.println(val);
+            }
+            tokNode = tokNode.getNextSibling();
+        }
 
-		return;
-	}
+        return;
+    }
 }
