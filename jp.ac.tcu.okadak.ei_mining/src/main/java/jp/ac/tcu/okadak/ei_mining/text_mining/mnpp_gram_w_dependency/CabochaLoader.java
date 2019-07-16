@@ -14,11 +14,12 @@ import org.w3c.dom.NodeList;
  * Cabocha -f3 による分析結果をロードする.
  *
  * @author K.Okada
- * @version 2019.07.15
+ * @version 2019.07.16
  */
 public class CabochaLoader {
 
     /**
+     * Cabocha -f3 による分析結果をロードする.
      *
      * @param args  デフォルト
      */
@@ -35,7 +36,6 @@ public class CabochaLoader {
     }
 
     /**
-     *
      * ロードする.
      *
      * @param filePath 対象ファイルのパス
@@ -44,7 +44,7 @@ public class CabochaLoader {
 
         Document xmlDoc = this.loadXMLFile(filePath);
         Node rootNode = xmlDoc.getDocumentElement();
-        this.loadDocument(rootNode);
+        this.parseDocument(rootNode);
 
         return;
     }
@@ -73,10 +73,11 @@ public class CabochaLoader {
     }
 
     /**
+     * 文書全体をパースする.
      *
      * @param rootNode ルートノード
      */
-    private void loadDocument(final Node rootNode) {
+    private void parseDocument(final Node rootNode) {
 
         NodeList sentenceNodes = rootNode.getChildNodes();
 
@@ -86,7 +87,7 @@ public class CabochaLoader {
             if (Node.ELEMENT_NODE == sentenceNode.getNodeType()) {
                 System.out.println(sentenceNode.getNodeName());
 
-                loadSenetence(sentenceNode);
+                parseSenetence(sentenceNode);
             }
             sentenceNode = sentenceNode.getNextSibling();
         }
@@ -95,10 +96,11 @@ public class CabochaLoader {
     }
 
     /**
+     * 文をパースする.
      *
      * @param sentenceNode 文ノード
      */
-    private void loadSenetence(final Node sentenceNode) {
+    private void parseSenetence(final Node sentenceNode) {
 
         NodeList chunkNodes = sentenceNode.getChildNodes();
 
@@ -108,7 +110,7 @@ public class CabochaLoader {
             if (Node.ELEMENT_NODE == chunkNode.getNodeType()) {
                 System.out.println("\t" + chunkNode.getNodeName());
 
-                loadChunk(chunkNode);
+                parseChunk(chunkNode);
             }
             chunkNode = chunkNode.getNextSibling();
         }
@@ -117,10 +119,11 @@ public class CabochaLoader {
     }
 
     /**
+     * チャンクをパースする.
      *
      * @param chunkNode チャンクノード
      */
-    private void loadChunk(final Node chunkNode) {
+    private void parseChunk(final Node chunkNode) {
 
         NodeList tokNodes = chunkNode.getChildNodes();
 
@@ -139,8 +142,10 @@ public class CabochaLoader {
                 System.out.println("\t\t" + id);
                 System.out.println("\t\t" + feature);
 
-                //               String val = tokNodes.item(++i).getTextContent();
-                //               System.out.println(val);
+                // テキスト部分を取得する
+                String val = tokNodes.item(i).getFirstChild().getNodeValue();
+
+                System.out.println("\t\t" + val);
             }
             tokNode = tokNode.getNextSibling();
         }
