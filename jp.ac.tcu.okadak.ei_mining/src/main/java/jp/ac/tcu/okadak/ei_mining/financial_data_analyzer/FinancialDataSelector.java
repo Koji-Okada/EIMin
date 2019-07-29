@@ -7,7 +7,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 財務データの選択器.
  *
  * @author K.Okada
- * @version 2019.07.28
+ * @version 2019.07.29
  */
 public class FinancialDataSelector {
 
@@ -35,6 +35,9 @@ public class FinancialDataSelector {
         // 財務データを読込む
         FDBDataLoader loader = new FDBDataLoader();
         EPIDataManager<Double> epiDM = loader.load();
+
+        String path = "selected.txt";
+        epiDM.saveData(path);
 
         return;
     }

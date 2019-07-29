@@ -10,7 +10,7 @@ import java.util.Set;
  * 企業-期間-指標マネジャー.
  *
  * @author K.Okada
- * @version 2019.07.28
+ * @version 2019.07.29
  *
  * @param <T>
  *            ジェネリックス
@@ -262,11 +262,14 @@ public class EPIDataManager<T> {
                 for (String ind : indicators) {
 
                     Object value = getValue(ent, prd, ind);
-
-                    String str = value.toString();
+                    String str = "";
+                    if (null != value) {
+                        str = value.toString();
+                    }
 
                     line = line + "," + str;
                 }
+                System.out.println(line);
             }
         }
 
