@@ -262,11 +262,14 @@ public class EPIDataManager<T> {
                 for (String ind : indicators) {
 
                     Object value = getValue(ent, prd, ind);
-
-                    String str = value.toString();
+                    String str = "";
+                    if (null != value) {
+                        str = value.toString();
+                    }
 
                     line = line + "," + str;
                 }
+                System.out.println(line);
             }
         }
 
