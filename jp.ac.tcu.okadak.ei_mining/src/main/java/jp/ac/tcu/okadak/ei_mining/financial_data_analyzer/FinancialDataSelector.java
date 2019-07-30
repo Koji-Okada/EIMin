@@ -7,7 +7,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * 財務データの選択器.
  *
  * @author K.Okada
- * @version 2019.07.29
+ * @version 2019.07.30
  */
 public class FinancialDataSelector {
 
@@ -16,7 +16,7 @@ public class FinancialDataSelector {
      *
      * @param args ダミー引数
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         System.out.println("Start data selector ...");
 
@@ -30,7 +30,7 @@ public class FinancialDataSelector {
     /**
      * 財務データを選択する.
      */
-    void select() {
+    final void select() {
 
         // 財務データを読込む
         FDBDataLoader loader = new FDBDataLoader();
