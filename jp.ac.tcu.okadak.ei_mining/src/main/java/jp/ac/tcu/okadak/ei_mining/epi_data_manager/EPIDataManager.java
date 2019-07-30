@@ -10,7 +10,7 @@ import java.util.Set;
  * 企業-期間-指標マネジャー.
  *
  * @author K.Okada
- * @version 2019.07.28
+ * @version 2019.07.29
  *
  * @param <T>
  *            ジェネリックス
@@ -244,7 +244,7 @@ public class EPIDataManager<T> {
      *
      * @param fileName ファイル名(パス指定)
      */
-    public void saveData(String fileName) {
+    public final void saveData(final String fileName) {
 
         List<String> enterprises = getEnterprises();
         List<String> periods = listPeriods();
