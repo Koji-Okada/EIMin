@@ -1,6 +1,7 @@
 package jp.ac.tcu.okadak.ei_mining.epi_data_manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Set;
  * 企業-期間-指標マネジャー.
  *
  * @author K.Okada
- * @version 2019.07.29
+ * @version 2019.07.31
  *
  * @param <T>
  *            ジェネリックス
@@ -197,6 +198,7 @@ public class EPIDataManager<T> {
     public final List<String> getIndicators() {
 
         List<String> list = new ArrayList<String>(iMap.keySet());
+        Collections.sort(list);
         return list;
     }
 
@@ -262,6 +264,39 @@ public class EPIDataManager<T> {
             for (String prd : periods) {
                 String line = ent + "," + prd;
                 for (String ind : indicators) {
+
+                    Object value = getValue(ent, prd, ind);
+                    String str = "";
+                    if (null != value) {
+                        str = value.toString();
+                    }
+
+                    line = line + "," + str;
+                }
+                System.out.println(line);
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * EPIデータをファイルに書き出す.
+     *
+     * @param fileName ファイル名(パス指定)
+     */
+    public final void saveData2(final String fileName) {
+
+        List<String> enterprises = getEnterprises();
+        List<String> periods = listPeriods();
+        List<String> indicators = getIndicators();
+
+        // データ部分を出力する
+        for (String ind : indicators) {
+            for (String ent : enterprises) {
+                String line = ind + "," + ent;
+
+                for (String prd : periods) {
 
                     Object value = getValue(ent, prd, ind);
                     String str = "";
