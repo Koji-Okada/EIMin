@@ -250,12 +250,14 @@ public class EPIDataManager<T> {
         List<String> periods = listPeriods();
         List<String> indicators = getIndicators();
 
+        // ヘッダー部分を出力する
         String header = ",";
         for (String ind : indicators) {
             header = header + "," + ind;
         }
         System.out.println(header);
 
+        // データ部分を出力する
         for (String ent : enterprises) {
             for (String prd : periods) {
                 String line = ent + "," + prd;
