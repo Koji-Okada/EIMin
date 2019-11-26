@@ -14,9 +14,14 @@ import javax.xml.parsers.SAXParserFactory;
  * XBRLデータの索引生成器.
  *
  * @author K.Okada
- * @version 2019.04.23
+ * @version 2019.11.26
  */
 public final class XBRLDataIndexer {
+
+	/**
+	 * 報告書の種類.
+	 */
+	private String docs[] = { "asr", "q1r", "q2r", "q3r" };
 
 	/**
 	 * コントラクタを隠蔽.
@@ -126,60 +131,66 @@ public final class XBRLDataIndexer {
 
 					String fileName = f.getName();
 
-					if (fileName.contains("asr")) {
-						// 有価証券報告書 asr に絞込む
-						if (fileName.contains("_E")) {
-							// EDNETコードの先頭は E から始まる
-							// ファンドコードの場合は G
+					for (String doc : docs) {
 
-							if (fileName.contains(".xbrl")) {
+						if (fileName.contains(doc)) {
+							// 有価証券報告書 asr に絞込む
+							if (fileName.contains("_E")) {
+								// EDNETコードの先頭は E から始まる
+								// ファンドコードの場合は G
 
-								// パース処理を行う
-								parser.parse(f, handler);
+								if (fileName.contains(".xbrl")) {
 
-								// EDINETコードを取得する
-								String ediNetCode = handler.getEdiNetCode();
-								if (null == ediNetCode) {
-									ediNetCode = "";
+									// パース処理を行う
+									parser.parse(f, handler);
+
+									// EDINETコードを取得する
+									String ediNetCode = handler.getEdiNetCode();
+									if (null == ediNetCode) {
+										ediNetCode = "";
+									}
+
+									// 証券コードを取得する
+									String securityCode = handler
+											.getSecurityCode();
+									if (null == securityCode) {
+										securityCode = "";
+									}
+
+									// 企業名を取得する
+									String enterpriseName = handler
+											.getEnterpriseName();
+									if (null == enterpriseName) {
+										enterpriseName = "";
+									}
+
+									// 会計期間終了日を取得する
+									String date = handler
+											.getCurrentFiscalYearEndDate();
+									if (null == date) {
+										date = "";
+									}
+
+									// 提出回数を取得する
+									String numOfSubmission = handler
+											.getNumOfSubmission();
+									if (null == numOfSubmission) {
+										numOfSubmission = "";
+									}
+
+									String str = doc + "," + numOfSubmission + ","
+											+ ediNetCode + "," + securityCode
+											+ "," + date + "," + enterpriseName
+											+ "," + f.getParent();
+
+									this.bw.write(str);
+									this.bw.newLine();
+
+									System.out.println(doc + "\t"
+											+ numOfSubmission + "\t"
+											+ date + "\t" + enterpriseName
+											+ "\t" + f.getParent());
 								}
-
-								// 証券コードを取得する
-								String securityCode = handler.getSecurityCode();
-								if (null == securityCode) {
-									securityCode = "";
-								}
-
-								// 企業名を取得する
-								String enterpriseName = handler
-										.getEnterpriseName();
-								if (null == enterpriseName) {
-									enterpriseName = "";
-								}
-
-								// 会計期間終了日を取得する
-								String date = handler
-										.getCurrentFiscalYearEndDate();
-								if (null == date) {
-									date = "";
-								}
-
-								// 提出回数を取得する
-								String numOfSubmission = handler
-										.getNumOfSubmission();
-								if (null == numOfSubmission) {
-									numOfSubmission = "";
-								}
-
-								String str = numOfSubmission + "," + ediNetCode
-										+ "," + securityCode + "," + date + ","
-										+ enterpriseName + "," + f.getParent();
-
-								this.bw.write(str);
-								this.bw.newLine();
-
-								System.out.println(numOfSubmission + "\t" + date
-										+ "\t" + enterpriseName + "\t" + f
-												.getParent());
 							}
 						}
 					}
