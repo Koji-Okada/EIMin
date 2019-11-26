@@ -21,7 +21,7 @@ public final class XBRLDataIndexer {
 	/**
 	 * 報告書の種類.
 	 */
-	private String docs[] = { "asr", "q1r", "q2r", "q3r" };
+	private String docTypes[] = { "asr", "q1r", "q2r", "q3r" };
 
 	/**
 	 * コントラクタを隠蔽.
@@ -108,6 +108,53 @@ public final class XBRLDataIndexer {
 		File base = new File(targetDir);
 		File[] files = base.listFiles();
 
+		for (File f : files) {
+			// ファイル毎に
+
+			if (f.isDirectory()) {
+				// サブディレクトリの場合
+				// 再帰呼出し
+
+				searchXBRLData(f.getPath());
+			} else {
+				// ファイルの場合
+
+				String fileName = f.getName();
+
+				for (String docType : docTypes) {
+
+					if (fileName.contains(docType)) {
+						// 有価証券報告書 asr に絞込む
+						if (fileName.contains("_E")) {
+							// EDNETコードの先頭は E から始まる
+							// ファンドコードの場合は G
+
+							if (fileName.contains(".xbrl")) {
+
+								// .xbrl ファイルから必要な情報を取り出す
+								getData(f, docType);
+
+								// フォルダ内に .xbrlファイルが
+								// 複数存在する場合があるので、
+								// 処理を打切らない。
+								// return;
+							}
+						}
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/**
+	 * XBRLファイルから必要なデータを得る.
+	 *
+	 * @param f		XBRLファイル
+	 * @param docType	文書種類
+	 */
+	private void getData(final File f, final String docType) {
+
 		try {
 			// SAXパーサーファクトリを生成する
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -118,84 +165,49 @@ public final class XBRLDataIndexer {
 			// パーサが処理を委譲するハンドラを生成する
 			XBRLBasicInfoHandler handler = new XBRLBasicInfoHandler();
 
-			for (File f : files) {
-				// ファイル毎に
+			// パース処理を行う
+			parser.parse(f, handler);
 
-				if (f.isDirectory()) {
-					// サブディレクトリの場合
-					// 再帰呼出し
-
-					searchXBRLData(f.getPath());
-				} else {
-					// ファイルの場合
-
-					String fileName = f.getName();
-
-					for (String doc : docs) {
-
-						if (fileName.contains(doc)) {
-							// 有価証券報告書 asr に絞込む
-							if (fileName.contains("_E")) {
-								// EDNETコードの先頭は E から始まる
-								// ファンドコードの場合は G
-
-								if (fileName.contains(".xbrl")) {
-
-									// パース処理を行う
-									parser.parse(f, handler);
-
-									// EDINETコードを取得する
-									String ediNetCode = handler.getEdiNetCode();
-									if (null == ediNetCode) {
-										ediNetCode = "";
-									}
-
-									// 証券コードを取得する
-									String securityCode = handler
-											.getSecurityCode();
-									if (null == securityCode) {
-										securityCode = "";
-									}
-
-									// 企業名を取得する
-									String enterpriseName = handler
-											.getEnterpriseName();
-									if (null == enterpriseName) {
-										enterpriseName = "";
-									}
-
-									// 会計期間終了日を取得する
-									String date = handler
-											.getCurrentFiscalYearEndDate();
-									if (null == date) {
-										date = "";
-									}
-
-									// 提出回数を取得する
-									String numOfSubmission = handler
-											.getNumOfSubmission();
-									if (null == numOfSubmission) {
-										numOfSubmission = "";
-									}
-
-									String str = doc + "," + numOfSubmission + ","
-											+ ediNetCode + "," + securityCode
-											+ "," + date + "," + enterpriseName
-											+ "," + f.getParent();
-
-									this.bw.write(str);
-									this.bw.newLine();
-
-									System.out.println(doc + "\t"
-											+ numOfSubmission + "\t"
-											+ date + "\t" + enterpriseName
-											+ "\t" + f.getParent());
-								}
-							}
-						}
-					}
-				}
+			// EDINETコードを取得する
+			String ediNetCode = handler.getEdiNetCode();
+			if (null == ediNetCode) {
+				ediNetCode = "";
 			}
+
+			// 証券コードを取得する
+			String securityCode = handler.getSecurityCode();
+			if (null == securityCode) {
+				securityCode = "";
+			}
+
+			// 企業名を取得する
+			String enterpriseName = handler.getEnterpriseName();
+			if (null == enterpriseName) {
+				enterpriseName = "";
+			}
+
+			// 会計期間終了日を取得する
+			String date = handler.getCurrentFiscalYearEndDate();
+			if (null == date) {
+				date = "";
+			}
+
+			// 提出回数を取得する
+			String numOfSubmission = handler.getNumOfSubmission();
+			if (null == numOfSubmission) {
+				numOfSubmission = "";
+			}
+
+			String str = docType + "," + numOfSubmission + "," + ediNetCode
+					+ "," + securityCode + "," + date + "," + enterpriseName
+					+ "," + f.getParent();
+
+			this.bw.write(str);
+			this.bw.newLine();
+
+			System.out.println(docType + "\t" + numOfSubmission + "\t" + date
+					+ "\t" + enterpriseName + "\t" + f.getParent());
+
 		} catch (Exception e) {
 			counterForException++; // 例外発生事象をカウントする
 			e.printStackTrace();
