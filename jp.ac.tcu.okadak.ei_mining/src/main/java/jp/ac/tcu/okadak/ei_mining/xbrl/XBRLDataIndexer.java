@@ -21,7 +21,7 @@ public final class XBRLDataIndexer {
 	/**
 	 * 報告書の種類.
 	 */
-	private String docTypes[] = { "asr", "q1r", "q2r", "q3r" };
+	private String[] docTypes = { "asr", "q1r", "q2r", "q3r" };
 
 	/**
 	 * コントラクタを隠蔽.
