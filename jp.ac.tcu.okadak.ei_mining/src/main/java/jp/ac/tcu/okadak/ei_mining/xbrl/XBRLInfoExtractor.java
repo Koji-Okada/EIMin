@@ -11,12 +11,12 @@ import jp.ac.tcu.okadak.ei_mining.data_loader.CSVTokenizer;
 import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
 
 /**
- * XBRLテキスト情報抽出器.
+ * XBRL情報抽出器.
  *
  * @author K.Okada
  * @version 2019.11.30
  */
-public class XBRLTextExtractor {
+public class XBRLInfoExtractor {
 
 	/**
 	 * XBRLデータの索引.
@@ -34,23 +34,23 @@ public class XBRLTextExtractor {
 
 	// =======================================================================
 	/**
-	 * 指定ファイルに示された企業の XBRLテキストを抽出する.
+	 * 指定ファイルに示された企業の XBRL情報を抽出する.
 	 *
 	 * @param arg
 	 *            デフォルト
 	 */
 	public static void main(final String[] arg) {
 
-		System.out.println("Start XBRL Text Extractor ...");
+		System.out.println("Start XBRL Information Extractor ...");
 
-		XBRLTextExtractor extractor = new XBRLTextExtractor();
+		XBRLInfoExtractor extractor = new XBRLInfoExtractor();
 		extractor.extract();
 
 		System.out.println("... Successfully Complete.");
 	}
 
 	/**
-	 * 構成設定ファイルで指定された企業リストから XBRLテキストを抽出する.
+	 * 構成設定ファイルで指定された企業リストから XBRL情報を抽出する.
 	 */
 	private void extract() {
 
@@ -60,7 +60,7 @@ public class XBRLTextExtractor {
 
 		// 設定ファイルから入出力パスを取得する
 		try {
-			File confFile = new File("conf/XBRLTextExtractor.txt");
+			File confFile = new File("conf/XBRLInfoExtractor.txt");
 			FileReader fr = new FileReader(confFile);
 			BufferedReader br = new BufferedReader(fr);
 
@@ -99,7 +99,7 @@ public class XBRLTextExtractor {
 	}
 
 	/**
-	 * 指定されたテキスト情報を取得する.
+	 * 指定された情報を取得する.
 	 * 										※作成中：効率悪い
 	 *
 	 * @param targetEnterprises	対象企業リスト
@@ -127,9 +127,6 @@ public class XBRLTextExtractor {
 				}
 			}
 		}
-
-		String path = xbrlIndex.getValue("株式会社日立製作所", "2019-03", "q2r");
-		System.out.println("--- " + path);
 
 		return;
 	}
