@@ -7,7 +7,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * XBRL 基本情報抽出器.
  *
  * @author K.Okada
- * @version 2019.04.23
+ * @version 2019.11.30
  */
 public class XBRLBasicInfoHandler extends DefaultHandler {
 
@@ -128,7 +128,8 @@ public class XBRLBasicInfoHandler extends DefaultHandler {
 			// 企業名(日本語)の記述部分に遭遇した場合
 			flagEnterpriseName = true;
 		} else if (0 == qName.compareTo(
-				"jpdei_cor:CurrentFiscalYearEndDateDEI")) {
+				"jpdei_cor:CurrentPeriodEndDateDEI")) {
+//				"jpdei_cor:CurrentFiscalYearEndDateDEI")) {
 			// 現状会計年度終了日の記述部分に遭遇した場合
 			flagCurrentFiscalYearEndDate = true;
 		} else if (0 == qName.compareTo("jpdei_cor:SecurityCodeDEI")) {

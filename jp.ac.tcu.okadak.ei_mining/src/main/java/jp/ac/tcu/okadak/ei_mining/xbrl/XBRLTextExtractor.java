@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import jp.ac.tcu.okadak.ei_mining.data_loader.CSVTokenizer;
 import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
@@ -13,7 +14,7 @@ import jp.ac.tcu.okadak.ei_mining.epi_data_manager.EPIDataManager;
  * XBRLテキスト情報抽出器.
  *
  * @author K.Okada
- * @version 2019.11.29
+ * @version 2019.11.30
  */
 public class XBRLTextExtractor {
 
@@ -87,7 +88,7 @@ public class XBRLTextExtractor {
 			}
 
 			// 対象企業から対象要素を抽出する
-			// ◆◆◆◆　　未だ未実装！！
+			getInfo(targetEnterprises);
 
 			br.close();
 		} catch (IOException e) {
@@ -97,6 +98,43 @@ public class XBRLTextExtractor {
 		return;
 	}
 
+	/**
+	 * 指定されたテキスト情報を取得する.
+	 * 										※作成中：効率悪い
+	 *
+	 * @param targetEnterprises	対象企業リスト
+	 */
+	// =======================================================================
+	private void getInfo(final ArrayList<String> targetEnterprises) {
+
+		Set<String> prList = (Set<String>) xbrlIndex.getPeriods();
+
+		String[] docTypes = { "q1r", "q2r", "q3r", "asr" };
+
+		for (String ent : targetEnterprises) {
+			System.out.println("==== " + ent);
+
+			for (String pr : prList) {
+
+				for (String docType : docTypes) {
+
+					String path = xbrlIndex.getValue(ent, pr, docType);
+
+					if (null != path) {
+						System.out.println("*-- " + docType + ":" + pr + ":"
+								+ ent + ":" + path);
+					}
+				}
+			}
+		}
+
+		String path = xbrlIndex.getValue("株式会社日立製作所", "2019-03", "q2r");
+		System.out.println("--- " + path);
+
+		return;
+	}
+
+	// =======================================================================
 	/**
 	 * 対象企業リストを取得する.
 	 *
@@ -206,18 +244,24 @@ public class XBRLTextExtractor {
 
 				CSVTokenizer csvt = new CSVTokenizer(str);
 
-				String docType = csvt.nextToken();	// ドキュメント種別
-				csvt.nextToken();	// 版
-				csvt.nextToken();	// コード
-				csvt.nextToken();	// 証券コード+"0"
-				String date = csvt.nextToken();		// 決算日
-				String enterprise = csvt.nextToken();	// 企業名
-				String path = csvt.nextToken();			// フォルダパス
+				String docType = csvt.nextToken(); // ドキュメント種別
+				csvt.nextToken(); // 版
+				csvt.nextToken(); // コード
+				csvt.nextToken(); // 証券コード+"0"
+				String date = csvt.nextToken(); // 決算日
+				String enterprise = csvt.nextToken(); // 企業名
+				String path = csvt.nextToken(); // フォルダパス
 
 				if ((0 != enterprise.length()) && (0 != date.length())) {
-					xbrlIndex.addData(enterprise, date, docType, path);
 
-					System.out.println(date + "\t" + enterprise + "\t" + path);
+					// 決算日の表現形式を変換する：yyyy-mm-dd → yyyy-mm
+					String period = date.substring(0, 7);
+
+					// 索引を登録する
+					xbrlIndex.addData(enterprise, period, docType, path);
+
+					System.out.println(docType + "\t" + period + "\t" + enterprise + "\t"
+							+ path);
 				}
 			}
 			br.close();
