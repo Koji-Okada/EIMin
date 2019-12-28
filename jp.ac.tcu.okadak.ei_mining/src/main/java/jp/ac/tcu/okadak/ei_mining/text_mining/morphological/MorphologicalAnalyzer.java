@@ -13,7 +13,7 @@ import java.util.List;
  * 形態素解析器の抽象クラス.
  *
  * @author K.Okada
- * @version 2018.08.24
+ * @version 2019.12.28
  */
 public abstract class MorphologicalAnalyzer {
 
@@ -30,6 +30,9 @@ public abstract class MorphologicalAnalyzer {
 	 */
 	final void analyzeFile(final String outputFileName,
 			final String inputFileName, final int mode) {
+
+//		String separator = " ";
+		String separator = "\r\n";
 
 		try {
 			// 入力ファイルオープン
@@ -50,9 +53,9 @@ public abstract class MorphologicalAnalyzer {
 
 				String result;
 				if (PartOfSpeech.ALL == mode) {
-					result = getSurface(mor, " ", mode);
+					result = getSurface(mor, separator, mode);
 				} else {
-					result = getBase(mor, " ", mode);
+					result = getBase(mor, separator, mode);
 				}
 
 				// テキスト抽出結果を保存する

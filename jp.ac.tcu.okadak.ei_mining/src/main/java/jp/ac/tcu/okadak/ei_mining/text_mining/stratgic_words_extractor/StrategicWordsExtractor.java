@@ -498,7 +498,7 @@ public final class StrategicWordsExtractor {
 				String year = parts2[1];
 
 				if (docType.equals("AR") || docType.equals("CSR") || docType
-						.equals("有報")) {
+						.equals("YH")) {
 					// ※文書種別を限定
 
 					load(f, entName, year); // 個別のファイルからワードを読込む

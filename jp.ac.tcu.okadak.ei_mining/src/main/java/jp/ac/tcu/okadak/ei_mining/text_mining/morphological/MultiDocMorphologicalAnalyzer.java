@@ -9,7 +9,7 @@ import java.io.IOException;
  * 複数文書に対する形態素解析器.
  *
  * @author K.Okada
- * @version 2018.04.26
+ * @version 2019.12.28
  */
 public class MultiDocMorphologicalAnalyzer {
 
@@ -78,8 +78,8 @@ public class MultiDocMorphologicalAnalyzer {
 		File[] files = file.listFiles();
 
 		// 形態素解析を生成する
-//		MorphlogicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
-		MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
+		MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+//		MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		for (File f : files) {
 			// 各ファイルに対して
