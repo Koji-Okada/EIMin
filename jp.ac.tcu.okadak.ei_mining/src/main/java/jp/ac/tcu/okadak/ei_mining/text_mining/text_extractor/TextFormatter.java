@@ -10,17 +10,16 @@ import java.util.regex.Pattern;
 /**
  * テキストファイルフォーマッタ.
  *
- * @author Okada
- * @version 2018.05.26
+ * @author K.Okada
+ * @version 2020.01.05
  */
 public class TextFormatter {
 
 	/**
 	 * テキストファイルから全文を読込む.
 	 *
-	 * @param filePath
-	 *            テキストファイルのファイルパス
-	 * @return 全文文字列
+	 * @param filePath	テキストファイルのファイルパス
+	 * @return			全文文字列
 	 */
 	public final String readAll(final String filePath) {
 
@@ -45,9 +44,8 @@ public class TextFormatter {
 	/**
 	 * 空白文字を取り除く.
 	 *
-	 * @param orgStr
-	 *            元の文字列
-	 * @return 空白文字除去後の文字列
+	 * @param orgStr	元の文字列
+	 * @return			空白文字除去後の文字列
 	 */
 	public final String removeWhiteSpace(final String orgStr) {
 
@@ -92,9 +90,8 @@ public class TextFormatter {
 	/**
 	 * 英文部分を削除する.
 	 *
-	 * @param orgStr
-	 * 			元の文字列
-	 * @return	削除後の文字列
+	 * @param orgStr	元の文字列
+	 * @return			削除後の文字列
 	 */
 	public final String eliminateEnglishSentece(final String orgStr) {
 
@@ -121,6 +118,31 @@ public class TextFormatter {
 		String newStr = sb.toString();
 
 		return newStr;
+	}
+
+	/**
+	 * HTMLタグを削除する.
+	 *
+	 * @param orgStr	元の文字列
+	 * @return			削除後の文字列
+	 */
+	public final String eliminateHTMLTags(final String orgStr) {
+
+		String str1 = orgStr.replaceAll("<.*?>", "");
+
+		return str1;
+	}
+
+	
+	public static void main(final String[] args) {
+
+		TextFormatter form = new TextFormatter();
+
+		String org = "<h3>見出し</h3>テキスト<br>。\r\n";
+
+		String s = form.eliminateHTMLTags(org);
+
+		System.out.println(s);
 	}
 
 }

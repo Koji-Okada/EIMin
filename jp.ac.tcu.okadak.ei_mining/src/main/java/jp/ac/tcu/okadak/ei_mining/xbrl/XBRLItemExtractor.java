@@ -16,7 +16,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.text_extractor.TextFormatter;
  * XBRL項目抽出器.
  *
  * @author K.Okada
- * @version 2019.12.10
+ * @version 2020.01.05
  */
 public class XBRLItemExtractor {
 
@@ -32,35 +32,34 @@ public class XBRLItemExtractor {
 		XBRLItemExtractor itemExtractor = new XBRLItemExtractor();
 
 		//  日立製作所 ASR 201803
-//				String path = "X:/2018/6/29/S100DJ2G/S100DJ2G/XBRL/PublicDoc/jpcrp030000-asr-001_E01737-000_2018-03-31_01_2018-06-29.xbrl";
+		String path = "X:/2018/6/29/S100DJ2G/S100DJ2G/XBRL/PublicDoc/jpcrp030000-asr-001_E01737-000_2018-03-31_01_2018-06-29.xbrl";
 
 		// パナソニック ASR 201803
-//				String path = "X:/2018/6/29/S100DI5Q/S100DI5Q/XBRL/PublicDoc/jpcrp030000-asr-001_E01772-000_2018-03-31_01_2018-06-29.xbrl";
+		//				String path = "X:/2018/6/29/S100DI5Q/S100DI5Q/XBRL/PublicDoc/jpcrp030000-asr-001_E01772-000_2018-03-31_01_2018-06-29.xbrl";
 
 		// シャープ ASR 201803
-//				String path = "X:/2018/6/21/S100D8OO/S100D8OO/XBRL/PublicDoc/jpcrp030000-asr-001_E01773-000_2018-03-31_01_2018-06-21.xbrl";
+		//				String path = "X:/2018/6/21/S100D8OO/S100D8OO/XBRL/PublicDoc/jpcrp030000-asr-001_E01773-000_2018-03-31_01_2018-06-21.xbrl";
 
 		// ソニー ASR 201803
-//		String path = "X:/2018/6/19/S100D83E/S100D83E/XBRL/PublicDoc/jpcrp030000-asr-001_E01777-000_2018-03-31_01_2018-06-19.xbrl";
+		//		String path = "X:/2018/6/19/S100D83E/S100D83E/XBRL/PublicDoc/jpcrp030000-asr-001_E01777-000_2018-03-31_01_2018-06-19.xbrl";
 
 		// 東芝 ASR 201803
-//		String path = "X:/2018/6/27/S100DD6J/S100DD6J/XBRL/PublicDoc/jpcrp030000-asr-001_E01738-000_2018-03-31_01_2018-06-27.xbrl";
+		//		String path = "X:/2018/6/27/S100DD6J/S100DD6J/XBRL/PublicDoc/jpcrp030000-asr-001_E01738-000_2018-03-31_01_2018-06-27.xbrl";
 
 		// 三菱電機 ASR 201803
-//		String path = "X:/2018/6/28/S100D9SC/S100D9SC/XBRL/PublicDoc/jpcrp030000-asr-001_E01739-000_2018-03-31_01_2018-06-28.xbrl";
+		//		String path = "X:/2018/6/28/S100D9SC/S100D9SC/XBRL/PublicDoc/jpcrp030000-asr-001_E01739-000_2018-03-31_01_2018-06-28.xbrl";
 
 		// 日本電気 ASR 201803
-//		String path = "X:/2018/6/25/S100DAXT/S100DAXT/XBRL/PublicDoc/jpcrp030000-asr-001_E01765-000_2018-03-31_01_2018-06-25.xbrl";
+		//		String path = "X:/2018/6/25/S100DAXT/S100DAXT/XBRL/PublicDoc/jpcrp030000-asr-001_E01765-000_2018-03-31_01_2018-06-25.xbrl";
 
 		// 富士通 ASR 201803
-//		String path = "X:/2018/6/25/S100DCSS/S100DCSS/XBRL/PublicDoc/jpcrp030000-asr-001_E01766-000_2018-03-31_01_2018-06-25.xbrl";
+		//		String path = "X:/2018/6/25/S100DCSS/S100DCSS/XBRL/PublicDoc/jpcrp030000-asr-001_E01766-000_2018-03-31_01_2018-06-25.xbrl";
 
 		// 東京急行電鉄 ASR 201803
-//		String path = "X:/2018/6/28/S100DG8K/S100DG8K/XBRL/PublicDoc/jpcrp030000-asr-001_E04090-000_2018-03-31_01_2018-06-28.xbrl";
+		//		String path = "X:/2018/6/28/S100DG8K/S100DG8K/XBRL/PublicDoc/jpcrp030000-asr-001_E04090-000_2018-03-31_01_2018-06-28.xbrl";
 
 		// 小田急電鉄 ASR 201803
-		String path = "X:/2018/6/28/S100DHC7/S100DHC7/XBRL/PublicDoc/jpcrp030000-asr-001_E04088-000_2018-03-31_01_2018-06-28.xbrl";
-
+		//		String path = "X:/2018/6/28/S100DHC7/S100DHC7/XBRL/PublicDoc/jpcrp030000-asr-001_E04088-000_2018-03-31_01_2018-06-28.xbrl";
 
 		itemExtractor.extract(path);
 
@@ -70,9 +69,11 @@ public class XBRLItemExtractor {
 	}
 
 	/**
+	 * ファイルから XBRLアイテムを取り出す.
 	 *
+	 * @param filePath	ファイルパス
 	 */
-	void extract(String filePath) {
+	final void extract(final String filePath) {
 
 		try {
 			// XML解析器を用意する
@@ -94,15 +95,8 @@ public class XBRLItemExtractor {
 				if (Node.ELEMENT_NODE == subNode.getNodeType()) {
 					i++;
 
-					//	if (subNode.getNodeName().equals(
-					//	"jpcrp_cor:RevenueIFRSSummaryOfBusinessResults")) {
-
 					extractIndex((Element) subNode);
-
-					//					System.out.println("========");
 				}
-				//					System.out.println(subNode.getNodeName());
-				//				}
 
 				subNode = subNode.getNextSibling();
 			}
@@ -117,6 +111,8 @@ public class XBRLItemExtractor {
 
 	/**
 	 *
+	 *
+	 * @param el	要素
 	 */
 	private void extractIndex(final Element el) {
 
@@ -127,7 +123,9 @@ public class XBRLItemExtractor {
 
 		// 値
 		String value = el.getTextContent();
-		String v = form.removeWhiteSpace(value);
+		String v1 = form.removeWhiteSpace(value);	// 空白文字を削除する
+		String v = form.eliminateHTMLTags(v1);		// HTMLタグを削除する
+
 		if (v.length() < 64) {
 			System.out.print(v + "\t");
 		} else {
@@ -136,6 +134,7 @@ public class XBRLItemExtractor {
 
 			System.out.print(head + " ... " + tail + "\t");
 		}
+		System.out.print(v1.length() + "\t" + v.length() + "\t");
 
 		// 属性
 		NamedNodeMap nm = el.getAttributes();
