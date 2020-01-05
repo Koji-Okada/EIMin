@@ -17,7 +17,7 @@ import difflib.Patch;
  *
  *
  * @author K.Okada
- * @version 2019.12.28
+ * @version 2020.01.05
  */
 public class TextDiff {
 
@@ -25,7 +25,7 @@ public class TextDiff {
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 
 		System.out.println("Start ...");
 
@@ -44,39 +44,53 @@ public class TextDiff {
 
 	/**
 	 *
+	 * @param revisedFile	更新後ファイルのファイルパス
+	 * @param orginalFile	更新前ファイルのファイルパス
 	 */
-	void analyze(String revFile, String orgFile) {
+	final void analyze(final String revisedFile, final String orginalFile) {
 
-		ArrayList org = getLines(orgFile);
-		ArrayList rev = getLines(revFile);
+		// ファイルから文字列を取得する
+		ArrayList<String> org = getLines(orginalFile, true);
+		ArrayList<String> rev = getLines(revisedFile, false);
+
+		System.out.println(" .. Check A.");
+
+		// 差分を求める
 		Patch<String> diff = DiffUtils.diff(org, rev);
+
+		System.out.println(" .. Check B.");
 
 		List<Delta<String>> deltas = diff.getDeltas();
 		for (Delta<String> delta : deltas) {
 			TYPE type = delta.getType();
-//			System.out.println(type);
+			System.out.println(type);
 			Chunk<String> oc = delta.getOriginal();
 			Chunk<String> rc = delta.getRevised();
 
-			if (rc.size() >= 8) {
-				System.out.printf("num=%d: position=%d, lines=%s%n", rc.size(), rc.getPosition(), rc.getLines());
-			}
+			//			if (rc.size() >= 8) {
+			System.out.printf("num=%d: position=%d, lines=%s%n", oc.size(), oc
+					.getPosition(), oc.getLines());
+			System.out.printf("num=%d: position=%d, lines=%s%n", rc.size(), rc
+					.getPosition(), rc.getLines());
+					//			}
 
-//			System.out.printf("del: position=%d, lines=%s%n", oc.getPosition(), oc.getLines());
-//			System.out.println(oc.size());
-//			System.out.printf("add: position=%d, lines=%s%n", rc.getPosition(), rc.getLines());
-//			System.out.println(rc.size());
+			//			System.out.printf("del: position=%d, lines=%s%n", oc.getPosition(), oc.getLines());
+			//			System.out.println(oc.size());
+			//			System.out.printf("add: position=%d, lines=%s%n", rc.getPosition(), rc.getLines());
+			//			System.out.println(rc.size());
 		}
 
 		return;
 	}
 
 	/**
+	 * ファイルから 1行毎の文字列のリストを作成する.
 	 *
-	 * @param filePath
-	 * @return
+	 * @param filePath	ファイルパス
+	 * @param org		更新前ファイルの場合 true
+	 * @return	文字列のリスト
 	 */
-	ArrayList<String> getLines(String filePath) {
+	final ArrayList<String> getLines(final String filePath, boolean org) {
 
 		ArrayList<String> lines = new ArrayList<String>();
 
@@ -85,11 +99,16 @@ public class TextDiff {
 
 			BufferedReader br = new BufferedReader(new FileReader(file));
 
+			TextFormatter form = new TextFormatter();
 			String ln;
 			while ((ln = br.readLine()) != null) {
 
+				if (org) {
+					// 行頭、行末のタグを除去する
+					ln = form.eliminateHTMLTags(ln);
+				}
+
 				lines.add(ln);
-//				System.out.println(ln);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
