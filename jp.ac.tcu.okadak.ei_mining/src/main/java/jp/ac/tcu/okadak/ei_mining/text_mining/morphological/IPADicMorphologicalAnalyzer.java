@@ -10,7 +10,7 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
- * @version 2019.05.09
+ * @version 2020.01.06
  */
 public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 
@@ -79,7 +79,7 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 				pos = PartOfSpeech.OTHERS;
 			}
 
-						System.out.println(strPos + ":" + surface + ":" + base);
+//						System.out.println(strPos + ":" + surface + ":" + base);
 
 			Morpheme m = new Morpheme(surface, base, pos);
 			morphemes.add(m);

@@ -12,6 +12,9 @@ import difflib.Delta;
 import difflib.Delta.TYPE;
 import difflib.DiffUtils;
 import difflib.Patch;
+import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.IPADicMorphologicalAnalyzer;
+import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.Morpheme;
+import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
 
 /**
  *
@@ -31,7 +34,7 @@ public class TextDiff {
 
 		TextDiff td = new TextDiff();
 
-		String path = "C:/Users/Okada/TextMining/MorphologicalFiles/";
+		String path = "C:/Users/Okada/TextMining/TextFiles/";
 		String originalFilePath = "YH(東京急行電鉄)2017.pdf.txt";
 		String revisedFilePath = "YH(東京急行電鉄)2018.pdf.txt";
 
@@ -50,8 +53,8 @@ public class TextDiff {
 	final void analyze(final String revisedFile, final String orginalFile) {
 
 		// ファイルから文字列を取得する
-		ArrayList<String> org = getLines(orginalFile, true);
-		ArrayList<String> rev = getLines(revisedFile, false);
+		ArrayList<String> org = getLines(orginalFile);
+		ArrayList<String> rev = getLines(revisedFile);
 
 		System.out.println(" .. Check A.");
 
@@ -60,18 +63,63 @@ public class TextDiff {
 
 		System.out.println(" .. Check B.");
 
+		IPADicMorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+
 		List<Delta<String>> deltas = diff.getDeltas();
 		for (Delta<String> delta : deltas) {
 			TYPE type = delta.getType();
-			System.out.println(type);
-			Chunk<String> oc = delta.getOriginal();
-			Chunk<String> rc = delta.getRevised();
 
-			//			if (rc.size() >= 8) {
-			System.out.printf("num=%d: position=%d, lines=%s%n", oc.size(), oc
-					.getPosition(), oc.getLines());
-			System.out.printf("num=%d: position=%d, lines=%s%n", rc.size(), rc
-					.getPosition(), rc.getLines());
+			if (TYPE.INSERT == type) {
+				// 挿入部分の場合
+
+				Chunk<String> rc = delta.getRevised();
+				List<String> rLines = rc.getLines();
+				for (String ln:rLines) {
+					System.out.println("*:" + ln);
+				}
+			} else if (TYPE.CHANGE == type) {
+				// 変更部分の場合
+
+				Chunk<String> oc = delta.getOriginal();
+				List<String> oLines = oc.getLines();
+
+				String oStrs = "";
+				for (String ln:oLines) {
+					oStrs = oStrs + ln;
+				}
+
+				Chunk<String> rc = delta.getRevised();
+				List<String> rLines = rc.getLines();
+
+				String rStrs = "";
+				for (String ln:rLines) {
+					rStrs = rStrs + ln;
+				}
+
+				List<Morpheme> oMor = new ArrayList<Morpheme>();
+				mla.analyze(oMor, oStrs);
+				String oSep = mla.getSurface(oMor, " ", PartOfSpeech.ALL);
+
+				List<Morpheme> rMor = new ArrayList<Morpheme>();
+				mla.analyze(rMor, rStrs);
+				String rSep = mla.getSurface(rMor, " ", PartOfSpeech.ALL);
+
+				System.out.println("-:" + oSep);
+				System.out.println("+:" + rSep);
+
+
+			}
+
+
+//			System.out.println(type);
+//			Chunk<String> oc = delta.getOriginal();
+//			Chunk<String> rc = delta.getRevised();
+//
+//			//			if (rc.size() >= 8) {
+//			System.out.printf("num=%d: position=%d, lines=%s%n", oc.size(), oc
+//					.getPosition(), oc.getLines());
+//			System.out.printf("num=%d: position=%d, lines=%s%n", rc.size(), rc
+//					.getPosition(), rc.getLines());
 					//			}
 
 			//			System.out.printf("del: position=%d, lines=%s%n", oc.getPosition(), oc.getLines());
@@ -87,10 +135,9 @@ public class TextDiff {
 	 * ファイルから 1行毎の文字列のリストを作成する.
 	 *
 	 * @param filePath	ファイルパス
-	 * @param org		更新前ファイルの場合 true
 	 * @return	文字列のリスト
 	 */
-	final ArrayList<String> getLines(final String filePath, boolean org) {
+	final ArrayList<String> getLines(final String filePath) {
 
 		ArrayList<String> lines = new ArrayList<String>();
 
@@ -102,12 +149,6 @@ public class TextDiff {
 			TextFormatter form = new TextFormatter();
 			String ln;
 			while ((ln = br.readLine()) != null) {
-
-				if (org) {
-					// 行頭、行末のタグを除去する
-					ln = form.eliminateHTMLTags(ln);
-				}
-
 				lines.add(ln);
 			}
 		} catch (IOException e) {
