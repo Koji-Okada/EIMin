@@ -84,6 +84,8 @@ public abstract class MorphologicalAnalyzer {
 
 		try {
 			// 入力ファイルオープン
+			System.out.println("  :" + inputFileName);
+
 			File inputFile = new File(inputFileName);
 			FileReader fr = new FileReader(inputFile);
 			BufferedReader br = new BufferedReader(fr);
