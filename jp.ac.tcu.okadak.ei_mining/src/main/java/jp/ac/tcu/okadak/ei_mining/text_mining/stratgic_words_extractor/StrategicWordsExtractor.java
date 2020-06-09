@@ -158,7 +158,9 @@ public final class StrategicWordsExtractor {
 			final String ind) {
 
 		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
-		final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.95e0d; // 閾値
+				final double threshold = 0.99e0d; // 閾値 (2020.06.09)
+
 
 		int numE = enterprises.size();
 		int numP = periods.size();
@@ -246,7 +248,8 @@ public final class StrategicWordsExtractor {
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
 		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
-		final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.95e0d; // 閾値
+		final double threshold = 0.99e0d; // 閾値 (2020.06.09)
 
 		String res = "";
 
@@ -359,7 +362,8 @@ public final class StrategicWordsExtractor {
 		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
 		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
-		final double threshold = 0.95e0d; // 閾値
+//		final double threshold = 0.95e0d; // 閾値
+		final double threshold = 0.99e0d; // 閾値 (2020.06.09)
 
 		int numE = enterprises.size();
 		int numP = periods.size();
