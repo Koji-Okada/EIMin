@@ -58,10 +58,7 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	public final void analyze(final List<Morpheme> morphemes,
 			final String targetSentense) {
 
-		System.out.println("Check A");
-		Tokenizer tokenizer = new Tokenizer();	// Tokenizer が生成できない！
-		System.out.println("Check B");
-
+		Tokenizer tokenizer = new Tokenizer();
 
 		List<Token> tokens = tokenizer.tokenize(targetSentense);
 		for (Token token : tokens) {
@@ -87,8 +84,6 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 			} else {
 				pos = PartOfSpeech.OTHERS;
 			}
-
-						System.out.println(strPos + ":" + surface + ":" + base);
 
 			Morpheme m = new Morpheme(surface, base, pos);
 			morphemes.add(m);
