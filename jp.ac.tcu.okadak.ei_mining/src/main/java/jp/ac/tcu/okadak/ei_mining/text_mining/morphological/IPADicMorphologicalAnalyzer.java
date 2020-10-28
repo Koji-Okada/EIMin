@@ -7,6 +7,12 @@ import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
 
 /**
+ * 2020.10.24 記
+ * C:\\user\....\.dl4j-kuromoji の配下をローカルに置かないとエラーとなる．
+ */
+
+
+/**
  * IPA-Dic を用いた形態素解析器.
  *
  * @author K.Okada
@@ -17,7 +23,7 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	/**
 	 * 形態素解析器の本体.
 	 */
-	private Tokenizer tokenizer = new Tokenizer();
+	private Tokenizer tokenizer;
 
 	/**
 	 *
@@ -52,7 +58,7 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 	public final void analyze(final List<Morpheme> morphemes,
 			final String targetSentense) {
 
-
+		Tokenizer tokenizer = new Tokenizer();
 
 		List<Token> tokens = tokenizer.tokenize(targetSentense);
 		for (Token token : tokens) {
@@ -78,8 +84,6 @@ public class IPADicMorphologicalAnalyzer extends MorphologicalAnalyzer {
 			} else {
 				pos = PartOfSpeech.OTHERS;
 			}
-
-//						System.out.println(strPos + ":" + surface + ":" + base);
 
 			Morpheme m = new Morpheme(surface, base, pos);
 			morphemes.add(m);

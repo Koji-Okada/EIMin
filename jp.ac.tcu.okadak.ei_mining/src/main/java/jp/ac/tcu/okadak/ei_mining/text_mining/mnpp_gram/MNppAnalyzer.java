@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.IPADicMorphologicalAnalyzer;
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.Morpheme;
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.MorphologicalAnalyzer;
+import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.NeologdMorphologicalAnalyzer;
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
 
 /**
@@ -28,8 +28,8 @@ public class MNppAnalyzer {
 	/**
 	 * 形態素解析器.
 	 */
-	private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
-//	private MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
+//	 private MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+	private MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 	/**
 	 * 最大グラム数.
