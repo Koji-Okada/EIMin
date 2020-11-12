@@ -72,6 +72,9 @@ public class Word2VecApplication {
 		} catch (UnsupportedEncodingException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
 
 

@@ -67,6 +67,8 @@ public class MultiDocW2VAnalyzer {
 		for (File f : files) {
 			// 各ファイルに対して
 
+			System.out.println("..." + f);
+
 			if (!f.isFile()) {
 				// ファイルの場合のみ処理対象とする
 				continue;
@@ -74,6 +76,9 @@ public class MultiDocW2VAnalyzer {
 
 			// 対象ファイルを分析する
 			w2v.analyze(f);
+
+			System.out.println("...!");
+
 		}
 
 		// 分析結果を保存する
