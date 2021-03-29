@@ -29,6 +29,8 @@ public class XBRLItemExtractor {
 
 		System.out.println("Start ... XBRL Item Extracyor");
 
+		// DOM方式による XBRLパーサ
+
 		XBRLItemExtractor itemExtractor = new XBRLItemExtractor();
 
 		//  日立製作所 ASR 201803
