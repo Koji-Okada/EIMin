@@ -30,8 +30,9 @@ public class Word2VecApplication {
 	 *
 	 * @param args
 	 *            デフォルト
+	 * @throws Exception 
 	 */
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws Exception {
 
 		Word2VecApplication w2vApp = new Word2VecApplication();
 		w2vApp.apply();
@@ -41,8 +42,9 @@ public class Word2VecApplication {
 
 	/**
 	 * 適用する.
+	 * @throws IOException 
 	 */
-	private void apply() {
+	private void apply() throws IOException {
 
 		String targetPath;
 
