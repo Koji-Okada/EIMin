@@ -245,7 +245,8 @@ public final class StrategicWordsExtractor {
 			final List<String> enterprises, final List<String> periods,
 			final String ind) {
 
-		final int minWindowSize = 1; // 窓の最小幅
+		final int minWindowSize = 0; // 窓の最小幅
+//		final int minWindowSize = 1; // 窓の最小幅
 		final int maxWindowSize = 4; // 窓の最大幅
 		//		final double threshold = 0.999999e0d; // 閾値 (2019.01.17)
 //		final double threshold = 0.95e0d; // 閾値
@@ -266,19 +267,21 @@ public final class StrategicWordsExtractor {
 
 		double vMax = 0.0e0d;
 		int wsMax = 0;
-		int weMax = numP - 1;
+//		int weMax = numP - 1;
+		int weMax = numP;
+
 		boolean found = false;
 
-		for (int wSize = minWindowSize; wSize <= maxWindowSize; wSize++) {
+		for (int wSize = minWindowSize; wSize <= maxWindowSize-1; wSize++) {
 			// 期間窓の幅を選択する
-			for (int ws = 1; ws < numP - wSize - 1; ws++) {
+			for (int ws = 0; ws < numP - wSize; ws++) {
 				// 期間窓の始点を選択する
 				int we = ws + wSize;
 
-				// System.out.println(ws + ":" + we);
+//				 System.out.println(numP + ":" + ws + ":" + we);
 
 				// 特定企業の場合：群1、特定企業でない場合：群2 に設定する.
-				for (int e = 0; e < numE; e++) {
+				for (int e = 0; e < numP; e++) {
 					for (int p = 0; p < numP; p++) {
 						if ((ws <= p) && (p <= we)) {
 							// 群1の条件を満たす場合
@@ -499,7 +502,9 @@ public final class StrategicWordsExtractor {
 				String[] parts3 = parts2[0].split("\\(", 2);
 				String docType = parts3[0];
 				String entName = parts3[1];
-				String year = parts2[1];
+//				String year = parts2[1];
+				String year = parts2[1].substring(0, 4);			// 川波の命名ルールに合わせた
+
 
 				if (docType.equals("AR") || docType.equals("IR") || docType
 						.equals("CSR") || docType.equals("YH")) {
