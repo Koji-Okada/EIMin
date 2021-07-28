@@ -40,9 +40,12 @@ public class MultiDocMorphologicalAnalyzer {
 
 		MultiDocMorphologicalAnalyzer mdpa = new MultiDocMorphologicalAnalyzer();
 
-		mdpa.setMode(PartOfSpeech.ALL);
+//		mdpa.setMode(PartOfSpeech.ALL);
 //		mdpa.setMode(PartOfSpeech.NORN | PartOfSpeech.VERB | PartOfSpeech.ADJ
 //				| PartOfSpeech.ADV);
+
+		mdpa.setMode(PartOfSpeech.NORN);
+
 		mdpa.analyze();
 
 		System.out.println("... Successfully Complete.");
@@ -78,8 +81,8 @@ public class MultiDocMorphologicalAnalyzer {
 		File[] files = file.listFiles();
 
 		// 形態素解析を生成する
-		MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
-//		MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
+//		MorphologicalAnalyzer mla = new IPADicMorphologicalAnalyzer();
+		MorphologicalAnalyzer mla = new NeologdMorphologicalAnalyzer();
 
 		for (File f : files) {
 			// 各ファイルに対して

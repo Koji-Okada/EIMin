@@ -12,6 +12,7 @@ import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.MorphologicalAnalyze
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.NeologdMorphologicalAnalyzer;
 import jp.ac.tcu.okadak.ei_mining.text_mining.morphological.PartOfSpeech;
 
+
 /**
  * 形態素階層化N-Gram解析器.
  *
