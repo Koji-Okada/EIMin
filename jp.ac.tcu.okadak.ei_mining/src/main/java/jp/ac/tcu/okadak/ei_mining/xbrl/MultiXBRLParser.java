@@ -12,7 +12,7 @@ public class MultiXBRLParser {
 	public static void main(String[] args) {
 
 //		String indexFile = "X:\\XBRL_Data\\index.txt";
-		String indexFile = "E:/index.txt";
+		String indexFile = "E:/TargetList.txt";
 
 
 		System.out.println("Start ...");
@@ -51,8 +51,11 @@ public class MultiXBRLParser {
 				String entName = tokenizer.nextToken();
 				String path = tokenizer.nextToken();
 
-				if (0 == type.compareTo("asr")) {
-					// ※有価証券報告書だけに限定している
+//				if (0 == type.compareTo("asr")) {
+//					// ※有価証券報告書だけに限定している
+					
+				if ((0 == type.compareTo("asr")) || 0 == type.compareTo("q1r") ||
+						(0 == type.compareTo("q2r")) || 0 == type.compareTo("q3r")) {
 
 //					path = path.replace("X:", "D:\\XBRL_Data");		// 開発環境の違いを吸収するため
 
