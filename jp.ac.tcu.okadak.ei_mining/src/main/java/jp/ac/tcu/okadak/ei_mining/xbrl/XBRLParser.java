@@ -63,7 +63,7 @@ public class XBRLParser {
 	 */
 	public String findXbrlFile(String path) {
 
-		//		System.out.println(path);
+				System.out.println(path);
 
 		File folder = new File(path);
 		File fileList[] = folder.listFiles();
@@ -107,7 +107,8 @@ public class XBRLParser {
 		}
 
 		//		rec.output();
-		rec.output2();
+		String path = "D:/XBRL/XBRLText/";
+		rec.output2(path);
 
 		return;
 	}

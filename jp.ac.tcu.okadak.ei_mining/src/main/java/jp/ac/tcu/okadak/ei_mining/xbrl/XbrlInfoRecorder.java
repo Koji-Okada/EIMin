@@ -25,6 +25,7 @@ public class XbrlInfoRecorder {
 	}
 
 	// ===========================================================================================
+	String docType = null; // 報告書種別
 	String entName = null; // 企業名
 	String sCode = null; // 株式コード
 	String eCode = null; // EDINETコード
@@ -42,28 +43,34 @@ public class XbrlInfoRecorder {
 		if (null == childNode)
 			return; // 具体的な値が無ければ調べる意味がない
 
+		// 報告書種別
+		if (nodeName.equals("jpcrp_cor:DocumentTitleCoverPage")) {
+			docType = childNode.getNodeValue();
+//			System.out.println(docType);
+		}
+
 		// 企業名
 		if (nodeName.equals("jpdei_cor:FilerNameInJapaneseDEI")) {
 			entName = childNode.getNodeValue();
-			//			System.out.println(entName);
+			// System.out.println(entName);
 		}
 
 		// 株式コード
 		if (nodeName.equals("jpdei_cor:SecurityCodeDEI")) {
 			sCode = childNode.getNodeValue();
-			//			System.out.println(sCode);
+			// System.out.println(sCode);
 		}
 
 		// EDINETコード
 		if (nodeName.equals("jpdei_cor:EDINETCodeDEI")) {
 			eCode = childNode.getNodeValue();
-			//			System.out.println(eCode);
+			// System.out.println(eCode);
 		}
 
 		// 会計基準
 		if (nodeName.equals("jpdei_cor:AccountingStandardsDEI")) {
 			acStandard = childNode.getNodeValue();
-			//			System.out.println(acStandard);
+			// System.out.println(acStandard);
 		}
 
 		// 提出回数
@@ -80,6 +87,12 @@ public class XbrlInfoRecorder {
 	String currentYearStartDate = null;
 	String currentYearEndDate = null;
 
+	String currentQuarterInstant = null;
+	String currentQuarterStartDate = null;
+	String currentQuarterEndDate = null;
+	
+	String currentQuarterInstantNonConsolidated = null;		// 単体決算の場合：追加調査が必要
+	
 	/**
 	 * 日時データ抽出
 	 *
@@ -104,7 +117,7 @@ public class XbrlInfoRecorder {
 							String name = e.getNodeName();
 							if (name.equals("xbrli:period")) {
 								currentYearInstant = getDate(e, "xbrli:instant");
-								//								System.out.println(currentYearInstant);
+								// System.out.println(currentYearInstant);
 							}
 						}
 					} else if (term.equals("CurrentYearDuration")) {
@@ -114,11 +127,44 @@ public class XbrlInfoRecorder {
 							String name = e.getNodeName();
 							if (name.equals("xbrli:period")) {
 								currentYearStartDate = getDate(e, "xbrli:startDate");
-								//								System.out.println("St:" + currentYearStartDate);
+								// System.out.println("St:" + currentYearStartDate);
 								currentYearEndDate = getDate(e, "xbrli:endDate");
-								//								System.out.println("Ed:" + currentYearEndDate);
+								// System.out.println("Ed:" + currentYearEndDate);
 							}
 						}
+					} 	else if (term.equals("CurrentQuarterInstant")) {
+						NodeList nodeList = node.getChildNodes();
+						for (int j = 0; j < nodeList.getLength(); j++) {
+							Node e = nodeList.item(j);
+							String name = e.getNodeName();
+							if (name.equals("xbrli:period")) {
+								currentQuarterInstant = getDate(e, "xbrli:instant");
+								// System.out.println(currentQuarterInstant);
+							}
+						}
+					} else if (term.equals("CurrentQuarterDuration")) {
+						NodeList nodeList = node.getChildNodes();
+						for (int j = 0; j < nodeList.getLength(); j++) {
+							Node e = nodeList.item(j);
+							String name = e.getNodeName();
+							if (name.equals("xbrli:period")) {
+								currentQuarterStartDate = getDate(e, "xbrli:startDate");
+								// System.out.println("St:" + currentQuarterStartDate);
+								currentQuarterEndDate = getDate(e, "xbrli:endDate");
+								// System.out.println("Ed:" + currentQuarterEndDate);
+							}
+						}
+						
+					} 	else if (term.equals("CurrentQuarterInstant_NonConsolidatedMember")) {
+						NodeList nodeList = node.getChildNodes();
+						for (int j = 0; j < nodeList.getLength(); j++) {
+							Node e = nodeList.item(j);
+							String name = e.getNodeName();
+							if (name.equals("xbrli:period")) {
+								currentQuarterInstantNonConsolidated = getDate(e, "xbrli:instant");
+								// System.out.println(currentQuarterInstant);
+							}
+						}	
 					}
 				}
 			}
@@ -168,7 +214,7 @@ public class XbrlInfoRecorder {
 	// 基本
 	// JPGAAp:NetSalesSummaryOfBusinessResults
 	// USGAAP:RevenuesUSGAAPSummaryOfBusinessResults
-	// IFRS  :RevenueIFRSSummaryOfBusinessResults
+	// IFRS :RevenueIFRSSummaryOfBusinessResults
 	String[] netSales0 = new String[5];
 	String[] netSalesNC0 = new String[5];
 
@@ -195,9 +241,9 @@ public class XbrlInfoRecorder {
 			return; // 具体的な値が無ければ調べる意味がない
 
 		// 売上高を抽出する
-		if (nodeName.equals("jpcrp_cor:NetSalesSummaryOfBusinessResults") ||
-				nodeName.equals("jpcrp_cor:RevenuesUSGAAPSummaryOfBusinessResults") ||
-				nodeName.equals("jpcrp_cor:RevenueIFRSSummaryOfBusinessResults")) {
+		if (nodeName.equals("jpcrp_cor:NetSalesSummaryOfBusinessResults")
+				|| nodeName.equals("jpcrp_cor:RevenuesUSGAAPSummaryOfBusinessResults")
+				|| nodeName.equals("jpcrp_cor:RevenueIFRSSummaryOfBusinessResults")) {
 
 			NamedNodeMap attr = node.getAttributes();
 			for (int i = 0; i < attr.getLength(); i++) {
@@ -374,7 +420,8 @@ public class XbrlInfoRecorder {
 		if (null != netSalesNC3[0])
 			count2++;
 
-		//		res = count1 + "," + count2 + ":" + entName + "," + sCode + "," + eCode + "," + acStandard + "," + numSubmission + "," + currentYearEndDate;
+		// res = count1 + "," + count2 + ":" + entName + "," + sCode + "," + eCode + ","
+		// + acStandard + "," + numSubmission + "," + currentYearEndDate;
 		res = entName + "," + sCode + "," + eCode + "," + acStandard + "," + numSubmission + "," + currentYearEndDate;
 
 		for (int i = 0; i < 5; i++) {
@@ -426,10 +473,26 @@ public class XbrlInfoRecorder {
 	/**
 	 *
 	 */
-	void output2() {
+	void output2(String path) {
 
-		String path = "E:/XBRLText/";
-		String fName = "YH(" + eCode + "_" + entName + ")" + currentYearEndDate + "_" + numSubmission + ".txt";
+		String ty = "--";
+		String date = null;
+		if (docType.contains("有価証券報告書")) {
+			ty = "YH";
+			date = currentYearInstant;
+		} else if (docType.contains("四半期報告書")) {
+			ty = "QR";
+			
+			if (null != currentQuarterInstant)
+				date = currentQuarterInstant;
+			else {	// 場当たり的なので要見直し
+				date = currentQuarterInstantNonConsolidated;
+			}
+		}
+		
+		if (null == date) System.out.println("Err!...");
+		
+		String fName = ty + "(" + eCode + "_" + entName + ")" + date + "_" + numSubmission + ".txt";
 
 		FileWriter fw = null;
 		try {
