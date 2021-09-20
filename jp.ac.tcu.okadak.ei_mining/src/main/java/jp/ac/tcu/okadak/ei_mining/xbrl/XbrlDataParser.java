@@ -8,7 +8,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XbrlInfoRecorder {
+public class XbrlDataParser {
 
 	/**
 	 *
@@ -420,9 +420,18 @@ public class XbrlInfoRecorder {
 		if (null != netSalesNC3[0])
 			count2++;
 
+		
+		String date = currentYearInstant;
+		if (null == date) {
+			date = currentQuarterInstant;
+		}
+		if (null == date) {
+			date = currentQuarterInstantNonConsolidated;
+		}
+		
 		// res = count1 + "," + count2 + ":" + entName + "," + sCode + "," + eCode + ","
 		// + acStandard + "," + numSubmission + "," + currentYearEndDate;
-		res = entName + "," + sCode + "," + eCode + "," + acStandard + "," + numSubmission + "," + currentYearEndDate;
+		res = entName + "," + sCode + "," + eCode + "," + acStandard + "," + numSubmission + "," + date;
 
 		for (int i = 0; i < 5; i++) {
 
@@ -455,12 +464,15 @@ public class XbrlInfoRecorder {
 
 		if (null != netSales[0]) {
 			// 連結決算がある場合
-			for (int i = 0; i < 5; i++) {
+//			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 2; i++) {
 				res = res + "," + netSales[i];
 			}
 		} else {
 			// 単体決算しかない場合
-			for (int i = 0; i < 5; i++) {
+//			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 2; i++) {
+
 				res = res + "," + netSalesNC[i];
 			}
 		}

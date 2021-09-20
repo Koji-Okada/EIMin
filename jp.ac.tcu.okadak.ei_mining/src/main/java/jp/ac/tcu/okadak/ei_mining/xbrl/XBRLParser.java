@@ -13,7 +13,7 @@ public class XBRLParser {
 	/**
 	 *
 	 */
-	XbrlInfoRecorder rec;
+	XbrlDataParser rec;
 
 	/**
 	 *
@@ -92,7 +92,7 @@ public class XBRLParser {
 		//		System.out.println(uri);
 
 		// 新規の記録器を作成する
-		rec = new XbrlInfoRecorder();
+		rec = new XbrlDataParser();
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -106,9 +106,9 @@ public class XBRLParser {
 			System.out.println(e);
 		}
 
-		//		rec.output();
-		String path = "D:/XBRL/XBRLText/";
-		rec.output2(path);
+		rec.output();
+//		String path = "D:/XBRL/XBRLText/";
+//		rec.output2(path);
 
 		return;
 	}

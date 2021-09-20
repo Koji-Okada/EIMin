@@ -39,7 +39,9 @@ public class MultiXBRLParser {
 			XBRLParser parser = new XBRLParser();
 
 			String line;
-			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前),売上高(2年前),売上高(3年前),売上高(4年前)");
+//			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前),売上高(2年前),売上高(3年前),売上高(4年前)");
+			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前)");
+
 			while (null != (line = br.readLine())) {
 				CSVTokenizer tokenizer = new CSVTokenizer(line);
 
