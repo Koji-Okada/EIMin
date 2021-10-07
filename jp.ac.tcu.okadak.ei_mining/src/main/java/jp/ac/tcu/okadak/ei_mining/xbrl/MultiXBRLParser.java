@@ -36,7 +36,7 @@ public class MultiXBRLParser {
 			FileReader fr = new FileReader(settingFile);
 			BufferedReader br = new BufferedReader(fr);
 
-			XBRLParser parser = new XBRLParser();
+			XBRLParserRC parserRC = new XBRLParserRC();
 
 			String line;
 //			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前),売上高(2年前),売上高(3年前),売上高(4年前)");
@@ -61,8 +61,15 @@ public class MultiXBRLParser {
 
 					path = path.replace("X:", "D:/XBRL/Target");		// 開発環境の違いを吸収するため
 
-					String xbrlUri = parser.findXbrlFile(path);
-					parser.parse(xbrlUri);
+					String xbrlUri = parserRC.findXbrlFile(path);
+					
+					parserRC.data = new XBRLData();
+					
+					parserRC.parser = new XBRLBasicInfoParser();
+					parserRC.parse(xbrlUri);
+					
+					parserRC.parser = new XBRLTextInfoParser();
+					parserRC.parse(xbrlUri);
 				}
 			}
 			br.close();

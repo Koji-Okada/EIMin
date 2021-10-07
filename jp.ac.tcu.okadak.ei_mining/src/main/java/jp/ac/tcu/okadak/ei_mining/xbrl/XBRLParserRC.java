@@ -8,12 +8,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XBRLParser {
+public class XBRLParserRC {
 
 	/**
 	 *
 	 */
-	XbrlDataParser rec;
+	XBRLDataParser parser;		// スーパークラス
+	XBRLData data;				// データの器
 
 	/**
 	 *
@@ -40,7 +41,7 @@ public class XBRLParser {
 		System.out.println("Start ...");
 
 		String xbrlUri;
-		XBRLParser p = new XBRLParser();
+		XBRLParserRC p = new XBRLParserRC();
 
 		xbrlUri = p.findXbrlFile(path1);
 		p.parse(xbrlUri);
@@ -58,7 +59,6 @@ public class XBRLParser {
 	/** ===============================================================================================================
 	 *
 	 *	XBRLファイルを探し URIを返す.
-	 *
 	 *
 	 */
 	public String findXbrlFile(String path) {
@@ -91,9 +91,6 @@ public class XBRLParser {
 
 		//		System.out.println(uri);
 
-		// 新規の記録器を作成する
-		rec = new XbrlDataParser();
-
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		try {
@@ -106,7 +103,7 @@ public class XBRLParser {
 			System.out.println(e);
 		}
 
-		rec.output();
+//		parser.output();
 //		String path = "D:/XBRL/XBRLText/";
 //		rec.output2(path);
 
@@ -121,7 +118,9 @@ public class XBRLParser {
 		if (Node.TEXT_NODE == node.getNodeType())
 			return;
 
-		rec.get(node);
+//		parser.getBasicInfo(data, node);	// 基礎データを取得する
+
+		parser.get(data, node);
 
 		// 子ノードに対して再帰処理
 		NodeList nodeList = node.getChildNodes();
