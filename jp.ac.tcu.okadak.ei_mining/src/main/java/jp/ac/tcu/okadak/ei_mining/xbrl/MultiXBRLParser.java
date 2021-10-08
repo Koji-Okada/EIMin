@@ -12,8 +12,8 @@ public class MultiXBRLParser {
 	public static void main(String[] args) {
 
 //		String indexFile = "X:\\XBRL_Data\\index.txt";
-//		String indexFile = "E:/TargetList.txt";
-		String indexFile = "D:/XBRL/TargetList.txt";
+		String indexFile = "E:/Target.txt";
+//		String indexFile = "D:/XBRL/TargetList.txt";
 
 		System.out.println("Start ...");
 
@@ -59,17 +59,20 @@ public class MultiXBRLParser {
 				if ((0 == type.compareTo("asr")) || 0 == type.compareTo("q1r") ||
 						(0 == type.compareTo("q2r")) || 0 == type.compareTo("q3r")) {
 
-					path = path.replace("X:", "D:/XBRL/Target");		// 開発環境の違いを吸収するため
+//					path = path.replace("X:", "D:/XBRL/Target");		// 開発環境の違いを吸収するため
 
 					String xbrlUri = parserRC.findXbrlFile(path);
 					
-					parserRC.data = new XBRLData();
+					parserRC.data = new XBRLData();	// XBRLデータオブジェクトを作成
 					
 					parserRC.parser = new XBRLBasicInfoParser();
 					parserRC.parse(xbrlUri);
+					parserRC.data.showBasicInfo();
+					parserRC.data.showDateInfo();
 					
-					parserRC.parser = new XBRLTextInfoParser();
+					parserRC.parser = new XBRLFinDataParser();
 					parserRC.parse(xbrlUri);
+					parserRC.data.showPLInfo();
 				}
 			}
 			br.close();

@@ -3,7 +3,7 @@ package jp.ac.tcu.okadak.ei_mining.xbrl;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class XBRLFinDataParser {
+public class XBRLFinDataParser extends XBRLDataParser{
 
 	
 	XBRLData dt;
@@ -16,7 +16,8 @@ public class XBRLFinDataParser {
 
 		this.dt = data;
 		
-		getFinancialInfo(node);
+		getFinJPGAAP(node);		// 国内会計基準
+//		getFinancialInfo(node);
 
 		return;
 	}
@@ -78,8 +79,287 @@ public class XBRLFinDataParser {
 	 */
 	void getFinJPGAAP(Node node) {
 
+		String nodeName = node.getNodeName();
+		Node childNode = node.getFirstChild();
+
+		if (null == childNode)
+			return; // 具体的な値が無ければ調べる意味がない
+
+		// 売上高を抽出する
+		if (nodeName.equals("jppfs_cor:NetSales")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.netSalesCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.netSalesPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
 		
+		// 売上原価を抽出する
+		if (nodeName.equals("jppfs_cor:CostOfSales")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.costOfSalesCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.costOfSalesPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
 		
+		// 売上総利益を抽出する
+		if (nodeName.equals("jppfs_cor:GrossProfit")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.grossProfitCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.grossProfitPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 販管費を抽出する
+		if (nodeName.equals("jppfs_cor:SellingGeneralAndAdministrativeExpenses")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.sellingGeneralAndAdministrativeExpensesCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.sellingGeneralAndAdministrativeExpensesPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 営業利益を抽出する
+		if (nodeName.equals("jppfs_cor:OperatingIncome")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.operatingIncomeCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.operatingIncomePr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 営業外収益を抽出する
+		if (nodeName.equals("jppfs_cor:NonOperatingIncome")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingIncomeCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingIncomePr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 営業外費用を抽出する
+		if (nodeName.equals("jppfs_cor:NonOperatingExpenses")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingExpensesCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingExpensesPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 経常利益を抽出する
+		if (nodeName.equals("jppfs_cor:OrdinaryIncome")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.ordinaryIncomeCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.ordinaryIncomePr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 特別損失を抽出する
+		if (nodeName.equals("jppfs_cor:ExtraordinaryLoss")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryLossCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryLossPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 税引前利益を抽出する
+		if (nodeName.equals("jppfs_cor:IncomeBeforeIncomeTaxes")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.incomeBeforeIncomeTaxesCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.incomeBeforeIncomeTaxesPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 純利益を抽出する
+		if (nodeName.equals("jppfs_cor:ProfitLoss")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
+		
+		// 純利益を抽出する
+		if (nodeName.equals("jppfs_cor:ProfitLossAttributableToOwnersOfParent")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					// 連結決算に関して
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossAttributableToOwnersOfParentCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossAttributableToOwnersOfParentPr1YTDuration = Long.valueOf(value);
+					}
+					
+					// 単体決算に関して
+				}
+			}
+		}
 		
 		return;
 	}

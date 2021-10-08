@@ -18,7 +18,8 @@ public class XBRLBasicInfoParser extends XBRLDataParser {
 		this.dt = data;
 		
 		getBasicInfo(node);
-
+		getDateInfo(node);
+		
 		return;
 	}
 	
