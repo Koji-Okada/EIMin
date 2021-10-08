@@ -3,11 +3,10 @@ package jp.ac.tcu.okadak.ei_mining.xbrl;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class XBRLFinDataParser extends XBRLDataParser{
+public class XBRLFinDataParser extends XBRLDataParser {
 
-	
 	XBRLData dt;
-	
+
 	/**
 	 *
 	 * @param node
@@ -15,8 +14,8 @@ public class XBRLFinDataParser extends XBRLDataParser{
 	void get(XBRLData data, Node node) {
 
 		this.dt = data;
-		
-		getFinJPGAAP(node);		// 国内会計基準
+
+		getFinJPGAAP(node); // 国内会計基準
 //		getFinancialInfo(node);
 
 		return;
@@ -39,40 +38,40 @@ public class XBRLFinDataParser extends XBRLDataParser{
 			"Prior2YearDuration_NonConsolidatedMember", "Prior3YearDuration_NonConsolidatedMember",
 			"Prior4YearDuration_NonConsolidatedMember" };
 
-	
 	// CurrentYTDDuration, Prior1YTDDuration
-	
+
 	// 期間-四半期-連結
-	final String[] QDC = { "CurrentYTDDuration", "Prior1YTDDuration", "Prior2YTDDuration",
-			"Prior3YTDDuration", "Prior4YTDDuration" };
+	final String[] QDC = { "CurrentYTDDuration", "Prior1YTDDuration", "Prior2YTDDuration", "Prior3YTDDuration",
+			"Prior4YTDDuration" };
 //	final String[] QDC = { "CurrentQuarterDuration", "Prior1QuarterDuration", "Prior2QuarterDuration",
 //			"Prior3QuarterDuration", "Prior4QuarterDuration" };
 
 	// 期間-四半期-単体
-	final String[] QDNC = { "CurrentQuarterDuration_NonConsolidatedMember", "Prior1QuarterDuration_NonConsolidatedMember",
-			"Prior2QuarterDuration_NonConsolidatedMember",
-			"Prior3QuarterDuration_NonConsolidatedMember", "Prior4QuarterDuration_NonConsolidatedMember" };
+	final String[] QDNC = { "CurrentYTDDuration_NonConsolidatedMember", "Prior1YTDDuration_NonConsolidatedMember",
+			"Prior2YTDDuration_NonConsolidatedMember", "Prior3YTDDuration_NonConsolidatedMember",
+			"Prior4YTDDuration_NonConsolidatedMember" };
+//	final String[] QDNC = { "CurrentQuarterDuration_NonConsolidatedMember", "Prior1QuarterDuration_NonConsolidatedMember",
+//			"Prior2QuarterDuration_NonConsolidatedMember",
+//			"Prior3QuarterDuration_NonConsolidatedMember", "Prior4QuarterDuration_NonConsolidatedMember" };
 
 	// 日時-年-連結
-	final String[] YIC = { "CurrentYearInstant", "Prior1YearInstant",
-			"Prior2YearInstant", "Prior3YearInstant",
-			"Prior4YearInstant"} ;
+	final String[] YIC = { "CurrentYearInstant", "Prior1YearInstant", "Prior2YearInstant", "Prior3YearInstant",
+			"Prior4YearInstant" };
 
 	// 日時-年-連結
 	final String[] YINC = { "CurrentYearInstant_NonConsolidatedMember", "Prior1YearInstant_NonConsolidatedMember",
 			"Prior2YearInstant_NonConsolidatedMember", "Prior3YearInstant_NonConsolidatedMember",
-			"Prior4YearInstant_NonConsolidatedMember"} ;
-		
+			"Prior4YearInstant_NonConsolidatedMember" };
+
 	// 日時-四半期-単体
-	final String[] QIC = { "CurrentQuarterInstant", "Prior1QuarterInstant",
-			"Prior2QuarterInstant", "Prior3QuarterInstant",
-			"Prior4QuarterInstant"} ;
-	
+	final String[] QIC = { "CurrentQuarterInstant", "Prior1QuarterInstant", "Prior2QuarterInstant",
+			"Prior3QuarterInstant", "Prior4QuarterInstant" };
+
 	// 日時-四半期-単体
 	final String[] QINC = { "CurrentQuarterInstant_NonConsolidatedMember", "Prior1QuarterInstant_NonConsolidatedMember",
 			"Prior2QuarterInstant_NonConsolidatedMember", "Prior3QuarterInstant_NonConsolidatedMember",
-			"Prior4QuarterInstant_NonConsolidatedMember"} ;
-	
+			"Prior4QuarterInstant_NonConsolidatedMember" };
+
 	// ==================================================================================
 	/**
 	 * 
@@ -94,20 +93,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.netSalesCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.netSalesCrtYTDuration = Long.valueOf(value);
+					}
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.netSalesPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.netSalesPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 売上原価を抽出する
 		if (nodeName.equals("jppfs_cor:CostOfSales")) {
 
@@ -117,20 +121,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.costOfSalesCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.costOfSalesCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.costOfSalesPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.costOfSalesPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 売上総利益を抽出する
 		if (nodeName.equals("jppfs_cor:GrossProfit")) {
 
@@ -140,20 +149,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.grossProfitCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.grossProfitCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.grossProfitPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.grossProfitPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 販管費を抽出する
 		if (nodeName.equals("jppfs_cor:SellingGeneralAndAdministrativeExpenses")) {
 
@@ -163,20 +177,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.sellingGeneralAndAdministrativeExpensesCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.sellingGeneralAndAdministrativeExpensesPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 営業利益を抽出する
 		if (nodeName.equals("jppfs_cor:OperatingIncome")) {
 
@@ -186,20 +205,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.operatingIncomeCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.operatingIncomeCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.operatingIncomePr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.operatingIncomePr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 営業外収益を抽出する
 		if (nodeName.equals("jppfs_cor:NonOperatingIncome")) {
 
@@ -209,20 +233,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingIncomeCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingIncomeCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingIncomePr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingIncomePr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 営業外費用を抽出する
 		if (nodeName.equals("jppfs_cor:NonOperatingExpenses")) {
 
@@ -232,20 +261,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingExpensesCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingExpensesCrtYTDuration = Long.valueOf(value);
+					}
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.nonOperatingExpensesPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingExpensesPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 経常利益を抽出する
 		if (nodeName.equals("jppfs_cor:OrdinaryIncome")) {
 
@@ -255,16 +289,49 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.ordinaryIncomeCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.ordinaryIncomeCrtYTDuration = Long.valueOf(value);
+					}
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.ordinaryIncomePr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.ordinaryIncomePr1YTDuration = Long.valueOf(value);
 					}
+				}
+			}
+		}
+
+		// 特別利益を抽出する
+		if (nodeName.equals("jppfs_cor:ExtraordinaryIncome")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryIncomeCrtYTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryIncomeCrtYTDuration = Long.valueOf(value);
+					} 
 					
-					// 単体決算に関して
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryIncomePr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryIncomePr1YTDuration = Long.valueOf(value);
+					}
 				}
 			}
 		}
@@ -278,20 +345,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryLossCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryLossCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.extraordinaryLossPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryLossPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 税引前利益を抽出する
 		if (nodeName.equals("jppfs_cor:IncomeBeforeIncomeTaxes")) {
 
@@ -301,20 +373,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.incomeBeforeIncomeTaxesCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.incomeBeforeIncomeTaxesCrtYTDuration = Long.valueOf(value);
+					} 
+					
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.incomeBeforeIncomeTaxesPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.incomeBeforeIncomeTaxesPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		// 純利益を抽出する
 		if (nodeName.equals("jppfs_cor:ProfitLoss")) {
 
@@ -324,21 +401,26 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.profitLossCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossCrtYTDuration = Long.valueOf(value);
+					} 
+
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.profitLossPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
-		// 純利益を抽出する
+
+		// 当社株主帰属純利益を抽出する
 		if (nodeName.equals("jppfs_cor:ProfitLossAttributableToOwnersOfParent")) {
 
 			NamedNodeMap attr = node.getAttributes();
@@ -347,20 +429,25 @@ public class XBRLFinDataParser extends XBRLDataParser{
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					// 連結決算に関して
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.profitLossAttributableToOwnersOfParentCrtYTDuration = Long.valueOf(value);
-					} else if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+					} else if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossAttributableToOwnersOfParentCrtYTDuration = Long.valueOf(value);
+					}
+
+					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
+						String value = childNode.getNodeValue();
+						this.dt.profitLossAttributableToOwnersOfParentPr1YTDuration = Long.valueOf(value);
+					} else if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.profitLossAttributableToOwnersOfParentPr1YTDuration = Long.valueOf(value);
 					}
-					
-					// 単体決算に関して
 				}
 			}
 		}
-		
+
 		return;
 	}
 

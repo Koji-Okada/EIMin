@@ -77,6 +77,8 @@ public class XBRLData {
 	Long nonOperatingExpensesPr1YTDuration = null;
 	Long ordinaryIncomeCrtYTDuration = null;	// 経常利益
 	Long ordinaryIncomePr1YTDuration = null;
+	Long extraordinaryIncomeCrtYTDuration = null;	// 特別利益
+	Long extraordinaryIncomePr1YTDuration = null;
 	Long extraordinaryLossCrtYTDuration = null;	// 特別損失
 	Long extraordinaryLossPr1YTDuration = null;
 	Long incomeBeforeIncomeTaxesCrtYTDuration = null;	// 税引前利益
@@ -98,6 +100,7 @@ public class XBRLData {
 		System.out.println("  営業外収益:\t" + nonOperatingIncomeCrtYTDuration + " <- " + nonOperatingIncomePr1YTDuration);
 		System.out.println("  営業外費用:\t" + nonOperatingExpensesCrtYTDuration + " <- " + nonOperatingExpensesPr1YTDuration);
 		System.out.println("  経常利益:\t" + ordinaryIncomeCrtYTDuration + " <- " + ordinaryIncomePr1YTDuration);
+		System.out.println("  特別利益:\t" + extraordinaryIncomeCrtYTDuration + " <- " + extraordinaryIncomePr1YTDuration);
 		System.out.println("  特別損失:\t" + extraordinaryLossCrtYTDuration + " <- " + extraordinaryLossPr1YTDuration);
 		System.out.println("  税引前利益:\t" + incomeBeforeIncomeTaxesCrtYTDuration + " <- " + incomeBeforeIncomeTaxesPr1YTDuration);
 		System.out.println("  純利益:\t" + profitLossCrtYTDuration + " <- " + profitLossPr1YTDuration);
