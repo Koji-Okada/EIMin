@@ -67,12 +67,15 @@ public class MultiXBRLParser {
 					
 					parserRC.parser = new XBRLBasicInfoParser();
 					parserRC.parse(xbrlUri);
-					parserRC.data.showBasicInfo();
-					parserRC.data.showDateInfo();
+//					parserRC.data.showBasicInfo();
+//					parserRC.data.showDateInfo();
 					
 					parserRC.parser = new XBRLFinDataParser();
 					parserRC.parse(xbrlUri);
-					parserRC.data.showPLInfo();
+//					parserRC.data.showPLInfo();
+					
+					
+					System.out.println(parserRC.data.output());
 				}
 			}
 			br.close();

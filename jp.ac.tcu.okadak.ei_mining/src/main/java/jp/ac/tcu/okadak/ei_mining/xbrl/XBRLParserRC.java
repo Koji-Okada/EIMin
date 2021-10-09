@@ -63,7 +63,7 @@ public class XBRLParserRC {
 	 */
 	public String findXbrlFile(String path) {
 
-				System.out.println(path);
+//				System.out.println(path);
 
 		File folder = new File(path);
 		File fileList[] = folder.listFiles();
