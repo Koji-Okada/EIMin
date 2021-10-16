@@ -62,10 +62,11 @@ public class XBRLData {
 	//
 
 	// 売上高
-	Long netSalesCrtYTDuration = null;
-	Long netSalesCrtYTDurationNC = null;
-	Long netSalesPr1YTDuration = null;
-	Long netSalesPr1YTDurationNC = null;
+	Long[] netSales = new Long[5];
+	Long[] netSalesNC = new Long[5];
+	// 営業収益(売上高相当)
+	Long[] operatingRevenue1SummaryOfBusinessResults = new Long[5];
+	Long[] operatingRevenue1SummaryOfBusinessResultsNC = new Long[5];
 	// 売上原価
 	Long costOfSalesCrtYTDuration = null;
 	Long costOfSalesCrtYTDurationNC = null;
@@ -130,7 +131,7 @@ public class XBRLData {
 	void showPLInfo() {
 		System.out.println("== P/L情報");
 		System.out.println(" 連結");
-		System.out.println("  売上高:\t" + netSalesCrtYTDuration + " <- " + netSalesPr1YTDuration);
+		System.out.println("  売上高:\t" + netSales[0] + " <- " + netSales[1]);
 		System.out.println("  売上原価:\t" + costOfSalesCrtYTDuration + " <- " + costOfSalesPr1YTDuration);
 		System.out.println("  売上総利益:\t" + grossProfitCrtYTDuration + " <- " + grossProfitPr1YTDuration);
 		System.out.println("  販管費:\t" + sellingGeneralAndAdministrativeExpensesCrtYTDuration + " <- "
@@ -148,7 +149,7 @@ public class XBRLData {
 		System.out.println("  当社株主帰属純利益:\t" + profitLossAttributableToOwnersOfParentCrtYTDuration + " <- "
 				+ profitLossAttributableToOwnersOfParentPr1YTDuration);
 		System.out.println(" 単体");
-		System.out.println("  売上高:\t" + netSalesCrtYTDurationNC + " <- " + netSalesPr1YTDurationNC);
+		System.out.println("  売上高:\t" + netSalesNC[0] + " <- " + netSalesNC[1]);
 		System.out.println("  売上原価:\t" + costOfSalesCrtYTDurationNC + " <- " + costOfSalesPr1YTDurationNC);
 		System.out.println("  売上総利益:\t" + grossProfitCrtYTDurationNC + " <- " + grossProfitPr1YTDurationNC);
 		System.out.println("  販管費:\t" + sellingGeneralAndAdministrativeExpensesCrtYTDurationNC + " <- "
@@ -189,58 +190,60 @@ public class XBRLData {
 		str = str + "\t" + date;
 		str = str + "\t" + docType;
 
-		if (null != netSalesCrtYTDuration) {
+		boolean consolidated = false;
+		if ((null != netSales[0]) || (null != operatingRevenue1SummaryOfBusinessResults[0])) {
+			consolidated = true;
+		}
+		
+		if (consolidated) {
 			// 連結決算がある場合
-			str = str + "\t" + (netSalesCrtYTDuration / 1000000);
-			str = str + "\t" + (operatingIncomeCrtYTDuration / 1000000);
-			str = str + "\t" + (nonOperatingIncomeCrtYTDuration / 1000000);
-			str = str + "\t" + (nonOperatingExpensesCrtYTDuration / 1000000);
-			str = str + "\t" + (ordinaryIncomeCrtYTDuration / 1000000);
-			if (null != extraordinaryIncomeCrtYTDuration) {
-				str = str + "\t" + (extraordinaryIncomeCrtYTDuration / 1000000);
+			if (null != netSales[0]) {
+				str = str + "\t" + toStr(netSales[0]);
 			} else {
-				str = str + "\t";
+				str = str + "\t" + toStr(operatingRevenue1SummaryOfBusinessResults[0]);
 			}
-			if (null != extraordinaryLossCrtYTDuration) {
-				str = str + "\t" + (extraordinaryLossCrtYTDuration / 1000000);
-			} else {
-				str = str + "\t";
-			}
-			str = str + "\t" + (incomeBeforeIncomeTaxesCrtYTDuration / 1000000);
-			str = str + "\t" + (profitLossCrtYTDuration / 1000000);
-			if (null != profitLossAttributableToOwnersOfParentCrtYTDuration) {
-				str = str + "\t" + (profitLossAttributableToOwnersOfParentCrtYTDuration / 1000000);
-			} else {
-				str = str + "\t";
-			}
+			str = str + "\t" + toStr(operatingIncomeCrtYTDuration);
+			str = str + "\t" + toStr(nonOperatingIncomeCrtYTDuration);
+			str = str + "\t" + toStr(nonOperatingExpensesCrtYTDuration);
+			str = str + "\t" + toStr(ordinaryIncomeCrtYTDuration);
+			str = str + "\t" + toStr(extraordinaryIncomeCrtYTDuration);
+			str = str + "\t" + toStr(extraordinaryLossCrtYTDuration);
+			str = str + "\t" + toStr(incomeBeforeIncomeTaxesCrtYTDuration);
+			str = str + "\t" + toStr(profitLossCrtYTDuration);
+			str = str + "\t" + toStr(profitLossAttributableToOwnersOfParentCrtYTDuration);
 		} else {
 			// 連結決算がない場合
-			str = str + "\t" + (netSalesCrtYTDurationNC / 1000000);
-			str = str + "\t" + (operatingIncomeCrtYTDurationNC / 1000000);
-			str = str + "\t" + (nonOperatingIncomeCrtYTDurationNC / 1000000);
-			str = str + "\t" + (nonOperatingExpensesCrtYTDurationNC / 1000000);
-			str = str + "\t" + (ordinaryIncomeCrtYTDurationNC / 1000000);
-			if (null != extraordinaryIncomeCrtYTDurationNC) {
-				str = str + "\t" + (extraordinaryIncomeCrtYTDurationNC / 1000000);
+			if (null != netSalesNC[0]) {
+				str = str + "\t" + toStr(netSalesNC[0]);
 			} else {
-				str = str + "\t";
+				str = str + "\t" + toStr(operatingRevenue1SummaryOfBusinessResultsNC[0]);
 			}
-			if (null != extraordinaryLossCrtYTDurationNC) {
-				str = str + "\t" + (extraordinaryLossCrtYTDurationNC / 1000000);
-			} else {
-				str = str + "\t";
-			}
-			str = str + "\t" + (incomeBeforeIncomeTaxesCrtYTDurationNC / 1000000);
-			str = str + "\t" + (profitLossCrtYTDurationNC / 1000000);
-			if (null != profitLossAttributableToOwnersOfParentCrtYTDurationNC) {
-				str = str + "\t" + (profitLossAttributableToOwnersOfParentCrtYTDurationNC / 1000000);
-			} else {
-				str = str + "\t";
-			}
-
+			str = str + "\t" + toStr(operatingIncomeCrtYTDurationNC);
+			str = str + "\t" + toStr(nonOperatingIncomeCrtYTDurationNC);
+			str = str + "\t" + toStr(nonOperatingExpensesCrtYTDurationNC);
+			str = str + "\t" + toStr(ordinaryIncomeCrtYTDurationNC);
+			str = str + "\t" + toStr(extraordinaryIncomeCrtYTDurationNC);
+			str = str + "\t" + toStr(extraordinaryLossCrtYTDurationNC);
+			str = str + "\t" + toStr(incomeBeforeIncomeTaxesCrtYTDurationNC);
+			str = str + "\t" + toStr(profitLossCrtYTDurationNC);
+			str = str + "\t" + toStr(profitLossAttributableToOwnersOfParentCrtYTDurationNC);
 		}
-
 		return str;
 	}
 
+	/**
+	 * 
+	 * @param v
+	 * @return
+	 */
+	private String toStr(Long v) {
+		String str = "";
+		if (null != v) {
+			str = str + (v / 1000000);
+		} else {
+			str = str + "null";
+		}
+		
+		return str;
+	}
 }

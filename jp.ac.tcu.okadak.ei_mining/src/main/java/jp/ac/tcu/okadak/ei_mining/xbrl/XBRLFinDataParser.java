@@ -74,7 +74,7 @@ public class XBRLFinDataParser extends XBRLDataParser {
 
 	// ==================================================================================
 	/**
-	 * 
+	 * 日本会計基準
 	 */
 	void getFinJPGAAP(Node node) {
 
@@ -93,22 +93,38 @@ public class XBRLFinDataParser extends XBRLDataParser {
 				if (attr.item(i).getNodeName().equals("contextRef")) {
 					String term = attr.item(i).getNodeValue();
 
-					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
-						String value = childNode.getNodeValue();
-						this.dt.netSalesCrtYTDuration = Long.valueOf(value);
-					} 
-					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
-						String value = childNode.getNodeValue();
-						this.dt.netSalesCrtYTDurationNC = Long.valueOf(value);
+					for (int j = 0; j < 5; j++) {
+						if (term.equals(YDC[j]) || term.equals(QDC[j])) {
+							String value = childNode.getNodeValue();
+							this.dt.netSales[j] = Long.valueOf(value);
+						}
+						if (term.equals(YDNC[j]) || term.equals(QDNC[j])) {
+							String value = childNode.getNodeValue();
+							this.dt.netSalesNC[j] = Long.valueOf(value);
+						}
 					}
-					
-					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
-						String value = childNode.getNodeValue();
-						this.dt.netSalesPr1YTDuration = Long.valueOf(value);
-					} 
-					if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
-						String value = childNode.getNodeValue();
-						this.dt.netSalesPr1YTDurationNC = Long.valueOf(value);
+				}
+			}
+		}
+
+		// 営業収益(売上高相当)を抽出する
+		if (nodeName.equals("jpcrp_cor:OperatingRevenue1SummaryOfBusinessResults")) {
+
+			NamedNodeMap attr = node.getAttributes();
+			for (int i = 0; i < attr.getLength(); i++) {
+
+				if (attr.item(i).getNodeName().equals("contextRef")) {
+					String term = attr.item(i).getNodeValue();
+
+					for (int j = 0; j < 5; j++) {
+						if (term.equals(YDC[j]) || term.equals(QDC[j])) {
+							String value = childNode.getNodeValue();
+							this.dt.operatingRevenue1SummaryOfBusinessResults[j] = Long.valueOf(value);
+						}
+						if (term.equals(YDNC[j]) || term.equals(QDNC[j])) {
+							String value = childNode.getNodeValue();
+							this.dt.operatingRevenue1SummaryOfBusinessResultsNC[j] = Long.valueOf(value);
+						}
 					}
 				}
 			}
@@ -130,12 +146,12 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.costOfSalesCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.costOfSalesPr1YTDuration = Long.valueOf(value);
-					} 
+					}
 					if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.costOfSalesPr1YTDurationNC = Long.valueOf(value);
@@ -156,12 +172,12 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.grossProfitCrtYTDuration = Long.valueOf(value);
-					} 
+					}
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.grossProfitCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.grossProfitPr1YTDuration = Long.valueOf(value);
@@ -186,16 +202,16 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDC[0]) || term.equals(QDC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesCrtYTDuration = Long.valueOf(value);
-					} 
+					}
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesPr1YTDuration = Long.valueOf(value);
-					} 
+					}
 					if (term.equals(YDNC[1]) || term.equals(QDNC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.sellingGeneralAndAdministrativeExpensesPr1YTDurationNC = Long.valueOf(value);
@@ -220,8 +236,8 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.operatingIncomeCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.operatingIncomePr1YTDuration = Long.valueOf(value);
@@ -250,8 +266,8 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingIncomeCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingIncomePr1YTDuration = Long.valueOf(value);
@@ -281,7 +297,7 @@ public class XBRLFinDataParser extends XBRLDataParser {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingExpensesCrtYTDurationNC = Long.valueOf(value);
 					}
-					
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.nonOperatingExpensesPr1YTDuration = Long.valueOf(value);
@@ -311,7 +327,7 @@ public class XBRLFinDataParser extends XBRLDataParser {
 						String value = childNode.getNodeValue();
 						this.dt.ordinaryIncomeCrtYTDurationNC = Long.valueOf(value);
 					}
-					
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.ordinaryIncomePr1YTDuration = Long.valueOf(value);
@@ -340,8 +356,8 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryIncomeCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryIncomePr1YTDuration = Long.valueOf(value);
@@ -353,7 +369,7 @@ public class XBRLFinDataParser extends XBRLDataParser {
 				}
 			}
 		}
-		
+
 		// 特別損失を抽出する
 		if (nodeName.equals("jppfs_cor:ExtraordinaryLoss")) {
 
@@ -370,8 +386,8 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryLossCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.extraordinaryLossPr1YTDuration = Long.valueOf(value);
@@ -400,8 +416,8 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.incomeBeforeIncomeTaxesCrtYTDurationNC = Long.valueOf(value);
-					} 
-					
+					}
+
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();
 						this.dt.incomeBeforeIncomeTaxesPr1YTDuration = Long.valueOf(value);
@@ -430,7 +446,7 @@ public class XBRLFinDataParser extends XBRLDataParser {
 					if (term.equals(YDNC[0]) || term.equals(QDNC[0])) {
 						String value = childNode.getNodeValue();
 						this.dt.profitLossCrtYTDurationNC = Long.valueOf(value);
-					} 
+					}
 
 					if (term.equals(YDC[1]) || term.equals(QDC[1])) {
 						String value = childNode.getNodeValue();

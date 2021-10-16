@@ -15,6 +15,7 @@ public class MultiXBRLParser {
 		String indexFile = "E:/Target.txt";
 //		String indexFile = "D:/XBRL/TargetList.txt";
 
+		indexFile = "E:/Takuhai.txt";
 		System.out.println("Start ...");
 
 		MultiXBRLParser m = new MultiXBRLParser();
@@ -85,5 +86,4 @@ public class MultiXBRLParser {
 
 		return;
 	}
-
 }
