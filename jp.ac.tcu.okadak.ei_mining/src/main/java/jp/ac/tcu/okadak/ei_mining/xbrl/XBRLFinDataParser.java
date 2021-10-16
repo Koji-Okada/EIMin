@@ -16,7 +16,6 @@ public class XBRLFinDataParser extends XBRLDataParser {
 		this.dt = data;
 
 		getFinJPGAAP(node); // 国内会計基準
-//		getFinancialInfo(node);
 
 		return;
 	}

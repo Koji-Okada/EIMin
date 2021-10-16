@@ -1,14 +1,9 @@
 package jp.ac.tcu.okadak.ei_mining.xbrl;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.w3c.dom.Node;
 
 public class XBRLTextInfoParser extends XBRLDataParser {
 
-	
 	XBRLData dt;
 	
 	/**
@@ -25,9 +20,6 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 	}
 
 	// ========================================================================================
-
-	String orgText = "";
-	String trnsText = "";
 
 	/**
 	 *
@@ -46,8 +38,14 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 
 			String text = childNode.getNodeValue();
 
-			orgText = orgText + "\n" + text;
-			trnsText = trnsText + "\n" + removeHTMLTag(text);
+			dt.orgText = dt.orgText + "\n" + text;
+			dt.trnsText = dt.trnsText + "\n" + removeHTMLTag(text);
+			
+			
+			if (text.contains("デリバリー")) {
+				System.out.println(nodeName);
+			}
+			
 		}
 
 		return;
@@ -63,7 +61,6 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 		boolean flag = false;
 		String trns = "";
 
-		int j = 0;
 		for (int i = 0; i < org.length(); i++) {
 			char ch = org.charAt(i);
 			if ('<' == ch) {
@@ -82,49 +79,5 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 
 	// ==========================================================================================================
 
-	/**
-	 *
-	 */
-	void output2(String path) {
 
-		String ty = "--";
-		String date = null;
-		if (dt.docType.contains("有価証券報告書")) {
-			ty = "YH";
-			date = dt.currentYearInstant;
-		} else if (dt.docType.contains("四半期報告書")) {
-			ty = "QR";
-
-			if (null != dt.currentQuarterInstant)
-				date = dt.currentQuarterInstant;
-			else { // 場当たり的なので要見直し
-				date = dt.currentQuarterInstantNonConsolidated;
-			}
-		}
-
-		if (null == date)
-			System.out.println("Err!...");
-
-		String fName = ty + "(" + dt.eCode + "_" + dt.entName + ")" + date + "_" + dt.numSubmission + ".txt";
-
-		FileWriter fw = null;
-		try {
-			File file = new File(path + fName);
-			fw = new FileWriter(file);
-			fw.write(trnsText);
-			fw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fw != null) {
-					fw.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return;
-	}
 }

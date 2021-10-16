@@ -1,5 +1,9 @@
 package jp.ac.tcu.okadak.ei_mining.xbrl;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class XBRLData {
 
 	// ==================================================================================
@@ -245,5 +249,57 @@ public class XBRLData {
 		}
 		
 		return str;
+	}
+	
+	
+	// ==================================================================================
+	// テキストデータ
+	//
+	String orgText = "";
+	String trnsText = "";
+	
+	/**
+	 *
+	 */
+	void output2(String path) {
+
+		String ty = "--";
+		String date = null;
+		if (docType.contains("有価証券報告書")) {
+			ty = "YH";
+			date = currentYearInstant;
+		} else if (docType.contains("四半期報告書")) {
+			ty = "QR";
+
+			if (null != currentQuarterInstant)
+				date = currentQuarterInstant;
+			else { // 場当たり的なので要見直し
+				date = currentQuarterInstantNonConsolidated;
+			}
+		}
+
+		if (null == date)
+			System.out.println("Err!...");
+
+		String fName = ty + "(" + eCode + "_" + entName + ")" + date + "_" + numSubmission + ".txt";
+
+		FileWriter fw = null;
+		try {
+			File file = new File(path + fName);
+			fw = new FileWriter(file);
+			fw.write(trnsText);
+			fw.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fw != null) {
+					fw.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return;
 	}
 }

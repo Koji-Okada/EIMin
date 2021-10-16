@@ -103,10 +103,6 @@ public class XBRLParserRC {
 			System.out.println(e);
 		}
 
-//		parser.output();
-//		String path = "D:/XBRL/XBRLText/";
-//		rec.output2(path);
-
 		return;
 	}
 

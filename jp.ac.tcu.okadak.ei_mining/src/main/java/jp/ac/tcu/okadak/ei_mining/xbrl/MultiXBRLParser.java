@@ -12,10 +12,10 @@ public class MultiXBRLParser {
 	public static void main(String[] args) {
 
 //		String indexFile = "X:\\XBRL_Data\\index.txt";
-		String indexFile = "E:/Target.txt";
 //		String indexFile = "D:/XBRL/TargetList.txt";
+		String indexFile = "E:/Target.txt";
 
-		indexFile = "E:/Takuhai-all.txt";
+		
 		System.out.println("Start ...");
 
 		MultiXBRLParser m = new MultiXBRLParser();
@@ -40,8 +40,6 @@ public class MultiXBRLParser {
 			XBRLParserRC parserRC = new XBRLParserRC();
 
 			String line;
-//			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前),売上高(2年前),売上高(3年前),売上高(4年前)");
-//			System.out.println("会社名,株式コード,EDINETコード,会計基準,Version,決算日,売上高(決算日),売上高(1年前)");
 
 			while (null != (line = br.readLine())) {
 				CSVTokenizer tokenizer = new CSVTokenizer(line);
@@ -65,18 +63,26 @@ public class MultiXBRLParser {
 					String xbrlUri = parserRC.findXbrlFile(path);
 					
 					parserRC.data = new XBRLData();	// XBRLデータオブジェクトを作成
-					
+
+					// 基本情報の抽出処理
 					parserRC.parser = new XBRLBasicInfoParser();
 					parserRC.parse(xbrlUri);
 //					parserRC.data.showBasicInfo();
 //					parserRC.data.showDateInfo();
 					
+					// 財務データの抽出処理
 					parserRC.parser = new XBRLFinDataParser();
 					parserRC.parse(xbrlUri);
 //					parserRC.data.showPLInfo();
-					
-					
+
 					System.out.println(parserRC.data.output());
+
+					// テキストデータの抽出処理
+					parserRC.parser = new XBRLTextInfoParser();
+					parserRC.parse(xbrlUri);
+					
+					String outPath = "D:/XBRL/XBRLText/";
+//					parserRC.data.output2(outPath);
 				}
 			}
 			br.close();
