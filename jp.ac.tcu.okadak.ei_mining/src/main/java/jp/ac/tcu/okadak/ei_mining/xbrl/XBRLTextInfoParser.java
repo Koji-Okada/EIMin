@@ -41,8 +41,9 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 			dt.orgText = dt.orgText + "\n" + text;
 			dt.trnsText = dt.trnsText + "\n" + removeHTMLTag(text);
 			
-			
-			if (text.contains("デリバリー")) {
+
+			if (text.contains("テイクアウト")) {
+//			if (text.contains("デリバリー")) {
 				System.out.println(nodeName);
 			}
 			
