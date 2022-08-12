@@ -6,10 +6,18 @@ import java.io.IOException;
 
 public class XBRLData {
 
+	String xbrlUri;
+	
+	public XBRLData(String xbrlUri) {
+		super();
+		
+		this.xbrlUri = xbrlUri;
+	}
+
 	// ==================================================================================
 	// 基礎データ
 	//
-	String docType = null; // 報告書種別
+	String docType = "不明"; // 報告書種別
 	String entName = null; // 企業名
 	String sCode = null; // 株式コード
 	String eCode = null; // EDINETコード
@@ -265,6 +273,12 @@ public class XBRLData {
 
 		String ty = "--";
 		String date = null;
+		
+		if (null == docType) {
+			System.out.println("***Error "+ entName + ":" + docType);
+		}
+		
+		
 		if (docType.contains("有価証券報告書")) {
 			ty = "YH";
 			date = currentYearInstant;
@@ -278,11 +292,12 @@ public class XBRLData {
 			}
 		}
 
-		if (null == date)
-			System.out.println("Err!...");
 
 		String fName = ty + "(" + eCode + "_" + entName + ")" + date + "_" + numSubmission + ".txt";
+		if (null == date)
+			System.out.println("Err!..." + fName + ":" + xbrlUri);
 
+		
 		FileWriter fw = null;
 		try {
 			File file = new File(path + fName);

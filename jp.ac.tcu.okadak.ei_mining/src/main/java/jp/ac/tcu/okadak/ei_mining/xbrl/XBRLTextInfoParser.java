@@ -34,21 +34,24 @@ public class XBRLTextInfoParser extends XBRLDataParser {
 			return; // 具体的な値が無ければ調べる意味がない
 
 		// テキストブロック
-		if (nodeName.contains("jpcrp_cor:") && nodeName.contains("TextBlock")) {
+//		if (nodeName.contains("jpcrp_cor:") && nodeName.contains("TextBlock")) {
+//			
+//			String text = childNode.getNodeValue();
+//
+//			dt.orgText = dt.orgText + "\n" + text;
+//			dt.trnsText = dt.trnsText + "\n" + removeHTMLTag(text);
+//		}
 
+		// テキストブロック
+		if (nodeName.contains("jpcrp_cor:") && nodeName.contains("AnalysisOfFinancialPositionOperatingResultsAndCashFlowsTextBlock")) {
+			
 			String text = childNode.getNodeValue();
 
 			dt.orgText = dt.orgText + "\n" + text;
 			dt.trnsText = dt.trnsText + "\n" + removeHTMLTag(text);
-			
-
-			if (text.contains("テイクアウト")) {
-//			if (text.contains("デリバリー")) {
-				System.out.println(nodeName);
-			}
-			
 		}
 
+				
 		return;
 	}
 

@@ -13,7 +13,8 @@ public class MultiXBRLParser {
 
 //		String indexFile = "X:\\XBRL_Data\\index.txt";
 //		String indexFile = "D:/XBRL/TargetList.txt";
-		String indexFile = "E:/Target.txt";
+//		String indexFile = "E:/Target.txt";
+		String indexFile = "E:/index-2021.txt";
 
 		
 		System.out.println("Start ...");
@@ -62,7 +63,7 @@ public class MultiXBRLParser {
 
 					String xbrlUri = parserRC.findXbrlFile(path);
 					
-					parserRC.data = new XBRLData();	// XBRLデータオブジェクトを作成
+					parserRC.data = new XBRLData(xbrlUri);	// XBRLデータオブジェクトを作成
 
 					// 基本情報の抽出処理
 					parserRC.parser = new XBRLBasicInfoParser();
@@ -71,18 +72,18 @@ public class MultiXBRLParser {
 //					parserRC.data.showDateInfo();
 					
 					// 財務データの抽出処理
-					parserRC.parser = new XBRLFinDataParser();
-					parserRC.parse(xbrlUri);
+//					parserRC.parser = new XBRLFinDataParser();
+//					parserRC.parse(xbrlUri);
 //					parserRC.data.showPLInfo();
 
-					System.out.println(parserRC.data.output());
+//					System.out.println(parserRC.data.output());
 
 					// テキストデータの抽出処理
 					parserRC.parser = new XBRLTextInfoParser();
 					parserRC.parse(xbrlUri);
 					
-					String outPath = "D:/XBRL/XBRLText/";
-//					parserRC.data.output2(outPath);
+					String outPath = "E:/XBRL_Text/";
+					parserRC.data.output2(outPath);
 				}
 			}
 			br.close();
